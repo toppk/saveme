@@ -14,3 +14,5 @@ https://github.com/joeyh/git-annex
 http://www.sentey.com/en/ls-6230-ls-6230/
 https://bup.github.io/
 https://github.com/bup/bup
+https://github.com/bdrewery/zfstools
+https://code.google.com/p/boar/
