@@ -17,5 +17,5 @@ if [ ! -z "$match" ]; then
     exit 2
 fi
 
-echo \# \"arid\"==$arid
+echo "# 'arid':'$arid'"
 

@@ -18,6 +18,7 @@ if ! test -b /dev/$disk; then
     exit 4
 fi
 
+
 type=$( lsblk -n /dev/$disk --output type )
 
 if echo $type | grep -q part; then
