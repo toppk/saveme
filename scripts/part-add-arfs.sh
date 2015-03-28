@@ -50,6 +50,3 @@ fi
 
 
 echo mke2fs -T ext4,largefile  -L $arid -j -m 1  -O sparse_super,dir_index -J size=128 /dev/$part
-echo echo "'"'LABEL='$arid' /alt/'$arid'                   ext4    noauto,comment=systemd.automount        1 4'"'"' >> /etc/fstab'  
-echo systemctl  daemon-reload
-echo systemctl  start   alt-${arid}.automount
