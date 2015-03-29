@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function runme()
 {
 
@@ -13,26 +12,35 @@ function runme()
     shift
     comm=$*
     echo "# STARTING: id=$id comm=[$comm]"
-    $comm > $id.out 2> $id.err
+    $comm > $logdir/$id.out 2> $logdir/$id.err
     err=$?
     if [ $err -ne 0 ]; then
 	echo "#  FAILURE: error $err during starting $id"
 	return 1
     fi
     echo "#  SUCCESS: started $id"
-    echo "#  RUNNING: id=$id comm=[bash -e ./$id.out] contents=[$( tr '\n' ';' < $id.out )]"
+    echo "#  RUNNING: id=$id comm=[bash -e ./$id.out] contents=[$( tr '\n' ';' < $logdir/$id.out )]"
     if [ $sleep -ne 0 ]; then
 	echo "#   notice: sleeping for $sleep seconds"
 	sleep $sleep
     fi
-    bash -e ./$id.out > ${id}_RUN.out 2> ${id}_RUN.err
+    bash -e $logdir/$id.out > $logdir/${id}_RUN.out 2> $logdir/${id}_RUN.err
     err=$?
     if [ $err -ne 0 ]; then
 	echo "#  FAILURE: error $err during running $id"
 	return 2
     fi
-    . <( cat $id.out  | sed -n  "/^#/s/.*'\(.*\)':'\(.*\)'$/\1=\2/p" )
+    . <( cat $logdir/$id.out  | sed -n  "/^#/s/.*'\(.*\)':'\(.*\)'$/\1=\2/p" )
 }
+
+
+testname=${testname:-generic}
+
+if [ -z "$logdir" ] ; then
+    logdir="./runs/$testname.$( date +%s )"
+    mkdir -p $logdir
+fi
+
 
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

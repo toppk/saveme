@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # add a ext4 archive fs on a partition
-# parameters: part (don't include /dev/ just, e.g.: sdb, mapper/hp1.cfs),
-#             id (label and mount point, must be unique and simple. hint: use core-gen-arid.sh)
+# parameters: id (label and mount point, must be unique and simple. hint: use core-gen-arid.sh)
 
 export PATH=/bin:/sbin
 PS4='+\D{%s} [$?] # '
 
 if [ $# -ne 1 ]; then
-   echo usage: $0 key
+   echo usage: $0 arid
    exit 1
 fi
    

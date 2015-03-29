@@ -7,7 +7,7 @@ export PATH=/bin:/sbin
 PS4='+\D{%s} [$?] # '
 
 if [ $# -ne 1 ]; then
-   echo usage: $0 key
+   echo usage: $0 arid
    exit 1
 fi
    
