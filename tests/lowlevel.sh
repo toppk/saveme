@@ -84,7 +84,7 @@ runme "lowlevel_sys-attach-arfs_$arid" ../scripts/sys-attach-arfs.sh  $arid || e
 #what should work
 if [ $( df --output /alt/$arid | tail -1 | awk '{ print $2 }' ) != "ext4" ]; then
     echo "#  FAILURE: $cprt does not contain expected fstype,label"
-    exit 7
+    exit 8
 fi
 echo "#  SUCCESS: /alt/$arid is and ext4 mounted filesystem"
 
