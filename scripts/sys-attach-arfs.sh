@@ -18,7 +18,7 @@ if ! test -b /dev/disk/by-label/$arid; then
     exit 4
 fi
 
-fstype=$( lsblk $( blkid -L xp6 ) -o fstype -n )
+fstype=$( lsblk $( blkid -L $arid ) -o fstype -n )
 if [ "$fstype" != "ext4" ]; then
     echo $fstype is not ext4
     exit 6

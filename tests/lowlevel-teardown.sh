@@ -36,6 +36,7 @@ cpid=$( basename $cprt )
 systemctl stop systemd-cryptsetup@${cpid}.service
 
 sed -i.bak '/^'$cpid'[ \t]/d' /etc/crypttab
+systemctl daemon-reload
 
 # this is good enough
 mv $keyf $keyf.OLD

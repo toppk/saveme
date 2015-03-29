@@ -38,6 +38,7 @@ testname=${testname:-generic}
 
 if [ -z "$logdir" ] ; then
     logdir="./runs/$testname.$( date +%s )"
+    echo "#   notice: logs are $logdir"
     mkdir -p $logdir
 fi
 
