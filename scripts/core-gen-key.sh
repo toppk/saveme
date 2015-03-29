@@ -17,7 +17,7 @@ if [ $err -ne 0 ]; then
 fi
 
 keyf="/etc/saveme/keys/luks.hp${next}.cfs.key"
-echo "# 'key':'$keyf'"
+echo "# 'keyf':'$keyf'"
 # SECURITY: generate random key material
 echo dd if=/dev/random of=$keyf bs=1 count=512
 echo chmod 600 $keyf

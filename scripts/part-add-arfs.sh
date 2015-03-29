@@ -8,7 +8,7 @@ export PATH=/bin:/sbin
 PS4='+\D{%s} [$?] # '
 
 if [ $# -ne 2 ]; then
-   echo usage: $0 part key
+   echo usage: $0 part arid
    exit 1
 fi
    

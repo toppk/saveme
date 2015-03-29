@@ -1,7 +1,8 @@
 #!/bin/bash
 
-
-# lowlevel disk,part,cprt,arfs teardown 
+# lowlevel disk,part,cprt,arfs teardown
+#
+# not quality
 
 export PATH=/bin:/sbin
 PS4='+\D{%s} [$?] # '
@@ -36,6 +37,8 @@ systemctl stop systemd-cryptsetup@${cpid}.service
 
 sed -i.bak '/^'$cpid'[ \t]/d' /etc/crypttab
 
+# this is good enough
 mv $keyf $keyf.OLD
 
-dd if=/dev/zero of=/dev/$disk bs=1024k count=100 conv=fdatasync,notrunc
+dd if=/dev/zero of=/dev/$disk bs=1024k count=100 conv=fdatasync,notrunc > /dev/null 2> /dev/null
+

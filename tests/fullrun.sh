@@ -9,7 +9,17 @@ if ! test -f fullrun.sh; then
     exit 2
 fi
 
+if [ $# -ne 1 ]; then
+    echo usage: $0 disk
+    exit 1
+fi
+
+disk=$1
+
 testname=${testname:-fullrun}
-. lowlevel.sh sdo
-. lowlevel-teardown.sh  xp5 mapper/cprt-35 /etc/saveme/keys/luks.cprt-35.key sdo
-echo "#  notice: logs are $logdir"
+echo "#  RUNNING: lowlevel.sh $disk"
+. lowlevel.sh $disk
+echo "#  RUNNING: lowlevel-teardown.sh $arid $cprt $keyf $disk"
+. lowlevel-teardown.sh  $arid $cprt $keyf $disk
+echo "#  SUCCESS: finished fullrun.sh $disk"
+echo "#   notice: logs are $logdir"

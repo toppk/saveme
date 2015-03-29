@@ -36,4 +36,13 @@ fi
 
 
 
+df_ver=$( df  --version | head -1 )
+
+if [ "$df_ver" == "df (GNU coreutils) 8.22" ]; then
+    :
+else
+    echo unknown df version $df_ver
+    exit 5
+fi
+
 
