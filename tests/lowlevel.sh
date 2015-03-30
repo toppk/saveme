@@ -23,8 +23,8 @@ testname=${testname:-lowlevel}
 # == STEP 1 - create partition table with first partition ==
 disk=$1
 runme --sleep "lowlevel_disk-add-part_$disk" ../scripts/disk-add-part.sh $disk || exit
-
 #what should work
+# 1 failure here after 192 runs.. 
 if ! lsblk /dev/$disk -n -o type | grep -q part; then
     echo "#  FAILURE: $disk does not have a partition type"
     exit 3
