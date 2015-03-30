@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+import sys,os
+sys.path += [ os.path.dirname(sys.argv[0])  + "/../lib" ]
+
+from saveme.main import CommandLine
+
+cl = CommandLine()
+cl.go()
+
+print("do you love me yet?")

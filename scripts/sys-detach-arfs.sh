@@ -32,4 +32,5 @@ if ! grep -q '^LABEL='$arid'[ \t]' /etc/fstab; then
     echo \# notice: LABEL=$arid fstab entry not found
 else
     echo sed -i.bak "'/^LABEL=$arid[ \t]/d' /etc/fstab"
+    echo systemctl daemon-reload
 fi
