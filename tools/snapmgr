@@ -3,9 +3,8 @@
 import sys,os
 sys.path += [ os.path.dirname(sys.argv[0])  + "/../lib" ]
 
-from saveme.main import CommandLine
+from saveme.api import CommandLine
 
 cl = CommandLine()
-cl.go()
-
+cl.go(sys.argv)
 print("do you love me yet?")

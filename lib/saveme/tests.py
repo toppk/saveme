@@ -1,5 +1,5 @@
 import unittest
-from main import CommandLine
+from api import CommandLine
 cl=CommandLine()
 
 
@@ -12,11 +12,11 @@ class TestMain(unittest.TestCase):
     _cl = None
     
     def setUp(self):
-        from main import CommandLine
+        from api import CommandLine
         self._cl = CommandLine()
 
     def test_cli_go(self):
-        self.assertEqual( self._cl.go(), 12)
+        self.assertEqual( self._cl.go(["me"]), 12)
 
     def test_cli_help(self):
         self.assertEqual( self._cl.help(), True)
@@ -24,10 +24,10 @@ class TestMain(unittest.TestCase):
 class TestUtil(unittest.TestCase):
 
     _parsedate = None
-    from utils import culltimeline as _culltimeline
+    from main import culltimeline as _culltimeline
     
     def setUp(self):
-        from utils import parsedate
+        from external import parsedate
         self._parsedate = parsedate
 
     def test_util_parsedate(self):
@@ -37,7 +37,7 @@ class TestUtil(unittest.TestCase):
 
     def test_util_culltimeline(self):
         # date '+%Y%m%d_%H:%M:%S_%z'
-        from utils import culltimeline as _culltimeline
+        from main import culltimeline as _culltimeline
         import pdb
         #pdb.set_trace()
         self.assertEqual(_culltimeline(['20150329_23:35:41_-0400'],
