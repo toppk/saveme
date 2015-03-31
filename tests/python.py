@@ -1,18 +1,17 @@
-import unittest
-from api import CommandLine
-cl=CommandLine()
+#!/usr/bin/env python3
 
+#
+#
+#
+import unittest
 
 import sys
 print(" Running Python Version [%s] " % sys.version)
 
-
 class TestMain(unittest.TestCase):
 
-    _cl = None
-    
     def setUp(self):
-        from api import CommandLine
+        from saveme.api import CommandLine
         self._cl = CommandLine()
 
     def test_cli_go(self):
@@ -24,11 +23,12 @@ class TestMain(unittest.TestCase):
 class TestUtil(unittest.TestCase):
 
     _parsedate = None
-    from main import culltimeline as _culltimeline
     
     def setUp(self):
-        from external import parsedate
+        from saveme.main import culltimeline
+        from saveme.external import parsedate
         self._parsedate = parsedate
+        self._culltimeline = culltimeline
 
     def test_util_parsedate(self):
         # date '+%Y%m%d_%H:%M:%S_%z'
@@ -37,7 +37,7 @@ class TestUtil(unittest.TestCase):
 
     def test_util_culltimeline(self):
         # date '+%Y%m%d_%H:%M:%S_%z'
-        from main import culltimeline as _culltimeline
+        from saveme.main import culltimeline as _culltimeline
         import pdb
         #pdb.set_trace()
         self.assertEqual(_culltimeline(['20150329_23:35:41_-0400'],
@@ -51,4 +51,6 @@ class TestUtil(unittest.TestCase):
                                        1427690151), [1427689541] )
 
 if __name__ == '__main__':
+    import sys,os
+    sys.path += [ os.path.abspath(os.path.dirname(sys.argv[0])  + "/../lib") ]
     unittest.main()

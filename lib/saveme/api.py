@@ -1,7 +1,11 @@
-#!/usr/bin/env python3
+
+#
+#
+#
 
 from .main import manage
-from .cfg import getdefaultpolicy as _cfg_getdefaultpolicy
+from .cfg import getdefsnappol as _cfg_default_snapshot_policy
+
 class CommandLine:
     
     i = 123
@@ -10,7 +14,7 @@ class CommandLine:
             print("usage: %s\n\nCOMMANDS\n manage <pool> [--policy=XXX]\n   snap <pool>\n\nOPTIONS\n policy = [0-9]*[hr,dy,wk,yr]" % args[0])
         elif args[1] == "manage":
             pool = args[2]
-            policy = _cfg_getdefaultpolicy()
+            policy = _cfg_default_snapshot_policy()
             for options in args[3:]:
                 if options.startswith("--policy="):
                     policy=options[9:]
