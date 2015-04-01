@@ -32,7 +32,7 @@ class CommandLine:
                 else:
                     print ("unknown option = %s" % options)
             print( "managing %s with pol[%s] " % (pool,policy))
-            manage(pool,policy)
+            return manage(pool,policy)
         elif args[1] == "snap":
             pool = args[2]
             for options in args[3:]:

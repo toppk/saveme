@@ -6,5 +6,4 @@ sys.path += [ os.path.abspath(os.path.dirname(sys.argv[0])  + "/../lib") ]
 from saveme.api import CommandLine
 
 cl = CommandLine()
-cl.go(sys.argv)
-print("do you love me yet?")
+sys.exit(cl.go(sys.argv))
