@@ -13,7 +13,14 @@ fi
    
 path=$1
 
-fstype=$( df $path --output=fstype | tail -1 )
+fstype=$( df $path --output=fstype 2> /dev/null | tail -1 ; exit ${PIPESTATUS[0]})
+err=$?
+if [ $err -ne 0 ]; then
+    echo $path not a directory
+    exit 1
+fi
+
+
 if [ $fstype == "zfs" ]; then
     cleanpath=$( echo $path | sed -e 's/^\///'  -e 's/\/$//' )
     zfs list -t snapshot -r $path -o name -H | grep  ^$cleanpath\@ | cut -d\@ -f2

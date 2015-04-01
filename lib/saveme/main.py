@@ -15,12 +15,12 @@ def manage(path,policy=None):
     retcode, out, err = runcommand(args)
     if retcode != 0:
         print("issues with pullsnap [%s][%s][%d]"%(out,err,retcode))
-        return
+        return 10
     snap = out.strip().split('\n')
     res = culltimeline(snap,policy,getcurtime())
     for keep in res:
         print(" will keep %s" % keep)
-    return 'go'
+    return 0
 
     
 def culltimeline(datearr,policy,now):
