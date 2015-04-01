@@ -4,12 +4,22 @@
 #
 
 from .utils import parsepolicy
-from .external import parsedate
+from .external import parsedate,runcommand,getcurtime
+from .cfg import getscriptsdir as _cfg_scripts_directory
+from .schema import findscript
 
-def manage(path,policystr=None):
+def manage(path,policy=None):
     res = []
-    prunemap = parsepolicy(policystr)
-    print("i'm not really thinking [%s]"%(prunemap))
+    prunemap = parsepolicy(policy)
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
+    retcode, out, err = runcommand(args)
+    if retcode != 0:
+        print("issues with pullsnap [%s][%s][%d]"%(out,err,retcode))
+        return
+    snap = out.strip().split('\n')
+    res = culltimeline(snap,policy,getcurtime())
+    for keep in res:
+        print(" will keep %s" % keep)
     return 'go'
 
     
