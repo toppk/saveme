@@ -20,6 +20,7 @@ class TestMain(unittest.TestCase):
     def test_cli_help(self):
         self.assertEqual( self._cl.help(), True)
 
+
 class TestUtil(unittest.TestCase):
 
     _parsedate = None
@@ -49,6 +50,15 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(_culltimeline(['20150329_23:35:41_-0400','20150329_23:30:41_-0400','20150329_23:25:41_-0400'],
                                        "0-1dy: 1hr,1dy-1wk: 2hr, 1yr+: none",
                                        1427690151), [1427689541] )
+
+class TestExternal(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_external_runcommand(self):
+        from saveme.main import runcommand as _runcommand
+        self.assertEqual(_runcommand(["/bin/bash","-c", "echo stdout\necho stderr 1>&2\nexit 3"]),(3, 'stdout\n', 'stderr\n'))
+        pass
 
 if __name__ == '__main__':
     import sys,os
