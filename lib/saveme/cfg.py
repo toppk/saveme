@@ -7,8 +7,12 @@ import os,sys
 
 settings = {
     'default-snapshot-policy' : '0-1dy: all, 1dy-1wk: 4hr, 1wk-12wk: 1wk, 12wk-1yr: 4wk, 1yr+: none',
+    'snapshot-pattern' : "^\d\d\d\d\d\d\d\d_\d\d:\d\d:\d\d_[-+]\d\d\d\d$",
     'scripts-directory' : None
 }
+
+def getsnapshotpattern():
+    return settings['snapshot-pattern']
 
 def getdefsnappol():
     return settings['default-snapshot-policy']

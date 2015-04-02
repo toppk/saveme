@@ -11,9 +11,14 @@ import re
 
 #
 
-def runcommand(args):
-    sp = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
-    out,err = sp.communicate()
+def runcommand(args,stdin=None):
+    if stdin is not None:
+        sp = subprocess.Popen(args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+        out,err = sp.communicate(input=bytes(stdin,"utf-8"))
+    else:
+        sp = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+        out,err = sp.communicate()
+    
     retcode = sp.wait()
     return retcode,out.decode("utf-8"),err.decode("utf-8")
         
