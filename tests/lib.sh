@@ -37,7 +37,7 @@ function runme()
 testname=${testname:-generic}
 
 if [ -z "$logdir" ] ; then
-    logdir="./runs/$testname.$( date +%s )"
+    logdir="./output/$testname.$( date +%s )"
     echo "#   notice: logs are $logdir"
     mkdir -p $logdir
 fi
