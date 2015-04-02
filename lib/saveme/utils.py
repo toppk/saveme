@@ -2,7 +2,24 @@
 #
 #
 #
+from .external import runcommand
 
+def launch(cmds):
+    print("\nPLEASE CONFIRM THE FOLLOWING ACTION\n---\n%s---"%cmds)
+    response = input("Do you wish to launch? y/n ")
+    if response == "y":
+        args = ["/bin/bash","-e","-c",cmds]
+        retcode, out, err = runcommand(args)
+        if retcode == 0:
+            print("Success, got output\n---\n%s---"%out)
+        else:
+            print("Error: out,err,exit [%s][%s][%d]"%(out,err,retcode))
+            return False
+    return True
+   
+
+
+    
 def parsepolicy(policystr):
     
     rules = []
