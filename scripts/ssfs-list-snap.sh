@@ -25,7 +25,7 @@ if [ $fstype == "zfs" ]; then
     cleanpath=$( echo $path | sed -e 's/^\///'  -e 's/\/$//' )
     zfs list -t snapshot -r $path -o name -H | grep  ^$cleanpath\@ | cut -d\@ -f2
 elif [[ $fstype == "btrfs"  || $fstype == "-" ]]; then
-    btrfs subvolume list -s /t2/home | grep " path .snapshot/" | cut -d\/ -f2
+    btrfs subvolume list -s $path | grep " path .snapshot/" | cut -d\/ -f2-
 else
     echo not btr or zed
     exit 2

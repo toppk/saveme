@@ -4,7 +4,7 @@
 #
 
 from .utils import parsepolicy
-from .external import parsedate,runcommand,getcurtime
+from .external import parsedate,runcommand,getcurtime,match
 from .cfg import getscriptsdir as _cfg_scripts_directory
 from .schema import findscript
 
@@ -17,7 +17,12 @@ def manage(path,policy=None):
         print("issues with pullsnap [%s][%s][%d]"%(out,err,retcode))
         return 10
     snap = out.strip().split('\n')
-    res = culltimeline(snap,policy,getcurtime())
+    tsnap = []
+    for s in snap:
+        if match(s,"^\d\d\d\d\d\d\d\d_\d\d:\d\d:\d\d_[-+]\d\d\d\d$"):
+            tsnap += [s]
+    print("yoyoyo %s" %tsnap)
+    res = culltimeline(tsnap,policy,getcurtime())
     for keep in res:
         print(" will keep %s" % keep)
     return 0

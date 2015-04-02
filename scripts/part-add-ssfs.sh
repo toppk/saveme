@@ -56,14 +56,9 @@ zfs create t3/home
 zfs set compression=lz4 t3/home
 zfs snapshot t3/home@$( date '+%Y%m%d_%H:%M:%S_%z' )
 zfs set snapdir=visible t3/home
-zfs list -t snapshot
 # btrfs
 mkfs.btrfs -L t2 -m raid1 -d raid1 /dev/mapper/hp30.cfs /dev/mapper/hp31.cfs
 mount  LABEL=t2   /t2
 btrfs subvol  create /t2/home
-mkdir /t2/home/.snapshot
-btrfs subvol snapshot /t2/home /t2/home/.snapshot/$( date '+%Y%m%d_%H:%M:%S_%z' )
-btrfs subvolume list -s /t2
-
 
 
