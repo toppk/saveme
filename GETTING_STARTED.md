@@ -31,15 +31,27 @@ functionality there then is wrapped by the tool.
 
 ## How to use
 
-As we are potentially running commands the can destroy data, preventing
+As this tool will potentially be running commands the can destroy data, preventing
 that is a importent issue.  Please read through our design philosophy
 below for more of that story.
+
+This tool can be run anywhere, the scripts do not currently include anything, and
+the python code will position itself as long as this structure (./{lib/,scripts/,tools/})
+is maintained.  Any keys for crypto will be stored under /etc/saveme/.o
+
+All execution has only been tested running as root.  Many actions would require
+this access.
 
 ### Scripts
 
 The scripts are named after the action they take.  For example, let's look
 at "part-add-luks.sh".  As these scripts run disk and filesystem commands
 that require root privledges.
+
+*Note* One important issue is that the scripts currently have a lot of 
+hardcoded assumptions about naming.  This will likely necessitate some
+restructuring of the scripts as there is no source'ing of one script
+to another.
 
 Let's walk through creating a partition table.  We are using sdj 
 
@@ -274,8 +286,23 @@ to be removed
 ```
 And now there are two snapshots
 
-
 ------------------------------------
+
+## Testing
+
+under tests/ here are the contents:
+
+* highlevel.sh - will be zfs and btrfs tests
+* lib.sh - routines for the test suite
+* lowlevel.sh - disk -> partition -> luks -> ext4
+* lowlevel-teardown.sh -  ext4 -> luks -> partition -> disk
+* fullrun.sh - will run through lowlevel -> lowlevel-teardown.  can be used in a for loop!
+* output - a directory that is automatically created by the shell tests.  this is to ensure 
+           we always capture diagnostics and a listing of all commands we run
+* python.py - test the python code, this can run as non-root
+* snapshots.sh - will be used to test snapshots
+* system.sh - is used to verify the operating system has all the required tools.
+              this is recommended to run for compatability
 
 ## Design philosophy
 
@@ -294,4 +321,9 @@ to verify code is not stale (which would be misleading)
 
 * defensive - there are no user errors, just bad software causing users to make mistakes
 check whatever is common
+
+* convention over configuration - provide rational defaults and require as little as possible.
+
+* users control - users should be able to control the things they should need to, in the simplest
+way.  The user should be able to take their ideas and easily translate that to configuration.
 
