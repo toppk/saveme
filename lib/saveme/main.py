@@ -103,20 +103,21 @@ def culltimeline(datearr,policy,now):
     dates.sort()
     for snapdate in dates:
         delta = now - snapdate[0]
-        #print("need to check %s vs %s is delt=%s" % (snapdate,now,delta))
+        print("need to check %s vs %s is delt=%s" % (snapdate,now,delta))
         for ra in prunemap:
             if delta >= ra[0] and ( (delta <= ra[1]) or ( ra[1] is None) ):
                 keep = False
+                #print("old=%s %s"%(old,ra[2]))
                 if ra[2] == "none":
                     pass
                 elif ra[2] == "all":
                     keep = True
                 elif old is None:
                     keep = True
-                    old = snapdate[0]
                 elif snapdate[0]-old > ra[2]:
                     keep = True
                 
+                old = snapdate[0]
 
                 if keep is False:
                     # print("going to kill %s cuz %s [%s]" % (snapdate,keep,ra[3]))

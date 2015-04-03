@@ -33,7 +33,7 @@ class TestUtil(unittest.TestCase):
 
     def test_util_parsedate(self):
         # date '+%Y%m%d_%H:%M:%S_%z'
-        self.assertEqual( self._parsedate('20150329_23:35:41_-0400'), 1427690141)
+        self.assertEqual( self._parsedate('20150329_23:35:41_-0400'), 1427686541)
 
 
     def test_util_culltimeline(self):
@@ -50,6 +50,10 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(_culltimeline(['20150329_23:35:41_-0400','20150329_23:30:41_-0400','20150329_23:25:41_-0400'],
                                        "0-1dy: 1hr,1dy-1wk: 2hr, 1yr+: none",
                                        1427690151), ['20150329_23:35:41_-0400', '20150329_23:30:41_-0400'] )
+
+        self.assertEqual(_culltimeline(["20150329_21:56:37_-0400","20150402_02:21:14_-0400","20150402_20:39:11_-0400"],
+                                       "0-1yr: 1dy",
+                                       1428021888), ['20150402_20:39:11_-0400'] )
 
 class TestExternal(unittest.TestCase):
     def setUp(self):

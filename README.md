@@ -1,6 +1,34 @@
 # saveme
+
 a timeline management tool for filesystems.
 
+## Introduction
+
+Protecting ones data has always been a tough challenge. Fortunetly there
+has been a lot of new technology developed that give new ways to solve
+old problems.  Here are tools that enable people to manage and protect
+their data, in a better way.
+
+...
+
+
+## Status
+
+* Lowlevel - There are scripts to manage adding partitions to disks,
+             setting up crypto partitions, adding filesystems to
+	     partitions.
+	     
+* Snapshots - There is a tool to manage snapshots with a simple policy.
+  	      Gone are the hourly/daily concepts, and replaced with a
+	      unified policy regarding snapshot density.
+
+	      Sample:  **"0-1dy: 1hr, 1dy-1wk: 4hr, 1wk-1yr: 4wk, 1yr+: none"**
+	      
+## Try it out
+
+Please checkout this project, and read the GETTING_STARTED and USAGE docs
+
+## Related Links
 
 * http://zfsonlinux.org/faq.html
 * https://pthree.org/2012/12/18/zfs-administration-part-xi-compression-and-deduplication/
