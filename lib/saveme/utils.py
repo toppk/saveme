@@ -4,7 +4,7 @@
 #
 from .external import runcommand
 
-def launch(cmds,promptuser=None):
+def launch(cmds,promptuser=True):
     if promptuser:
         print("\nPLEASE CONFIRM THE FOLLOWING ACTION\n---\n%s\n---"%"\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
         response = input("Do you wish to launch? y/n ")
