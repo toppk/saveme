@@ -76,11 +76,13 @@ a set of weeklys.  We treat snapshot management for what is is, which
 is removing snapshots.  And we allow a simple description of the 
 natural usage:
 
+```
     policy = timerange ":" density
  timerange = time "-" time | time "+"
       time = digit timespec
   timespec = "mi" | "hr" | "dy" | "wk" | "yr"
    density = timespec | "all" | "none"
+```
 
 ##### A simple example
 
