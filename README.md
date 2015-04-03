@@ -80,3 +80,4 @@ There is more to come...
 * https://rudd-o.com/linux-and-free-software/ways-in-which-zfs-is-better-than-btrfs
 * https://lwn.net/Articles/342892/
 * https://github.com/kdave/btrfsmaintenance
+* http://netapp-blog.blogspot.com/2009/12/snapshot-configuration-in-netapp.html
