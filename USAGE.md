@@ -130,7 +130,7 @@ The script has a specific date format to generate the default snapshot name, but
 tool and the script allow the user to override it.
 
 ```bash
-# ../tools/snapmgr create /t2/home 
+# ./tools/snapmgr create /t2/home 
 
 PLEASE CONFIRM THE FOLLOWING ACTION
 ---
@@ -141,9 +141,9 @@ Success, got output
 ---
 Create a readonly snapshot of '/t2/home' in '/t2/home/.snapshot/20150402_02:39:31_-0400'
 ---
-# ../scripts/ssfs-take-snap.sh 
+# ./scripts/ssfs-take-snap.sh 
 usage: ../scripts/ssfs-take-snap.sh path [--label=XXX]
-[root@static tests]# ../scripts/ssfs-take-snap.sh /t2/home
+# ./scripts/ssfs-take-snap.sh /t2/home
 # 'snap':'20150402_02:39:51_-0400'
 btrfs subvolume snapshot -r /t2/home /t2/home/.snapshot/20150402_02:39:51_-0400
 # echo $?
