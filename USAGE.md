@@ -15,30 +15,30 @@ This current scripts are for linux only (but both btrfs and zfs).
 
 ### Core 
 
-core-gen-arid.sh - determine the next label for archive filesystem
-core-gen-key.sh - crypto key generation for luks
+* core-gen-arid.sh - determine the next label for archive filesystem
+* core-gen-key.sh - crypto key generation for luks
 
 ### Disk
 
-disk-add-part.sh - add a gpt partition table, and a whole disk partition on it
-disk-rem-part.sh - wipe partition table
+* disk-add-part.sh - add a gpt partition table, and a whole disk partition on it
+* disk-rem-part.sh - wipe partition table
 
 ### Partition
 
-part-add-arfs.sh - create ext4 filesystem on the partition
-part-add-luks.sh - create a luks block layer on the partition
-part-add-ssfs.sh - will allow creation of btrfs or zfs pools
+* part-add-arfs.sh - create ext4 filesystem on the partition
+* part-add-luks.sh - create a luks block layer on the partition
+* part-add-ssfs.sh - will allow creation of btrfs or zfs pools
 
 ### System
 
-sys-attach-arfs.sh - add fs to fstab and reload systemd so it can be automounted
-sys-detach-arfs.sh - unmount fs and remove from fstab and reload system to clean up
+* sys-attach-arfs.sh - add fs to fstab and reload systemd so it can be automounted
+* sys-detach-arfs.sh - unmount fs and remove from fstab and reload system to clean up
 
 ### Snapshots
 
-ssfs-delete-snap.sh - remove a snapshot
-ssfs-list-snap.sh   - list all snapshots
-ssfs-take-snap.sh   - create a snapshot
+* ssfs-delete-snap.sh - remove a snapshot
+* ssfs-list-snap.sh   - list all snapshots
+* ssfs-take-snap.sh   - create a snapshot
 
 ## Tools 
 
