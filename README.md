@@ -23,10 +23,11 @@ their data, in a better way.
 	      unified policy regarding snapshot density.
 
 ```
-       # crontab -l 
-       10,40 * * * * snapmgr create /my/vol --noprompt
-       0     4 * * * snapmgr manage /my/vol --policy="0-1dy: 1hr, 1dy-1wk: 4hr, 1wk-1yr: 4wk, 1yr+: none" --noprompt
-       #
+# crontab -l 
+10,40 * * * * snapmgr create /my/vol --noprompt
+0     4 * * * snapmgr manage /my/vol --policy="0-1dy: all, 1dy-1wk: \
+                             8hr, 4wk-1yr: 2wk, 1yr+: none" --noprompt
+#
 
 ```
 	      
