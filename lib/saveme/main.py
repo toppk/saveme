@@ -22,7 +22,7 @@ def deletesnapshot(path,label):
         print("delsnap gen issues [%s][%s][%d]"%(out,err,retcode))
         return 1
    
-def create(path,label=None):
+def create(path,label=None,promptuser=None):
     
     args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("take-snap")),path]
     
@@ -38,7 +38,7 @@ def create(path,label=None):
         print("issues with execution [%s][%s][%d]"%(out,err,retcode))
         return 1
 
-    if launch(out):
+    if launch(out,promptuser=promptuser):
         return 0
     else:
         return 2
@@ -60,7 +60,7 @@ def listsnapshot(path):
             print("%s #ignored" % s)
 
 
-def manage(path,policy=None):
+def manage(path,policy=None,promptuser=None):
     res = []
     prunemap = parsepolicy(policy)
     args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
@@ -87,7 +87,7 @@ def manage(path,policy=None):
           if len([i for i in out.split("\n") if i != "" and i[0] != "#"]) == 0:
               print("No action needed")
               return 0
-          if launch(out):
+          if launch(out,promptuser=promptuser):
                 return 0
           else:
                 return 3
