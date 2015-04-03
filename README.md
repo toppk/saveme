@@ -9,6 +9,18 @@ has been a lot of new technology developed that give new ways to solve
 old problems.  Here are tools that enable people to manage and protect
 their data, in a better way.
 
+## Compatability
+
+This tool is designed to be ported to any storage technology.
+Currently works with:
+
+* linux 
+* btrfs
+* zfs
+* ext4
+* gpt partition tables
+* dm-crypt (luks/cryptsetup) for crypto
+
 ...
 
 
@@ -33,7 +45,9 @@ their data, in a better way.
 	      
 ## Try it out
 
-Please checkout this project, and read the GETTING_STARTED and USAGE docs
+Please checkout this project, and read the GETTING_STARTED and USAGE docs.  
+
+There is more to come...
 
 ## Related Links
 
