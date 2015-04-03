@@ -15,30 +15,30 @@ This current scripts are for linux only (but both btrfs and zfs).
 
 ### Core 
 
-core-gen-arid.sh - determine the next label for archive filesystem
-core-gen-key.sh - crypto key generation for luks
+* core-gen-arid.sh - determine the next label for archive filesystem
+* core-gen-key.sh - crypto key generation for luks
 
 ### Disk
 
-disk-add-part.sh - add a gpt partition table, and a whole disk partition on it
-disk-rem-part.sh - wipe partition table
+* disk-add-part.sh - add a gpt partition table, and a whole disk partition on it
+* disk-rem-part.sh - wipe partition table
 
 ### Partition
 
-part-add-arfs.sh - create ext4 filesystem on the partition
-part-add-luks.sh - create a luks block layer on the partition
-part-add-ssfs.sh - will allow creation of btrfs or zfs pools
+* part-add-arfs.sh - create ext4 filesystem on the partition
+* part-add-luks.sh - create a luks block layer on the partition
+* part-add-ssfs.sh - will allow creation of btrfs or zfs pools
 
 ### System
 
-sys-attach-arfs.sh - add fs to fstab and reload systemd so it can be automounted
-sys-detach-arfs.sh - unmount fs and remove from fstab and reload system to clean up
+* sys-attach-arfs.sh - add fs to fstab and reload systemd so it can be automounted
+* sys-detach-arfs.sh - unmount fs and remove from fstab and reload system to clean up
 
 ### Snapshots
 
-ssfs-delete-snap.sh - remove a snapshot
-ssfs-list-snap.sh   - list all snapshots
-ssfs-take-snap.sh   - create a snapshot
+* ssfs-delete-snap.sh - remove a snapshot
+* ssfs-list-snap.sh   - list all snapshots
+* ssfs-take-snap.sh   - create a snapshot
 
 ## Tools 
 
@@ -130,7 +130,7 @@ The script has a specific date format to generate the default snapshot name, but
 tool and the script allow the user to override it.
 
 ```bash
-[root@static tests]# ../tools/snapmgr create /t2/home 
+# ../tools/snapmgr create /t2/home 
 
 PLEASE CONFIRM THE FOLLOWING ACTION
 ---
@@ -141,11 +141,12 @@ Success, got output
 ---
 Create a readonly snapshot of '/t2/home' in '/t2/home/.snapshot/20150402_02:39:31_-0400'
 ---
-[root@static tests]# ../scripts/ssfs-take-snap.sh 
+# ../scripts/ssfs-take-snap.sh 
 usage: ../scripts/ssfs-take-snap.sh path [--label=XXX]
 [root@static tests]# ../scripts/ssfs-take-snap.sh /t2/home
 # 'snap':'20150402_02:39:51_-0400'
 btrfs subvolume snapshot -r /t2/home /t2/home/.snapshot/20150402_02:39:51_-0400
-[root@static tests]# echo $?
+# echo $?
 0
+#
 ```
