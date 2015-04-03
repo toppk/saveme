@@ -22,7 +22,13 @@ their data, in a better way.
   	      Gone are the hourly/daily concepts, and replaced with a
 	      unified policy regarding snapshot density.
 
-	      Sample:  **"0-1dy: 1hr, 1dy-1wk: 4hr, 1wk-1yr: 4wk, 1yr+: none"**
+```
+       # crontab -l 
+       10,40 * * * * snapmgr create /my/vol --noprompt
+       0     4 * * * snapmgr manage /my/vol --policy="0-1dy: 1hr, 1dy-1wk: 4hr, 1wk-1yr: 4wk, 1yr+: none" --noprompt
+       #
+
+```
 	      
 ## Try it out
 
