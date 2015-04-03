@@ -47,6 +47,8 @@ Currently works with:
 
 Please checkout this project, and read the GETTING_STARTED and USAGE docs.  
 
+Requires python3.
+
 There is more to come...
 
 ## Related Links
