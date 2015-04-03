@@ -3,12 +3,11 @@
 #
 #
 
-from dateutil import parser
 import subprocess
 import time
 import os
 import re
-
+from datetime import datetime,timezone
 #
 
 def runcommand(args,stdin=None):
@@ -26,9 +25,8 @@ def getcurtime():
     return int(time.strftime("%s", time.gmtime()))
 
     
-def parsedate(datestr):
-    date = parser.parse(datestr.replace("_"," "))
-    return int(date.strftime("%s"))
+def parsedate(ts):
+    return int(datetime.strptime(ts[:-6],"%Y%m%d_%H:%M:%S").replace(tzinfo=timezone.utc).timestamp()) - (int(ts[-2:])*60 + 60 * 60 * int(ts[-4:-2]) * int(ts[-5:-4]+'1'))
 
 def match(string,pattern):
     return re.search("^%s$"%pattern,string) is not None
