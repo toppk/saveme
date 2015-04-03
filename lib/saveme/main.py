@@ -84,9 +84,12 @@ def manage(path,policy=None):
         #
         retcode, out, err = runcommand(args,stdin="\n".join(res)+"\n")
         if retcode == 0:
-            if launch(out):
+          if len([i for i in out.split("\n") if i != "" and i[0] != "#"]) == 0:
+              print("No action needed")
+              return 0
+          if launch(out):
                 return 0
-            else:
+          else:
                 return 3
         else:
             print("yoyo[%s][%s][%d]"%(out,err,retcode))
@@ -103,7 +106,7 @@ def culltimeline(datearr,policy,now):
     dates.sort()
     for snapdate in dates:
         delta = now - snapdate[0]
-        print("need to check %s vs %s is delt=%s" % (snapdate,now,delta))
+        # print("need to check %s vs %s is delt=%s" % (snapdate,now,delta))
         for ra in prunemap:
             if delta >= ra[0] and ( (delta <= ra[1]) or ( ra[1] is None) ):
                 keep = False

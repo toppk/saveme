@@ -5,13 +5,13 @@
 from .external import runcommand
 
 def launch(cmds):
-    print("\nPLEASE CONFIRM THE FOLLOWING ACTION\n---\n%s---"%cmds)
+    print("\nPLEASE CONFIRM THE FOLLOWING ACTION\n---\n%s\n---"%"\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
     response = input("Do you wish to launch? y/n ")
     if response == "y":
         args = ["/bin/bash","-e","-c",cmds]
         retcode, out, err = runcommand(args)
         if retcode == 0:
-            print("Success, got output\n---\n%s---"%out)
+            print("Success, got output\n---\n%s---"% out)
         else:
             print("Error: out,err,exit [%s][%s][%d]"%(out,err,retcode))
             return False

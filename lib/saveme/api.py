@@ -11,7 +11,7 @@ class CommandLine:
     i = 123
 
     def usage(self,proc):
-        print("usage: %s\n\nCOMMANDS\n manage <path> [--policy=XXX]\n   snap <path>\n delete <path> <label>\n create <path> [--label=XXX]\n   list <path>\n\nOPTIONS\n policy = [0-9]*[hr,dy,wk,yr]\n label = use a manual id" % proc)
+        print("usage: %s\n\nCOMMANDS\n manage <path> [--policy=XXX]\n delete <path> <label>\n create <path> [--label=XXX]\n   list <path>\n\nOPTIONS\n policy = [0-9]*[hr,dy,wk,yr]\n label = use a manual id" % proc)
 
     def go(self,args):
         if len(args) == 1:
