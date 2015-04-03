@@ -13,7 +13,6 @@
 
 PLEASE CONFIRM THE FOLLOWING ACTION
 ---
-# 'snap':'20150402_02:39:31_-0400'
 btrfs subvolume snapshot -r /t2/home /t2/home/.snapshot/20150402_02:39:31_-0400
 ---
 Do you wish to launch? y/n y

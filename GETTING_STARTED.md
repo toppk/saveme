@@ -98,6 +98,7 @@ just doing some extra checks to make sure it is as safe to run as can
 be.
 
 ------------------------------------
+
 ```bash
 # ./scripts/disk-add-part.sh sdj
 sdj has partitions or is not a disk
@@ -136,6 +137,7 @@ Information: You may need to update /etc/fstab.
 
 Now run the capture output (this could have been a cut-n-paste), but it is
 less dangerous then pasting into root shells :).
+
 ------------------------------------
 
 ```bash
@@ -155,6 +157,7 @@ was successfully created.
 
 
 ------------------------------------
+
 ```bash
 # ./tools/snapmgr 
 usage: ./tools/snapmgr
@@ -175,6 +178,7 @@ OPTIONS
 Passing no arguments where some are required will display help.
 
 ------------------------------------
+
 ```bash
 # ./tools/snapmgr list /t2/home
 20150329_21:56:37_-0400
@@ -186,6 +190,7 @@ Passing no arguments where some are required will display help.
 Here we are listing the snapshots.
 
 ------------------------------------
+
 ```bash
 # ./tools/snapmgr create /t2/home
 
@@ -206,6 +211,7 @@ us to confirm before executing the suggested commands.  There is a prompt waitin
 input where it says "Do you wish to launch? y/n".
 
 ------------------------------------
+
 ```bash
 # ./tools/snapmgr list /t2/home
 20150329_21:56:37_-0400
@@ -218,6 +224,7 @@ input where it says "Do you wish to launch? y/n".
 Here the created snapshot appears.
 
 ------------------------------------
+
 ```bash
 # ./tools/snapmgr delete /t2/home 20150402_02:39:31_-0400
 
@@ -236,6 +243,7 @@ Delete subvolume (no-commit): '/t2/home/.snapshot/20150402_02:39:31_-0400'
 Removing a snapshot will prompt again before executing the commands.
 
 ------------------------------------
+
 ```bash
 # ./tools/snapmgr manage /t2/home --policy="0-1yr: 2dy"
 Managing snapshots for path="/t2/home" with policy="0-1yr: 2dy" 
@@ -255,7 +263,9 @@ Delete subvolume (no-commit): '/t2/home/.snapshot/20150402_20:39:11_-0400'
 Here manage is evaluating all snapshots according to the policy, and since it says you need
 two days between snapshots for all snapshots from now to a year old, there is one snapshot
 to be removed
+
 ------------------------------------
+
 ```bash
 # ./tools/snapmgr list /t2/home
 20150329_21:56:37_-0400

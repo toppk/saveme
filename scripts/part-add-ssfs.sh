@@ -48,17 +48,19 @@ if [ "$pass" == "" ]; then
     exit 6
 fi
 
+## not ready for prime time
 exit 3
 
+
 # zfs
-zpool create  t3 mirror /dev/mapper/hp35.cfs /dev/mapper/hp34.cfs
-zfs create t3/home
-zfs set compression=lz4 t3/home
-zfs snapshot t3/home@$( date '+%Y%m%d_%H:%M:%S_%z' )
-zfs set snapdir=visible t3/home
+echo zpool create  t3 mirror /dev/mapper/hp35.cfs /dev/mapper/hp34.cfs
+echo zfs create t3/home
+echo zfs set compression=lz4 t3/home
+echo zfs snapshot t3/home@$( date '+%Y%m%d_%H:%M:%S_%z' )
+echo zfs set snapdir=visible t3/home
 # btrfs
-mkfs.btrfs -L t2 -m raid1 -d raid1 /dev/mapper/hp30.cfs /dev/mapper/hp31.cfs
-mount  LABEL=t2   /t2
-btrfs subvol  create /t2/home
+echo mkfs.btrfs -L t2 -m raid1 -d raid1 /dev/mapper/hp30.cfs /dev/mapper/hp31.cfs
+echo mount  LABEL=t2   /t2
+echo btrfs subvol  create /t2/home
 
 
