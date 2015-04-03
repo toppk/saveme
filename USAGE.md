@@ -100,7 +100,7 @@ Then it's weekly till the end of the quarter:
 
 Then lastly every month till the end of the year:
 
-   90dy-1yr: 4wk
+    90dy-1yr: 4wk
 
 Join with "," to make the full policy:
 
