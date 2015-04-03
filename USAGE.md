@@ -96,7 +96,7 @@ After that, we only want to keep one every four hours, for the rest of the week:
 
 Then it's weekly till the end of the quarter:
  
-    1wk-90dy: 7dy
+    1wk-90dy: 1wk
 
 Then lastly every month till the end of the year:
 
@@ -104,12 +104,13 @@ Then lastly every month till the end of the year:
 
 Join with "," to make the full policy:
 
-      0 - 2dy : all, 2dy - 1wk : 4hr, 1wk - 90dy : 7dy, 90dy - 1y: 4wk, 1y+ : none
+      0 - 2dy : all, 2dy - 1wk : 4hr, 1wk - 90dy : 1wk, 90dy - 1y: 4wk, 1y+ : none
 
 There is this infinite range.  Any time period that isn't captured will be kept, 
 hence the "+" support to go back to the epoch :)
 
-     
+**Note** There is no "mo" for month.  Use wk for week or dy for day.
+
 #### noprompt
 
 This allows the python wrapper to take action that the script suggests.
