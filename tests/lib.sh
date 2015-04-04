@@ -8,11 +8,10 @@ function runme()
 	sleep=10
 	shift
     fi
+
     id=$1
     shift
-    comm=$*
-    echo "# STARTING: id=$id comm=[$comm]"
-    $comm > $logdir/$id.out 2> $logdir/$id.err
+    launch $id $*
     err=$?
     if [ $err -ne 0 ]; then
 	echo "#  FAILURE: error $err during starting $id"
@@ -31,6 +30,24 @@ function runme()
 	return 2
     fi
     . <( cat $logdir/$id.out  | sed -n  "/^#/s/.*'\(.*\)':'\(.*\)'$/\1=\2/p" )
+}
+
+function launch()
+{
+    id=$1
+    shift
+    comm=$*
+    echo "# STARTING: id=$id comm=[$comm]"
+    $comm > $logdir/$id.out 2> $logdir/$id.err
+    err=$?
+    if [ $err -ne 0 ]; then
+	echo "#  FAILURE: error $err during starting $id"
+	echo "#  out=[$( cat $logdir/$id.out )] err=[$( cat $logdir/$id.err)]"
+	return 1
+    else
+	#echo "#  SUCCESS: out=[$( cat $logdir/$id.out )]"
+	return 0
+    fi
 }
 
 
