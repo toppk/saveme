@@ -21,7 +21,16 @@ testname=${testname:-snapshots}
 path=$1
 
 # == STEP 1 - help  ==
-runme "snapshots_help" ../tools/snapmgr && exit
+output=$( ../tools/snapmgr list $path )
+err=$?
+if [ $err -ne 0 ]; then
+    echo snapshot list failed $err [[ $output ]]
+    exit 2
+fi
+if [ ! -z "$output" ] ; then
+     echo you have snapshots [[ $output ]]
+     exit 1
+fi
 echo "# this was supposed to fail"
 # == STEP 2 - create  ==
 launch "snapshots_create" ../tools/snapmgr create $path --noprompt || exit

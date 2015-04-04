@@ -56,13 +56,17 @@ def listsnapshot(path):
     for s in snap:
         if match(s,_cfg_snapshot_pattern()):
             print("%s" % s)
-        else:
+        elif s != "":
             print("%s #ignored" % s)
 
 
 def manage(path,policy=None,promptuser=None):
     res = []
-    prunemap = parsepolicy(policy)
+    try:
+        prunemap = parsepolicy(policy)
+    except ValueError as e:
+        print("issues with policy [%s]"%(e))
+        return 3
     args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
 
     #
@@ -106,9 +110,10 @@ def culltimeline(datearr,policy,now):
     dates.sort()
     for snapdate in dates:
         delta = now - snapdate[0]
-        # print("need to check %s vs %s is delt=%s" % (snapdate,now,delta))
+        #print("need to check %s vs %s is delt=%s" % (snapdate,now,delta))
         for ra in prunemap:
-            if delta >= ra[0] and ( (delta <= ra[1]) or ( ra[1] is None) ):
+            #print(" eval  ra= %s, %s, %s, %s " % (ra) )
+            if delta >= ra[0] and ( ( ra[1] is None) or (delta <= ra[1])  ):
                 keep = False
                 #print("old=%s %s"%(old,ra[2]))
                 if ra[2] == "none":

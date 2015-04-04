@@ -22,7 +22,7 @@ def runcommand(args,stdin=None):
     return retcode,out.decode("utf-8"),err.decode("utf-8")
         
 def getcurtime():
-    return int(time.strftime("%s", time.gmtime()))
+    return int(time.time())
 
     
 def parsedate(ts):
