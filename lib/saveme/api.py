@@ -3,7 +3,7 @@
 #
 #
 
-from .main import manage,create,listsnapshot,deletesnapshot
+from .snapshots import manage,create,listsnapshot,deletesnapshot
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
 
 class CommandLine:
@@ -14,6 +14,8 @@ class CommandLine:
         print("usage: %s\n\nCOMMANDS\n manage <path> [--policy=XXX] [--noprompt]\n delete <path> <label>\n create <path> [--label=XXX] [--noprompt]\n   list <path>\n\nOPTIONS\n policy = [0-9]*[hr,dy,wk,yr]\n label = use a manual id\n noprompt = will take action, no pause for confirmation" % proc)
 
     def go(self,args):
+
+        status = 12
         if len(args) == 1:
             self.usage(args[0])
         elif args[1] == "manage":
@@ -62,7 +64,7 @@ class CommandLine:
                 else:
                     print ("unknown option = %s" % options)
                     return 3
-            create(pool,label=label,promptuser=promptuser)
+            status = create(pool,label=label,promptuser=promptuser)
         elif args[1] == "delete":
             if len(args) < 4:
                 print("delete: you must specify <path> <label>")
@@ -76,7 +78,7 @@ class CommandLine:
         else:
             print("not a valid action")
             return 2
-        return 12
+        return status
 
     def help(self):
         print('i am suppossed to go, check usage')

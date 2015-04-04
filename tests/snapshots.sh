@@ -18,7 +18,13 @@ fi
 testname=${testname:-snapshots}
 . lib.sh
 
+path=$1
 
-# == STEP 1 -  ==
-runme "snapshots_manage" ../tools/snapmgr || exit
+# == STEP 1 - help  ==
+runme "snapshots_help" ../tools/snapmgr && exit
+echo "# this was supposed to fail"
+# == STEP 2 - create  ==
+launch "snapshots_create" ../tools/snapmgr create $path --noprompt || exit
+echo "# Success"
+
 
