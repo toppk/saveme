@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# snapshot manage create tests
+# snapshot cleanup script
+# WARNING: this will delete all snapshots
 
 export PATH=/bin:/sbin
 PS4='+\D{%s} [$?] # '
@@ -27,13 +28,10 @@ if [ $err -ne 0 ]; then
     echo snapshot list failed $err [[ $output ]]
     exit 2
 fi
-if [ ! -z "$output" ] ; then
-     echo you have snapshots [[ $output ]]
+if [ -z "$output" ] ; then
+     echo you do not have snapshots [[ $output ]]
      exit 1
 fi
-echo "# this was supposed to fail"
-# == STEP 2 - create  ==
-launch "snapshots_create" ../tools/snapmgr create $path --noprompt || exit
-echo "# Success"
-
+# == STEP 2 - delete  ==
+../tools/snapmgr manage $path --policy="0+: none"
 

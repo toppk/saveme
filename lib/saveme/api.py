@@ -48,7 +48,7 @@ class CommandLine:
             for options in args[3:]:
                 print ("unknown option = %s" % options)
                 return 3
-            listsnapshot(pool)
+            status = listsnapshot(pool)
         elif args[1] == "create":
             if len(args) == 2:
                 print("create: you must specify <path>")

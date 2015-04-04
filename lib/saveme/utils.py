@@ -43,6 +43,8 @@ def parsepolicy(policystr):
             start=parsehdate(ra[:-1])
         else:
             print("this is bad")
+        if end is not None and start > end:
+            raise ValueError('cannot end before you start [%s]'% ra)
         rules += [(start,end,sc,rule)]
 
     # need to sort and quality check the rules (and fill any gaps)
