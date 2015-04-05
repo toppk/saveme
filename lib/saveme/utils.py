@@ -6,14 +6,13 @@ from .external import runcommand
 
 def launch(cmds, promptuser=True):
     if promptuser:
-        print("""
-PLEASE CONFIRM THE FOLLOWING ACTION
+        print("""SUGGESTED ACTION
 ---
 %s
 ---""" % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
-        response = input("Do you wish to launch? y/n ")
+        response = input("==> Do you wish to launch? y/n ")
     else:
-        print("""AUTORUNNING THE FOLLOWING ACTION
+        print("""LAUNCHING THE FOLLOWING ACTION
 ---
 %s
 ---""" % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
@@ -22,9 +21,9 @@ PLEASE CONFIRM THE FOLLOWING ACTION
         args = ["/bin/bash", "-e", "-c", cmds]
         retcode, out, err = runcommand(args)
         if retcode == 0:
-            print("Success, got output\n---\n%s---"% out)
+            print("SUCCESS -  Output is below:\n---\n%s---"% out)
         else:
-            print("Error: out,err,exit [%s][%s][%d]"%(out, err, retcode))
+            print("ERROR - out,err,exit [%s][%s][%d]"%(out, err, retcode))
             return False
     return True
 
