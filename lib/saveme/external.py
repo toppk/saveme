@@ -33,8 +33,8 @@ def parsedate(timespec):
     sign = int(timespec[-5:-4]+'1')
     hour = int(timespec[-4:-2])
     minute = int(timespec[-2:])
-    utcdate = datetime.strptime( datestr, pattern).replace(tzinfo=timezone.utc)
-    utcoffset = sign * ( hour + minute )
+    utcdate = datetime.strptime(datestr, pattern).replace(tzinfo=timezone.utc)
+    utcoffset = sign * (hour + minute)
     return 1e6 * (int(utcdate.timestamp()) - utcoffset)
 
 def match(string, pattern):
