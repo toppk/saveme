@@ -66,13 +66,15 @@ def parsehdate(timestr):
         # I said no month
         print("no mo(nth) support")
     elif timestr.endswith("wk"):
-        time = int(timestr[:-2]) * 7 * 24 * 60 * 60
+        time = int(timestr[:-2]) * 7 * 24 * 60 * 60 * 1e6
     elif timestr.endswith("dy"):
-        time = int(timestr[:-2]) * 24 * 60 * 60
+        time = int(timestr[:-2]) * 24 * 60 * 60 * 1e6
     elif timestr.endswith("hr"):
-        time = int(timestr[:-2]) * 60 * 60
+        time = int(timestr[:-2]) * 60 * 60 * 1e6
     elif timestr.endswith("mi"):
-        time = int(timestr[:-2]) * 60
+        time = int(timestr[:-2]) * 60 * 1e6
     elif timestr.endswith("se"):
-        time = int(timestr[:-2])
+        time = int(timestr[:-2]) * 1e6
+    else:
+        raise ValueError('bad time spec %s'% timestr)
     return time

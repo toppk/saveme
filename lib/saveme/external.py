@@ -25,12 +25,17 @@ def runcommand(args, stdin=None):
     return retcode, out.decode("utf-8"), err.decode("utf-8")
 
 def getcurtime():
-    return int(time.time())
+    return int(time.time() * 1e6)
 
 def parsedate(timespec):
     pattern = "%Y%m%d_%H:%M:%S"
-    return int(datetime.strptime(timespec[:-6], pattern).replace(tzinfo=timezone.utc).timestamp()) \
-        - (int(timespec[-2:])*60 + 60 * 60 * int(timespec[-4:-2]) * int(timespec[-5:-4]+'1'))
+    datestr = timespec[:-6]
+    sign = int(timespec[-5:-4]+'1')
+    hour = int(timespec[-4:-2])
+    minute = int(timespec[-2:])
+    utcdate = datetime.strptime( datestr, pattern).replace(tzinfo=timezone.utc)
+    utcoffset = sign * ( hour + minute )
+    return 1e6 * (int(utcdate.timestamp()) - utcoffset)
 
 def match(string, pattern):
     return re.search("^%s$"%pattern, string) is not None
