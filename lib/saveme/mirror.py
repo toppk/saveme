@@ -115,4 +115,3 @@ def index(path):
 #indexpath2("/home")
 #indexpath2("/home/media/Shorts")
 #[root@static tests]# more $( python3 -c "import os;os.sys.stdout.buffer.write(b'/home/toppk/crap/phonegames/s40game/Gameloft\xbe\xad\xb5\xe4\xd3\xce\xcf\xb7\xc8\xab\xbc\xaf/XIII/XIII.jad')" )
-#../tools/mirroradm missing-chksum | while read volid fileid path; do cs=$(../scripts/file-generate-chksum.sh $path);echo == $volid $fileid == $cs;  ../tools/mirroradm provide-chksum $volid $fileid $cs ;done
