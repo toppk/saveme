@@ -11,7 +11,17 @@ class CommandLine:
         pass
 
     def usage(self, proc):
-        print("usage: %s\n\nCOMMANDS\n manage <path> [--policy=XXX] [--noprompt]\n delete <path> <label>\n create <path> [--label=XXX] [--noprompt]\n   list <path>\n\nOPTIONS\n policy = [0-9]*[hr,dy,wk,yr]\n label = use a manual id\n noprompt = will take action, no pause for confirmation" % proc)
+        print("""usage: %s
+
+COMMANDS
+ manage <path> [--policy=XXX] [--noprompt]
+ delete <path> <label>\n create <path> [--label=XXX] [--noprompt]
+   list <path>
+
+OPTIONS
+ policy = [0-9]*[hr,dy,wk,yr]
+ label = use a manual id
+ noprompt = will take action, no pause for confirmation""" % proc)
 
     def go(self, args):
         status = 12
@@ -36,7 +46,8 @@ class CommandLine:
                     else:
                         print("unknown option = %s" % options)
                         return 3
-                print("Managing snapshots for path=\"%s\" with policy=\"%s\" " % (pool, policy))
+                print("Managing snapshots for path=\"%s\" with policy=\"%s\" "
+                      % (pool, policy))
                 status = manage(pool, policy, promptuser=promptuser)
         elif args[1] == "list":
             if len(args) == 2:
