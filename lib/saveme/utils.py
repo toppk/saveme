@@ -6,10 +6,17 @@ from .external import runcommand
 
 def launch(cmds, promptuser=True):
     if promptuser:
-        print("\nPLEASE CONFIRM THE FOLLOWING ACTION\n---\n%s\n---"%"\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
+        print("""
+PLEASE CONFIRM THE FOLLOWING ACTION
+---
+%s
+---""" % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
         response = input("Do you wish to launch? y/n ")
     else:
-        print("\nAUTORUNNING THE FOLLOWING ACTION\n---\n%s\n---"%"\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
+        print("""AUTORUNNING THE FOLLOWING ACTION
+---
+%s
+---""" % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
 
     if not promptuser or response == "y":
         args = ["/bin/bash", "-e", "-c", cmds]
@@ -26,23 +33,23 @@ def parsepolicy(policystr):
     rules = []
     for rule in policystr.split(","):
         rule = rule.strip()
-        (ra, sc) = rule.split(":")
-        sc = sc.strip()
-        ra = ra.strip()
+        (rangespec, sparseness) = rule.split(":")
+        sparseness = sparseness.strip()
+        rangespec = rangespec.strip()
         start = None
         end = None
-        if sc not in ("all", "none"):
-            sc = parsehdate(sc)
-        if ra.find("-") > 0:
-            (start, end) = ra.split("-")
+        if sparseness not in ("all", "none"):
+            sparseness = parsehdate(sparseness)
+        if rangespec.find("-") > 0:
+            (start, end) = rangespec.split("-")
             (start, end) = (parsehdate(start), parsehdate(end))
-        elif ra.endswith("+"):
-            start = parsehdate(ra[:-1])
+        elif rangespec.endswith("+"):
+            start = parsehdate(rangespec[:-1])
         else:
             print("this is bad")
         if end is not None and start > end:
-            raise ValueError('cannot end before you start [%s]'% ra)
-        rules += [(start, end, sc, rule)]
+            raise ValueError('cannot end before you start [%s]'% rangespec)
+        rules += [(start, end, sparseness, rule)]
 
     # need to sort and quality check the rules (and fill any gaps)
     return rules

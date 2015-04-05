@@ -10,7 +10,8 @@ from .cfg import getsnapshotpattern as _cfg_snapshot_pattern
 from .schema import findscript
 
 def deletesnapshot(path, label):
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(), findscript("delete-snap")), path, label]
+    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
+                                  findscript("delete-snap")), path, label]
 
     retcode, out, err = runcommand(args)
     if retcode == 0:
@@ -23,7 +24,8 @@ def deletesnapshot(path, label):
         return 1
 
 def create(path, label=None, promptuser=None):
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(), findscript("take-snap")), path]
+    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
+                                  findscript("take-snap")), path]
 
     if label is not None:
         args += ["--label=%s" % label]
@@ -43,45 +45,48 @@ def create(path, label=None, promptuser=None):
         return 2
 
 def listsnapshot(path):
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(), findscript("list-snap")), path]
+    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
+                                  findscript("list-snap")), path]
 
     #
     retcode, out, err = runcommand(args)
     if retcode != 0:
         print("issues with listsnap [%s][%s][%d]"%(out, err, retcode))
         return 10
-    snap = out.strip().split('\n')
-    for s in snap:
-        if match(s, _cfg_snapshot_pattern()):
-            print("%s" % s)
-        elif s != "":
-            print("%s #ignored" % s)
+    snapshots = out.strip().split('\n')
+    for snap in snapshots:
+        if match(snap, _cfg_snapshot_pattern()):
+            print("%s" % snap)
+        elif snap != "":
+            print("%s #ignored" % snap)
 
 
 def manage(path, policy=None, promptuser=None):
     res = []
     try:
         parsepolicy(policy)
-    except ValueError as e:
-        print("issues with policy [%s]"%(e))
+    except ValueError as err:
+        print("issues with policy [%s]"%(err))
         return 3
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(), findscript("list-snap")), path]
+    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
+                                  findscript("list-snap")), path]
 
     #
     retcode, out, err = runcommand(args)
     if retcode != 0:
         print("issues with listsnap [%s][%s][%d]"%(out, err, retcode))
         return 10
-    snap = out.strip().split('\n')
+    snapshots = out.strip().split('\n')
     tsnap = []
-    for s in snap:
-        if match(s, _cfg_snapshot_pattern()):
-            tsnap += [s]
+    for snap in snapshots:
+        if match(snap, _cfg_snapshot_pattern()):
+            tsnap += [snap]
         else:
-            print(" (skipping snapshot: %s - does not match expected pattern)" % s)
+            print(" (skipping: %s - does not match expected pattern)" % snap)
     res = culltimeline(tsnap, policy, getcurtime())
     if res is not None or len(res) > 0:
-        args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(), findscript("delete-snap")), path, "-"]
+        args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
+                                      findscript("delete-snap")), path, "-"]
 
         #
         retcode, out, err = runcommand(args, stdin="\n".join(res)+"\n")
@@ -108,23 +113,23 @@ def culltimeline(datearr, policy, now):
     for snapdate in dates:
         delta = now - snapdate[0]
         #print("need to check %s vs %s is delt=%s" % (snapdate,now,delta))
-        for ra in prunemap:
-            #print(" eval  ra= %s, %s, %s, %s " % (ra) )
-            if delta >= ra[0] and ((ra[1] is None) or (delta <= ra[1])):
+        for rangespec in prunemap:
+            #print(" eval  ra= %s, %s, %s, %s " % (rangespec) )
+            if delta >= rangespec[0] and ((rangespec[1] is None) or (delta <= rangespec[1])):
                 keep = False
-                #print("old=%s %s"%(old,ra[2]))
-                if ra[2] == "none":
+                #print("old=%s %s"%(old,rangespec[2]))
+                if rangespec[2] == "none":
                     pass
-                elif ra[2] == "all":
+                elif rangespec[2] == "all":
                     keep = True
                 elif old is None:
                     keep = True
-                elif snapdate[0]-old > ra[2]:
+                elif snapdate[0]-old > rangespec[2]:
                     keep = True
                 old = snapdate[0]
 
                 if keep is False:
-                    # print("going to kill %s cuz %s [%s]" % (snapdate,keep,ra[3]))
+                    # print("kill %s cuz %s [%s]" % (snapdate,keep,rangespec[3]))
                     res += [snapdate[1]]
     res.sort(reverse=True)
     return res
