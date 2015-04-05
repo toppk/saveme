@@ -81,3 +81,8 @@ There is more to come...
 * https://lwn.net/Articles/342892/
 * https://github.com/kdave/btrfsmaintenance
 * http://netapp-blog.blogspot.com/2009/12/snapshot-configuration-in-netapp.html
+* http://www.la-samhna.de/samhain/s_faq.html
+* http://aide.sourceforge.net/
+* http://www.ossec.net/
+* https://www.tarsnap.com/about.html
+* http://www.la-samhna.de/library/scanners.html
