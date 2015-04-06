@@ -327,3 +327,8 @@ check whatever is common
 * users control - users should be able to control the things they should need to, in the simplest
 way.  The user should be able to take their ideas and easily translate that to configuration.
 
+## Current standards and conventions
+
+* time specification - all time is internally represented in integer epoch microseconds
+
+* checksums - sha512+size
