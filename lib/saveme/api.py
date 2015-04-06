@@ -3,7 +3,8 @@
 #
 #
 
-from .mirror import index, createdb, missingsum, addsum
+from .mirror import index, createdb, missingsum, addsum, \
+    listvolumes, checksumvolume
 from .snapshots import manage, create, listsnapshot, deletesnapshot
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
 
@@ -17,10 +18,11 @@ class CommandLine:
             print("""usage: %s
 
 COMMANDS
-       checksum <path> 
+       checksum <volumeid>
           index <path>
  missing-chksum
  provide-chksum  <volumeid> <fileid> <checksum>
+    scan-chksum  <volumeid> <fileid> <checksum>
            list
         resetdb""" % proc)
 
@@ -34,6 +36,15 @@ COMMANDS
                 addsum(int(args[2]), args[3], args[4])
         elif args[1] == "missing-chksum":
             missingsum()
+        elif args[1] == "checksum":
+            if len(args) != 3:
+                print("provide: you must specify <volumeid>")
+                status = 1
+            else:
+                volumeid = int(args[2])
+                status = checksumvolume(volumeid)
+        elif args[1] == "list":
+            listvolumes()
         elif args[1] == "resetdb":
             createdb()
         elif args[1] == "index":

@@ -3,7 +3,9 @@
 #
 #
 #from .cfg import getdbdir as _cfg_database_directory
-from .external import getcurtime
+from .cfg import getscriptsdir as _cfg_scripts_directory
+from .schema import findscript
+from .external import getcurtime, runcommand
 import queue
 import os
 from stat import S_ISDIR
@@ -11,7 +13,7 @@ import sqlite3
 
 #
 
-def indexpath2(path):
+def indexpath(path):
     for file in indexer(path):
         try:
             print("%s/%s" % (path, file[0])) # S_ISDIR(res.st_mode),fp))
@@ -42,46 +44,145 @@ def createdb():
         cur.execute('''drop table files''')
     except sqlite3.OperationalError:
         pass
-    cur.execute('''create table files
-    (volumeid integer, fileid text, path text, st_uid integer, st_gid integer,
-    st_atime integer, st_ctime integer, st_mtime integer,
-    st_blksize integer, st_blocks integer, st_size integer,
-    st_rdev integer, st_dev integer, st_ino integer,
-    st_mode integer, st_nlink integer)''')
+    cur.execute('''
+create table files (
+    volumeid integer,
+    fileid text,
+    path text, 
+    st_uid integer, 
+    st_gid integer,
+    st_atime integer, 
+    st_ctime integer, 
+    st_mtime integer,
+    st_blksize integer, 
+    st_blocks integer, 
+    st_size integer,
+    st_rdev integer, 
+    st_dev integer, 
+    st_ino integer,
+    st_mode integer, 
+    st_nlink integer
+)''')
 
     try:
         cur.execute('''drop table checksums''')
     except sqlite3.OperationalError:
         pass
-    cur.execute('''create table checksums
-    (chksum text, fileid text, volumeid text)''')
+    cur.execute('''
+create table checksums (
+    chksum text, 
+    fileid text, 
+    volumeid integer
+)''')
+    try:
+        cur.execute('''drop table archives''')
+    except sqlite3.OperationalError:
+        pass
+    cur.execute('''
+create table archives (
+    name text, 
+    description text,
+    status text
+)''')
+    try:
+        cur.execute('''drop table mirrors''')
+    except sqlite3.OperationalError:
+        pass
+    cur.execute('''
+create table mirrors (
+    chksum text, 
+    blobkey text,
+    blobchksum text, 
+    archiveid integer
+)''')
     try:
         cur.execute('''drop table volumes''')
     except sqlite3.OperationalError:
         pass
-    cur.execute('''create table volumes
-    (path text, status text, created integer)''')
+    cur.execute('''
+create table volumes (
+    path text, 
+    status text,
+    created integer
+)''')
     conn.commit()
     cur.close()
 
 def addsum(volumeid, fileid, chksum):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
+    print("yoyoyo %d / %s / %s |"%(volumeid, fileid, chksum))
     cur.execute('''insert into checksums values (?,?,?)''',
-                (chksum, fileid, int(volumeid)))
+                (chksum, fileid, volumeid))
     conn.commit()
     cur.close()
 
-def missingsum():
+def checksumvolume(volumeid):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
-    cur.execute('''select files.path, files.fileid, files.volumeid, volumes.path from files
+    cur.execute('''select rowid, path, status, created from volumes where rowid=%d'''%volumeid)
+    volumeid, path, status, created = cur.fetchone()
+    if status != "indexed":
+        print("will not work on this status")
+        return 2
+    
+    print('%d %s %s/%s' % (volumeid, status, created, path))
+    files = []
+    files = findsum(volumeid, withsums=False)
+    for file in files:
+        if file[0] != volumeid:
+            print("this is odd %s" % (str(file)))
+        chksum = generatechecksum("%s/%s"%(file[2], file[3].decode('utf-8')))
+        if chksum is None:
+            print("errir in chksum")
+        else:
+            addsum(file[0], file[1], chksum)
+    cur.execute('''update volumes set status='checksumed' where rowid=%d'''%(volumeid))
+    conn.commit()
+    cur.close()
+
+def generatechecksum(path):
+    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
+                                  findscript("generate-checksum")), path]
+
+    #
+    retcode, out, err = runcommand(args)
+    if retcode != 0:
+        print("issues with genchk [%s][%s][%d]"%(out, err, retcode))
+        return 
+    return out.strip()
+
+def listvolumes():
+    conn = sqlite3.connect('example.db')
+    cur = conn.cursor()
+    cur.execute('''select rowid, path, status, created from volumes''')
+    for row in cur.fetchall():
+        rowid, path, status, created = row
+        print('%d %s %s %s' % (rowid, status, created, path))
+    cur.close()
+
+def missingsum(volumeid=None):
+    files = findsum(volumeid, withsums=False)
+    for file in files:
+        print('%d %s %s/%s' % (file[0], file[1], file[2], file[3].decode('utf-8')))
+                
+def findsum(volumeid=None, withsums=True):
+    conn = sqlite3.connect('example.db')
+    cur = conn.cursor()
+    query = '''select files.volumeid, files.fileid, volumes.path, files.path from files
     left join checksums on files.fileid = checksums.fileid and files.volumeid=checksums.volumeid
     join volumes on files.volumeid=volumes.rowid
-    where files.st_mode&32768 and checksums.chksum is null''')
+    where files.st_mode&32768'''
+    if not withsums:
+        query += ' and checksums.chksum is null'
+    if volumeid is not None:
+        query += " and volumes.rowid=%d" % volumeid
+    cur.execute(query)
+    files = []
     for row in cur.fetchall():
-        filepath, fileid, volumeid, volpath = row
-        print('%d %s %s/%s' % (volumeid, fileid, volpath, filepath.decode('utf-8')))
+        files += [row]
+    cur.close()
+    return files
 
 def index(path):
     if not os.path.isdir(path):
