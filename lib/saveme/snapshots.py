@@ -99,7 +99,7 @@ def manage(path, policy=None, promptuser=None):
             else:
                 return 3
         else:
-            print("yoyo[%s][%s][%d]"%(out, err, retcode))
+            print("error running cmd [%s][%s][%d]"%(out, err, retcode))
     return 0
 
 def culltimeline(datearr, policy, now):
