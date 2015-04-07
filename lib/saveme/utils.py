@@ -47,7 +47,7 @@ def parsepolicy(policystr):
         else:
             print("this is bad")
         if end is not None and start > end:
-            raise ValueError('cannot end before you start [%s]'% rangespec)
+            raise ValueError('cannot end before you start %s - %s[%s]'%(start,end, rangespec))
         rules += [(start, end, sparseness, rule)]
 
     # need to sort and quality check the rules (and fill any gaps)
@@ -60,20 +60,20 @@ def parsehdate(timestr):
     if timestr == "0":
         time = 0
     elif timestr.endswith("yr"):
-        time = int(timestr[:-2]) * 365 * 24 * 60 * 60
+        time = int(int(timestr[:-2]) * 365 * 24 * 60 * 60 * 1e6)
     elif timestr.endswith("mo"):
         # I said no month
         print("no mo(nth) support")
     elif timestr.endswith("wk"):
-        time = int(timestr[:-2]) * 7 * 24 * 60 * 60 * 1e6
+        time = int(int(timestr[:-2]) * 7 * 24 * 60 * 60 * 1e6)
     elif timestr.endswith("dy"):
-        time = int(timestr[:-2]) * 24 * 60 * 60 * 1e6
+        time = int(int(timestr[:-2]) * 24 * 60 * 60 * 1e6)
     elif timestr.endswith("hr"):
-        time = int(timestr[:-2]) * 60 * 60 * 1e6
+        time = int(int(timestr[:-2]) * 60 * 60 * 1e6)
     elif timestr.endswith("mi"):
-        time = int(timestr[:-2]) * 60 * 1e6
+        time = int(int(timestr[:-2]) * 60 * 1e6)
     elif timestr.endswith("se"):
-        time = int(timestr[:-2]) * 1e6
+        time = int(int(timestr[:-2]) * 1e6)
     else:
         raise ValueError('bad time spec %s'% timestr)
     return time

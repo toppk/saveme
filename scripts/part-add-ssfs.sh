@@ -56,7 +56,7 @@ exit 3
 echo zpool create  t3 mirror /dev/mapper/hp35.cfs /dev/mapper/hp34.cfs
 echo zfs create t3/home
 echo zfs set compression=lz4 t3/home
-echo zfs snapshot t3/home@$( date '+%Y%m%d_%H:%M:%S_%z' )
+echo zfs snapshot t3/home@$( date '+%Y-%m-%dT%H:%M:%S%z' )
 echo zfs set snapdir=visible t3/home
 # btrfs
 echo mkfs.btrfs -L t2 -m raid1 -d raid1 /dev/mapper/hp30.cfs /dev/mapper/hp31.cfs
