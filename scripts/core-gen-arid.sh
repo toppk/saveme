@@ -5,7 +5,7 @@
 export PATH=/bin:/sbin
 PS4='+\D{%s} [$?] # '
 
-last=$( awk '$2 ~ /^\/arfs\/xp/ { print substr($2,8) }' /etc/fstab | sort -n | tail -1 )
+last=$( awk '$2 ~ /^\/arfs\/xp/ { print substr($2,9) }' /etc/fstab | sort -n | tail -1 )
 
 let next="$last + 1"
 
