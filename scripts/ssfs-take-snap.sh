@@ -25,7 +25,7 @@ if [ -z "$path" ]; then
 fi
 
 if [ -z "$label" ]; then
-    label=$( date '+%Y%m%d_%H:%M:%S_%z' )
+    label=$( date '+%Y-%m-%dT%H:%M:%S%z' )
 fi
 
 

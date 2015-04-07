@@ -129,7 +129,7 @@ def culltimeline(datearr, policy, now):
                 old = snapdate[0]
 
                 if keep is False:
-                    # print("kill %s cuz %s [%s]" % (snapdate,keep,rangespec[3]))
+                    #print("kill %s cuz %s [%s]" % (snapdate,keep,rangespec[3]))
                     res += [snapdate[1]]
     res.sort(reverse=True)
     return res

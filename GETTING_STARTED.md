@@ -329,6 +329,7 @@ way.  The user should be able to take their ideas and easily translate that to c
 
 ## Current standards and conventions
 
-* time specification - all time is internally represented in integer epoch microseconds
+* time specification - all time is internally represented in integer epoch microseconds, 
+externally it is presenting int iso8601
 
 * checksums - sha512+size
