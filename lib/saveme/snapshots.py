@@ -11,7 +11,7 @@ from .schema import findscript
 
 def deletesnapshot(path, label):
     args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("delete-snap")), path, label]
+                                  findscript("delete-snap")['script']), path, label]
 
     retcode, out, err = runcommand(args)
     if retcode == 0:
@@ -25,7 +25,7 @@ def deletesnapshot(path, label):
 
 def create(path, label=None, promptuser=None):
     args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("take-snap")), path]
+                                  findscript("take-snap")['script']), path]
 
     if label is not None:
         args += ["--label=%s" % label]
@@ -46,7 +46,7 @@ def create(path, label=None, promptuser=None):
 
 def listsnapshot(path):
     args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("list-snap")), path]
+                                  findscript("list-snap")['script']), path]
 
     #
     retcode, out, err = runcommand(args)
@@ -69,7 +69,7 @@ def manage(path, policy=None, promptuser=None):
         print("issues with policy [%s]"%(err))
         return 3
     args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("list-snap")), path]
+                                  findscript("list-snap")['script']), path]
 
     #
     retcode, out, err = runcommand(args)
@@ -86,7 +86,7 @@ def manage(path, policy=None, promptuser=None):
     res = culltimeline(tsnap, policy, getcurtime())
     if res is not None or len(res) > 0:
         args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                      findscript("delete-snap")), path, "-"]
+                                      findscript("delete-snap")['script']), path, "-"]
 
         #
         retcode, out, err = runcommand(args, stdin="\n".join(res)+"\n")

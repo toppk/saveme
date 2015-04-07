@@ -5,10 +5,7 @@
 #from .cfg import getdbdir as _cfg_database_directory
 from .cfg import getscriptsdir as _cfg_scripts_directory
 from .schema import findscript
-from .external import getcurtime, runcommand
-import queue
-import os
-from stat import S_ISDIR
+from .external import getcurtime, runcommand, indexer, epoch2iso
 import sqlite3
 
 #
@@ -19,23 +16,6 @@ def indexpath(path):
             print("%s/%s" % (path, file[0])) # S_ISDIR(res.st_mode),fp))
         except UnicodeEncodeError:
             print("%s/%s" % (path, file[0].encode('utf-8', 'surrogateescape')))
-
-def indexer(path):
-    #print("supposed to index %s to %s" % (path,_cfg_database_directory()))
-    if path[-1] != "/":
-        path += "/"
-    print(path)
-    yield ('.', os.lstat(path))
-    myqueue = queue.Queue()
-    myqueue.put(path)
-    while not myqueue.empty():
-        entry = myqueue.get()
-        for filename in os.listdir(entry):
-            filepath = "%s%s" % (entry, filename)
-            res = os.lstat(filepath)
-            if S_ISDIR(res.st_mode):
-                myqueue.put(filepath+'/')
-            yield (filepath[len(path):], res)
 
 def createdb():
     conn = sqlite3.connect('example.db')
@@ -72,7 +52,8 @@ create table files (
 create table checksums (
     chksum text, 
     fileid text, 
-    volumeid integer
+    volumeid integer,
+    gendate integer
 )''')
     try:
         cur.execute('''drop table archives''')
@@ -111,9 +92,9 @@ create table volumes (
 def addsum(volumeid, fileid, chksum):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
-    print("yoyoyo %d / %s / %s |"%(volumeid, fileid, chksum))
-    cur.execute('''insert into checksums values (?,?,?)''',
-                (chksum, fileid, volumeid))
+    print("inserting for %d, %s"%(volumeid, fileid))
+    cur.execute('''insert into checksums values (?,?,?,?)''',
+                (chksum, fileid, volumeid, getcurtime()))
     conn.commit()
     cur.close()
 
@@ -121,12 +102,15 @@ def checksumvolume(volumeid):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
     cur.execute('''select rowid, path, status, created from volumes where rowid=%d'''%volumeid)
-    volumeid, path, status, created = cur.fetchone()
+    volume = cur.fetchone()
+    if volume is None:
+        print("no volume with volumeid=%d"%volumeid)
+        return 3
+    volumeid, path, status, created = volume
     if status != "indexed":
         print("will not work on this status")
         return 2
-    
-    print('%d %s %s/%s' % (volumeid, status, created, path))
+    print('%d %12s %s %s' % (volumeid, status, epoch2iso(int(created)), path))
     files = []
     files = findsum(volumeid, withsums=False)
     for file in files:
@@ -143,7 +127,7 @@ def checksumvolume(volumeid):
 
 def generatechecksum(path):
     args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("generate-checksum")), path]
+                                  findscript("generate-checksum")['script']), path]
 
     #
     retcode, out, err = runcommand(args)
@@ -158,7 +142,7 @@ def listvolumes():
     cur.execute('''select rowid, path, status, created from volumes''')
     for row in cur.fetchall():
         rowid, path, status, created = row
-        print('%d %s %s %s' % (rowid, status, created, path))
+        print('%d %12s %s %s' % (rowid, status, epoch2iso(int(created)), path))
     cur.close()
 
 def missingsum(volumeid=None):
@@ -185,9 +169,6 @@ def findsum(volumeid=None, withsums=True):
     return files
 
 def index(path):
-    if not os.path.isdir(path):
-        print("path %s is not a directory"%path)
-        return 2
 
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
@@ -195,20 +176,25 @@ def index(path):
     cur.execute('insert into volumes values (?,?,?)',
                 (path, 'indexed', getcurtime()))
     volumeid = cur.lastrowid
-
-    for file in indexer(path):
-        inode = file[1]
-        fileid = "%d:%d" % (inode.st_dev, inode.st_ino)
-        cur.execute('insert into files values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-                    (volumeid, fileid, file[0].encode('utf8', 'surrogateescape'),
-                     inode.st_uid, inode.st_gid, int(inode.st_atime_ns/1e3),
-                     int(inode.st_ctime_ns/1e3), int(inode.st_mtime_ns/1e3),
-                     inode.st_blksize, inode.st_blocks, inode.st_size,
-                     inode.st_rdev, inode.st_dev, inode.st_ino, inode.st_mode,
-                     inode.st_nlink))
-
+    try:
+        for file in indexer(path):
+            inode = file[1]
+            fileid = "%d:%d" % (inode.st_dev, inode.st_ino)
+            cur.execute('insert into files values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                        (volumeid, fileid, file[0].encode('utf8', 'surrogateescape'),
+                         inode.st_uid, inode.st_gid, int(inode.st_atime_ns/1e3),
+                         int(inode.st_ctime_ns/1e3), int(inode.st_mtime_ns/1e3),
+                         inode.st_blksize, inode.st_blocks, inode.st_size,
+                         inode.st_rdev, inode.st_dev, inode.st_ino, inode.st_mode,
+                         inode.st_nlink))
+    except ValueError as err:
+        print("cannot index due to issue[%s] "%err)
+        return 1
+        
+            
     conn.commit()
     cur.close()
+    return 0
 
 #indexpath2("/home/toppk/androidbu/proc/10227/task/10259")
 #indexpath("/t2/home/.snapshot/")
