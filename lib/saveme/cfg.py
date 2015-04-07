@@ -8,7 +8,7 @@ import os, sys
 
 SETTINGS = {
     'default-snapshot-policy' : '0-1dy: all, 1dy-1wk: 4hr, 1wk-12wk: 1wk, 12wk-1yr: 4wk, 1yr+: none',
-    'snapshot-pattern' : r"^\d\d\d\d\d\d\d\d_\d\d:\d\d:\d\d_[-+]\d\d\d\d$",
+    'snapshot-pattern' : r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[-+]\d\d\d\d$",
     'scripts-directory' : None,
     'database-directory' : '/etc/saveme/db'
 }
