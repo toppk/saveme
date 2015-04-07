@@ -71,6 +71,18 @@ def runcommand(args, stdin=None):
 def getcurtime():
     return int(time.time() * 1e6)
 
+def epoch2iso(epochmicros):
+    thedate = datetime.fromtimestamp(epochmicros/1e6)
+    thedate = datetime.fromtimestamp(time.time())
+    strdate = thedate.strftime("%Y-%m-%dT%H:%M:%S")
+    minute = (time.localtime().tm_gmtoff / 60) % 60
+    hour = ((time.localtime().tm_gmtoff / 60) - minute) / 60
+    utcoffset = "%.2d%.2d" %(hour, minute)
+    if utcoffset[0] != '-':
+        utcoffset = '+' + utcoffset
+    return strdate + utcoffset
+
+
 def parsedate(timespec):
     pattern = "%Y-%m-%dT%H:%M:%S"
     datestr = timespec[:-5]
