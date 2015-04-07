@@ -14,7 +14,7 @@ def genarid():
 
 def makearfsfromdisk(disk):
     args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("delete-snap")), disk]
+                                  findscript("delete-snap")['script']), disk]
 
     print("ran[%s]"% getrandom(64))
     retcode, out, err = runcommand(args)
