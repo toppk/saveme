@@ -28,9 +28,9 @@ fi
 fsln=$( cat /etc/fstab | awk '$1 ~ /^LABEL='$arid'$/ { print $0 }' )
 if [ "$fsln" != "" ]; then
     echo $arid is already there
-    if ! systemctl status alt-$arid.automount | egrep -q 'active \((running|waiting)\)'; then
+    if ! systemctl status arfs-$arid.automount | egrep -q 'active \((running|waiting)\)'; then
 	echo also, $arid is not running to fix, run:
-	printf "\tsystemctl  start   alt-${arid}.automount\n"
+	printf "\tsystemctl  start   arfs-${arid}.automount\n"
 	
     fi
     exit 5
@@ -38,6 +38,6 @@ fi
 
 
 
-echo echo "'"'LABEL='$arid' /alt/'$arid'                   ext4    noauto,comment=systemd.automount        1 4'"'"' >> /etc/fstab'  
+echo echo "'"'LABEL='$arid' /arfs/'$arid'                   ext4    noauto,comment=systemd.automount        1 4'"'"' >> /etc/fstab'  
 echo systemctl  daemon-reload
-echo systemctl  start   alt-${arid}.automount
+echo systemctl  start   arfs-${arid}.automount
