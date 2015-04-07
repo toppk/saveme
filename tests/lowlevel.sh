@@ -24,12 +24,8 @@ testname=${testname:-lowlevel}
 disk=$1
 runme --sleep "lowlevel_disk-add-part_$disk" ../scripts/disk-add-part.sh $disk || exit
 #what should work
-# 1 failure here after 192 runs.. 
-if ! lsblk /dev/$disk -n -o type | grep -q part; then
-    echo "#  FAILURE: $disk does not have a partition type"
-    exit 3
-fi
-echo "#  SUCCESS: $disk has a partition type"
+# 1 failure here after 192 runs..
+launch "lowlevel_disk-verify-part_$" ../scripts/disk-verify-part.sh $disk || exit
 
 # == STEP 2 - generate key ==
 keyf=""
@@ -82,11 +78,11 @@ echo "#  SUCCESS: $cprt contains expected fstype,label"
 runme "lowlevel_sys-attach-arfs_$arid" ../scripts/sys-attach-arfs.sh  $arid || exit
 
 #what should work
-if [ $( df --output /alt/$arid | tail -1 | awk '{ print $2 }' ) != "ext4" ]; then
+if [ $( df --output /arfs/$arid | tail -1 | awk '{ print $2 }' ) != "ext4" ]; then
     echo "#  FAILURE: $cprt does not contain expected fstype,label"
     exit 8
 fi
-echo "#  SUCCESS: /alt/$arid is and ext4 mounted filesystem"
+echo "#  SUCCESS: /arfs/$arid is and ext4 mounted filesystem"
 
 for key in arid cprt disk keyf part; do
     echo "# '$key':'$( eval echo \$$key)'"
