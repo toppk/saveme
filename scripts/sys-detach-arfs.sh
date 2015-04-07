@@ -18,15 +18,15 @@ if ! test -b /dev/disk/by-label/$arid; then
     exit 4
 fi
 
-if ! systemctl status alt-$arid.automount | egrep -q 'active \((running|waiting)\)'; then
+if ! systemctl status arfs-$arid.automount | egrep -q 'active \((running|waiting)\)'; then
     echo \# notice: $arid is not running
 else
-    echo systemctl stop alt-$arid.automount
+    echo systemctl stop arfs-$arid.automount
 fi
-if ! test -d /alt/$arid; then
-    echo \# notice: /alt/$arid does not exist
+if ! test -d /arfs/$arid; then
+    echo \# notice: /arfs/$arid does not exist
 else
-    echo rmdir /alt/$arid
+    echo rmdir /arfs/$arid
 fi
 if ! grep -q '^LABEL='$arid'[ \t]' /etc/fstab; then
     echo \# notice: LABEL=$arid fstab entry not found
