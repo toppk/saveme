@@ -6,6 +6,7 @@
 from .mirror import index, createdb, missingsum, addsum, \
     listvolumes, checksumvolume
 from .snapshots import manage, create, listsnapshot, deletesnapshot
+from .block import makearfsfromdisk, genarid
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
 
 class CommandLine:
@@ -39,9 +40,13 @@ COMMANDS
         elif args[1] == "checksum":
             if len(args) != 3:
                 print("provide: you must specify <volumeid>")
-                status = 1
+                status = 2
             else:
-                volumeid = int(args[2])
+                try:
+                    volumeid = int(args[2])
+                except ValueError as err:
+                    print("volumeid must be an integer")
+                    return 3
                 status = checksumvolume(volumeid)
         elif args[1] == "list":
             listvolumes()
@@ -50,13 +55,45 @@ COMMANDS
         elif args[1] == "index":
             if len(args) != 3:
                 print("index: you must specify <path>")
-                status = 1
+                status = 4
             else:
                 path = args[2]
                 index(path)
         else:
             print("not a valid action")
-            status = 2
+            status = 5
+        return status
+
+    def disktool(self, args):
+        def usage(proc):
+            print("""usage: %s
+
+COMMANDS
+ disk-to-arfs <disk>
+ generate-arid
+
+OPTIONS
+ disk = disk to use (e.g. hda)""" % proc)
+        status = 12
+        if len(args) == 1:
+            usage(args[0])
+        elif args[1] == "generate-arid":
+            if len(args) != 2:
+                print("there are no arguments")
+                status = 1
+            else:
+                print("%s" % genarid())
+                status = 0
+        elif args[1] == "disk-to-arfs":
+            if len(args) != 3:
+                print("disk-to-arfs: you must specify <disk>")
+                status = 2
+            else:
+                disk = args[2]
+                status = makearfsfromdisk(disk)
+        else:
+            print("not a valid action")
+            status = 3
         return status
 
     def snapmgr(self, args):
