@@ -27,7 +27,7 @@ fi
 
 cryptsetup_ver=$( cryptsetup  --version )
 
-if [ "$cryptsetup_ver" == "cryptsetup 1.6.6" ]; then
+if echo "$cryptsetup_ver" | egrep -q "cryptsetup 1.6.[67]"; then
     :
 else
     echo unknown cryptsetup version $cryptsetup_ver
