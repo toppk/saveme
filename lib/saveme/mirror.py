@@ -3,9 +3,9 @@
 #
 #
 #from .cfg import getdbdir as _cfg_database_directory
-from .cfg import getscriptsdir as _cfg_scripts_directory
-from .schema import findscript
-from .external import getcurtime, runcommand, indexer, epoch2iso
+from .external import getcurtime, indexer, epoch2iso
+from .utils import TaskRunner
+
 import sqlite3
 
 #
@@ -126,15 +126,13 @@ def checksumvolume(volumeid):
     cur.close()
 
 def generatechecksum(path):
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("generate-checksum")['script']), path]
 
-    #
-    retcode, out, err = runcommand(args)
-    if retcode != 0:
-        print("issues with genchk [%s][%s][%d]"%(out, err, retcode))
-        return
-    return out.strip()
+    runner = TaskRunner()
+    runner.setvalue('path', path)
+    runner.runstep("generate-checksum")
+    if runner.getretcode() == 0:
+        if runner.getout() != "":
+            return runner.getout()
 
 def listvolumes():
     conn = sqlite3.connect('example.db')
