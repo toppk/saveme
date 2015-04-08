@@ -6,12 +6,21 @@ from .external import runcommand
 from .schema import findscript
 from .cfg import getscriptsdir as _cfg_scripts_directory
 
+class StopException(Exception):
+    pass
 
 class TaskRunner:
+    class MissingParamException(Exception):
+        pass
+
     def __init__(self):
         self._dict = {}
         self._alias = {}
         self._output = None
+        self._retcode = None
+
+    def getretcode(self):
+        return self._retcode
 
     def setvalue(self, key, value):
         self._dict[key] = value
@@ -40,6 +49,8 @@ class TaskRunner:
         args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
                                       action['script'])]
         for arg in action['args']:
+            if not arg in self._dict:
+                raise TaskRunner.MissingParamException("Cannot find %s in dict"%arg)
             args += [self._dict[arg]]
 
         if options is not None:
@@ -47,20 +58,15 @@ class TaskRunner:
                 args += ["--%s=%s" % (option[0], option[1])]
 
         retcode, out, err = runcommand(args, stdin=stdin)
+        self._retcode = retcode
         self._output = out.strip()
         if retcode == 0:
             if action['generates-commands']:
                 if out == "":
                     print("NO ACTION GENERATED")
-                    return 0
-                if launch(out, promptuser=promptuser):
-                    return 0
-                else:
-                    return 3
+                self._retcode = launch(out, promptuser=promptuser)
         else:
             print("action:%s gen issues [%s][%s][%d]"%(step, out, err, retcode))
-            return 1
-        return 0
 
 
 
@@ -71,6 +77,8 @@ def launch(cmds, promptuser=True):
 %s
 ---""" % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
         response = input("==> Do you wish to launch? y/n ")
+        if response != "y":
+            raise StopException()
     else:
         print("""LAUNCHING THE FOLLOWING ACTION
 ---
