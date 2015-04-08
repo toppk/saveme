@@ -133,7 +133,7 @@ def generatechecksum(path):
     retcode, out, err = runcommand(args)
     if retcode != 0:
         print("issues with genchk [%s][%s][%d]"%(out, err, retcode))
-        return 
+        return
     return out.strip()
 
 def listvolumes():
@@ -149,7 +149,7 @@ def missingsum(volumeid=None):
     files = findsum(volumeid, withsums=False)
     for file in files:
         print('%d %s %s/%s' % (file[0], file[1], file[2], file[3].decode('utf-8')))
-                
+
 def findsum(volumeid=None, withsums=True):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
@@ -190,8 +190,8 @@ def index(path):
     except ValueError as err:
         print("cannot index due to issue[%s] "%err)
         return 1
-        
-            
+
+
     conn.commit()
     cur.close()
     return 0

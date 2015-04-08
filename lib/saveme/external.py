@@ -9,7 +9,6 @@ import queue
 from stat import S_ISDIR
 import os
 import re
-import string
 from datetime import datetime, timezone
 
 #
@@ -19,9 +18,10 @@ from datetime import datetime, timezone
 #
 
 def getid():
-    return getrandom(5,justalphanum=True)
+    return getrandom(5, justalphanum=True)
 
 def getrandom(length, justalphanum=False):
+    import string
     chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
     if not justalphanum:
         chars += "+-"
