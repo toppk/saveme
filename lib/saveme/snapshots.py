@@ -3,7 +3,7 @@
 #
 #
 
-from .utils import parsepolicy, TaskRunner
+from .utils import parsepolicy, TaskRunner, StopException
 from .external import parsedate, getcurtime, match
 from .cfg import getsnapshotpattern as _cfg_snapshot_pattern
 
@@ -24,11 +24,11 @@ def create(path, label=None, promptuser=True):
 def listsnapshot(path):
     runner = TaskRunner()
     runner.setvalue('path', path)
-    retval = runner.runstep("list-snap")
-    if retval == 0:
-        if runner.getout() is not "":
+    runner.runstep("list-snap")
+    if runner.getretcode() == 0:
+        if runner.getout() != "":
             print(runner.getout())
-    return retval
+    return runner.getretcode()
 
 def manage(path, policy=None, promptuser=None):
     res = []
@@ -40,9 +40,9 @@ def manage(path, policy=None, promptuser=None):
 
     runner = TaskRunner()
     runner.setvalue('path', path)
-    retcode = runner.runstep("list-snap")
-    if retcode != 0:
-        return retcode
+    runner.runstep("list-snap")
+    if runner.getretcode() != 0:
+        return runner.getretcode()
     if runner.getout() == "":
         print("no snapshots to manage")
         return 0
@@ -57,9 +57,14 @@ def manage(path, policy=None, promptuser=None):
     if res is not None or len(res) > 0:
         runner.setvalue('label', '-')
         stdin = "\n".join(res)+"\n"
-        retcode = runner.runstep("delete-snap", stdin=stdin, promptuser=promptuser)
+        try:
+            runner.runstep("delete-snap", stdin=stdin, promptuser=promptuser)
+        except StopException:
+            print("user selected no")
+            return 2
+
         # if len([i for i in out.split("\n") if i != "" and i[0] != "#"]) == 0:
-    return retcode
+    return runner.getretcode()
 
 def culltimeline(datearr, policy, now):
     res = []
