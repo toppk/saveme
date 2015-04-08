@@ -44,7 +44,7 @@ COMMANDS
             else:
                 try:
                     volumeid = int(args[2])
-                except ValueError as err:
+                except ValueError:
                     print("volumeid must be an integer")
                     return 3
                 status = checksumvolume(volumeid)

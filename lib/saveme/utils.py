@@ -12,24 +12,32 @@ class TaskRunner:
         self._dict = {}
         self._alias = {}
 
-    def setvalue(self,key,value):
+    def setvalue(self, key, value):
         self._dict[key] = value
 
-    def addalias(self,origkey,alias):
+    def addalias(self, origkey, alias):
         self._alias[alias] = origkey
 
-    def getvalue(self,alias):
-        if self._alias.has_key(alias):
+    def getvalue(self, alias):
+        if alias in self._alias:
             alias = self._alias[alias]
 
         return self._dict[alias]
-        
-    def runstep(self,step):
+
+    def dump(self):
+        for key, value in self._dict.items():
+            print("  Key=%s => Value=%s" % (key, value))
+
+    def runstep(self, step):
         action = findscript(step)
-        print("Should run action[%s]: %s with [%s] that is a cmdgenerator=%s"%(step, action['script'], action['args'], action['generates-commands']))
+        print("action[%s]: %s with [%s] that is a cmdgen=%s" %
+              (step, action['script'], action['args'],
+               action['generates-commands']))
         args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                      action['script'] ), 'sdm']
-        
+                                      action['script'])]
+        for arg in action['args']:
+            args += [self._dict[arg]]
+
         retcode, out, err = runcommand(args)
         if retcode == 0:
             if action['generates-commands']:
@@ -39,7 +47,8 @@ class TaskRunner:
                     return 3
         else:
             print("action:%s gen issues [%s][%s][%d]"%(step, out, err, retcode))
-        return 1
+            return 1
+        return 0
 
 
 
@@ -86,7 +95,8 @@ def parsepolicy(policystr):
         else:
             print("this is bad")
         if end is not None and start > end:
-            raise ValueError('cannot end before you start %s - %s[%s]'%(start,end, rangespec))
+            raise ValueError('cannot end before you start %s - %s[%s]' %
+                             (start, end, rangespec))
         rules += [(start, end, sparseness, rule)]
 
     # need to sort and quality check the rules (and fill any gaps)
