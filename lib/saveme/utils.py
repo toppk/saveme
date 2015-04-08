@@ -11,6 +11,7 @@ class TaskRunner:
     def __init__(self):
         self._dict = {}
         self._alias = {}
+        self._output = None
 
     def setvalue(self, key, value):
         self._dict[key] = value
@@ -28,20 +29,31 @@ class TaskRunner:
         for key, value in self._dict.items():
             print("  Key=%s => Value=%s" % (key, value))
 
-    def runstep(self, step):
+    def getout(self):
+        return self._output
+
+    def runstep(self, step, options=None, stdin=None, promptuser=True):
         action = findscript(step)
-        print("action[%s]: %s with [%s] that is a cmdgen=%s" %
-              (step, action['script'], action['args'],
-               action['generates-commands']))
+        #print("action[%s]: %s with [%s] that is a cmdgen=%s" %
+        #      (step, action['script'], action['args'],
+        #       action['generates-commands']))
         args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
                                       action['script'])]
         for arg in action['args']:
             args += [self._dict[arg]]
 
-        retcode, out, err = runcommand(args)
+        if options is not None:
+            for option in options:
+                args += ["--%s=%s" % (option[0], option[1])]
+
+        retcode, out, err = runcommand(args, stdin=stdin)
+        self._output = out.strip()
         if retcode == 0:
             if action['generates-commands']:
-                if launch(out):
+                if out == "":
+                    print("NO ACTION GENERATED")
+                    return 0
+                if launch(out, promptuser=promptuser):
                     return 0
                 else:
                     return 3

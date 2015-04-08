@@ -3,11 +3,9 @@
 #
 #
 
-from .utils import parsepolicy, launch, TaskRunner
-from .external import parsedate, runcommand, getcurtime, match
-from .cfg import getscriptsdir as _cfg_scripts_directory
+from .utils import parsepolicy, TaskRunner
+from .external import parsedate, getcurtime, match
 from .cfg import getsnapshotpattern as _cfg_snapshot_pattern
-from .schema import findscript
 
 def deletesnapshot(path, label):
     runner = TaskRunner()
@@ -15,43 +13,22 @@ def deletesnapshot(path, label):
     runner.setvalue('label', label)
     return runner.runstep("delete-snap")
 
-def create(path, label=None, promptuser=None):
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("take-snap")['script']), path]
-
+def create(path, label=None, promptuser=True):
+    runner = TaskRunner()
+    runner.setvalue('path', path)
+    options = []
     if label is not None:
-        args += ["--label=%s" % label]
-
-    retcode, out, err = runcommand(args)
-    if retcode == 0:
-        if len([i for i in out.split("\n") if i != "" and i[0] != "#"]) == 0:
-            print("No action needed")
-            return 0
-    else:
-        print("issues with execution [%s][%s][%d]"%(out, err, retcode))
-        return 1
-
-    if launch(out, promptuser=promptuser):
-        return 0
-    else:
-        return 2
+        options += [('label', label)]
+    return runner.runstep("take-snap", options=options, promptuser=promptuser)
 
 def listsnapshot(path):
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("list-snap")['script']), path]
-
-    #
-    retcode, out, err = runcommand(args)
-    if retcode != 0:
-        print("issues with listsnap [%s][%s][%d]"%(out, err, retcode))
-        return 10
-    snapshots = out.strip().split('\n')
-    for snap in snapshots:
-        if match(snap, _cfg_snapshot_pattern()):
-            print("%s" % snap)
-        elif snap != "":
-            print("%s #ignored" % snap)
-
+    runner = TaskRunner()
+    runner.setvalue('path', path)
+    retval = runner.runstep("list-snap")
+    if retval == 0:
+        if runner.getout() is not "":
+            print(runner.getout())
+    return retval
 
 def manage(path, policy=None, promptuser=None):
     res = []
@@ -60,15 +37,16 @@ def manage(path, policy=None, promptuser=None):
     except ValueError as err:
         print("issues with policy [%s]"%(err))
         return 3
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("list-snap")['script']), path]
 
-    #
-    retcode, out, err = runcommand(args)
+    runner = TaskRunner()
+    runner.setvalue('path', path)
+    retcode = runner.runstep("list-snap")
     if retcode != 0:
-        print("issues with listsnap [%s][%s][%d]"%(out, err, retcode))
-        return 10
-    snapshots = out.strip().split('\n')
+        return retcode
+    if runner.getout() == "":
+        print("no snapshots to manage")
+        return 0
+    snapshots = runner.getout().split('\n')
     tsnap = []
     for snap in snapshots:
         if match(snap, _cfg_snapshot_pattern()):
@@ -77,22 +55,11 @@ def manage(path, policy=None, promptuser=None):
             print(" (skipping: %s - does not match expected pattern)" % snap)
     res = culltimeline(tsnap, policy, getcurtime())
     if res is not None or len(res) > 0:
-        args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                      findscript("delete-snap")['script']), path, "-"]
-
-        #
-        retcode, out, err = runcommand(args, stdin="\n".join(res)+"\n")
-        if retcode == 0:
-            if len([i for i in out.split("\n") if i != "" and i[0] != "#"]) == 0:
-                print("No action needed")
-                return 0
-            if launch(out, promptuser=promptuser):
-                return 0
-            else:
-                return 3
-        else:
-            print("error running cmd [%s][%s][%d]"%(out, err, retcode))
-    return 0
+        runner.setvalue('label', '-')
+        stdin = "\n".join(res)+"\n"
+        retcode = runner.runstep("delete-snap", stdin=stdin, promptuser=promptuser)
+        # if len([i for i in out.split("\n") if i != "" and i[0] != "#"]) == 0:
+    return retcode
 
 def culltimeline(datearr, policy, now):
     res = []
