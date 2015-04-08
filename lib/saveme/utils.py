@@ -3,6 +3,45 @@
 #
 #
 from .external import runcommand
+from .schema import findscript
+from .cfg import getscriptsdir as _cfg_scripts_directory
+
+
+class TaskRunner:
+    def __init__(self):
+        self._dict = {}
+        self._alias = {}
+
+    def setvalue(self,key,value):
+        self._dict[key] = value
+
+    def addalias(self,origkey,alias):
+        self._alias[alias] = origkey
+
+    def getvalue(self,alias):
+        if self._alias.has_key(alias):
+            alias = self._alias[alias]
+
+        return self._dict[alias]
+        
+    def runstep(self,step):
+        action = findscript(step)
+        print("Should run action[%s]: %s with [%s] that is a cmdgenerator=%s"%(step, action['script'], action['args'], action['generates-commands']))
+        args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
+                                      action['script'] ), 'sdm']
+        
+        retcode, out, err = runcommand(args)
+        if retcode == 0:
+            if action['generates-commands']:
+                if launch(out):
+                    return 0
+                else:
+                    return 3
+        else:
+            print("action:%s gen issues [%s][%s][%d]"%(step, out, err, retcode))
+        return 1
+
+
 
 def launch(cmds, promptuser=True):
     if promptuser:
