@@ -3,26 +3,28 @@
 #
 #
 
-from .utils import parsepolicy, launch
-from .external import parsedate, runcommand, getcurtime, match, getrandom, getid
-from .cfg import getscriptsdir as _cfg_scripts_directory
-from .cfg import getsnapshotpattern as _cfg_snapshot_pattern
-from .schema import findscript
+from .utils import TaskRunner
+from .external import getid
 
 def genarid():
     return getid()
 
 def makearfsfromdisk(disk):
-    args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
-                                  findscript("delete-snap")['script']), disk]
-
-    print("ran[%s]"% getrandom(64))
-    retcode, out, err = runcommand(args)
-    if retcode == 0:
-        if launch(out):
-            return 0
-        else:
-            return 3
-    else:
-        print("delsnap gen issues [%s][%s][%d]"%(out, err, retcode))
-        return 1
+    runner = TaskRunner()
+    runner.setvalue('disk',disk)
+    for step in ('add-partition-table',
+                 'verify-partition-table',
+                 'generate-luks-key',
+                 'add-luks-partition'):
+        runner.runstep(step)
+    # cprt will be the part for the rest of the steps
+    runner.addalias('cprt','part')
+    runner.runstep('verify-luks-partition')
+    runner.setvalue('arid',genarid())
+    runner.runstep('verify-arid-unused')
+    for step in ('add-archive-filesystem',
+                 'verify-archive-filesystem',
+                 'mount-archive-filesystem',
+                 'check-archive-filesystem'):
+        runner.runstep(step)
+ 

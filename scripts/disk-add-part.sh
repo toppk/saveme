@@ -33,5 +33,8 @@ if [ $err -ne 0 ];then
     exit 3
 fi
 
+part=${disk}1
+
+echo "# 'part':'$part'"
 echo parted /dev/$disk mktable gpt
 echo parted -a optimal /dev/$disk mkpart primary 0% 100%

@@ -22,8 +22,13 @@ testname=${testname:-lowlevel}
 
 # == STEP 1 - create partition table with first partition ==
 disk=$1
+part=""
 runme --sleep "lowlevel_disk-add-part_$disk" ../scripts/disk-add-part.sh $disk || exit
 #what should work
+if [ -z "$part" ]; then
+    echo "#  FAILURE: $part is not defined"
+    exit 8
+fi
 # 1 failure here after 192 runs..
 launch "lowlevel_disk-verify-part_$" ../scripts/disk-verify-part.sh $disk || exit
 
@@ -39,17 +44,15 @@ fi
 echo "#  SUCCESS: core-gen-key"
 
 # == STEP 3 - create encrypted partition on disk partition ==
-part="${disk}1"
 cleankeyf=$( echo $keyf | tr '/' '+' )
 cprt=""
 runme "lowlevel_part-add-luks_$part_$cleankeyf" ../scripts/part-add-luks.sh $part $keyf || exit
 
-#what should work
-if [ `lsblk /dev/$cprt  -o type -n` != "crypt" ]; then
-    echo "  FAILURE: $cryptpart is not crypt partition"
+if [ -z "$cprt" ]; then
+    echo "#  FAILURE: no cprt"
     exit 5
 fi
-echo "#  SUCCESS: $cprt is crypt"
+launch "lowlevel_luks-verify-part_$" ../scripts/part-verify-luks.sh $cprt || exit
 
 # == STEP 4 - generate archive filesystem id ==
 arid=""
@@ -67,12 +70,7 @@ cleancprt=$( echo $cprt | tr '/' '+' )
 runme "lowlevel_part-add-arfs_${cleancprt}_$arid" ../scripts/part-add-arfs.sh $cprt $arid || exit
 ## workaround: need time to settle?
 seq 10 | while read a; do lsblk /dev/$cprt -o fstype -r -n | grep -q ext4 && break || echo "#  notice: sleeping for 50ms waiting for drive";usleep 50000;done
-#what should work
-if [ "$( lsblk /dev/$cprt -r  -o fstype,label -n )" != "ext4 $arid" ]; then
-    echo "#  FAILURE: $cprt does not contain expected fstype,label"
-    exit 7
-fi
-echo "#  SUCCESS: $cprt contains expected fstype,label"
+launch "lowlevel_arfs-verify-part_$" ../scripts/part-verify-arfs.sh $cprt $arid || exit
 
 # == STEP 6 - mount archive filesystem ==
 runme "lowlevel_sys-attach-arfs_$arid" ../scripts/sys-attach-arfs.sh  $arid || exit
