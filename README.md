@@ -30,18 +30,20 @@ Currently works with:
 
 ## Status
 
-* OVERALL - This software is still experimental.  Not everthing
-            works, but much attention was placed on basic safety.
-            This software should only be used by people who feel
-            comfortable running commands as root that can reformat
-            filesystem.
+* General - This software is still experimental.  Not everthing
+            works, but the scripts and execution follow a simple
+            design, that anyone who feels comfortable running 
+            commands as root that can reformat filesystem should
+            be able to review any command simply.
 
 * Lowlevel - There are scripts to assist setting up partitions
              setting up crypto block devices, adding filesystems to
-	     partitions.   There is a tool to help run through all
-             the steps to create a new filesystem on a new disk.
+	     partitions.  All disk level commands are contained in
+             shell scripts that average less then 40 lines per file.
+             There is a tool to help run through all the steps to
+             create a new filesystem on a new disk.
 
-             See USAGE for more details.
+See USAGE for more details.
 	     
 * Snapshots - There is a tool to manage snapshots with a simple policy.
   	      Gone are the hourly/daily concepts, and replaced with a
@@ -55,7 +57,7 @@ Currently works with:
 #
 
 ```
-              See USAGE for more details.
+See USAGE for more details.
 
 * Backups - This tool is currently in progress.  Currently there is a 
             sqlite database that stores indexes and checksums of files.
@@ -63,7 +65,7 @@ Currently works with:
             set of fileystems registerd as "archive" where each file 
             will be encrypted with it's own key.
 
-            See lib/saveme/mirror.py for details.
+See lib/saveme/mirror.py for details.
 	      
 ## Try it out
 
