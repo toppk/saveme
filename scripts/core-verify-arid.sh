@@ -10,7 +10,7 @@ if [ $# -ne 1 ]; then
    exit 1
 fi
    
-part=$1
+arid=$1
 
 match=$( cat /etc/fstab | awk '$1 ~ /LABEL='$arid'$/ { print $0 }' )
 if [ ! -z "$match" ]; then

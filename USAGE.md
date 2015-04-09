@@ -42,6 +42,88 @@ This current scripts are for linux only (but both btrfs and zfs).
 
 ## Tools 
 
+### mirroradm
+
+### disktool
+
+Disktool wraps the disk and partitioning scripts to create a sequence of actions.
+
+Here the tool will go from raw disk, to filesystem, showing the user the commands
+to run and the output gather.  All that is required is the user to answer "y" to 
+proceed with the different steps.
+
+```bash
+
+# ./tools/disktool disk-to-arfs sdm
+SUGGESTED ACTION
+---
+parted /dev/sdm mktable gpt
+parted -a optimal /dev/sdm mkpart primary 0% 100%
+---
+==> Do you wish to launch? y/n y
+SUCCESS -  Output is below:
+---
+---                                                                       
+SUGGESTED ACTION
+---
+dd if=/dev/random of=/etc/saveme/keys/luks.hp37.cfs.key bs=1 count=512
+chmod 600 /etc/saveme/keys/luks.hp37.cfs.key
+---
+==> Do you wish to launch? y/n y
+SUCCESS -  Output is below:
+---
+---
+SUGGESTED ACTION
+---
+cryptsetup --verbose -c aes-xts-plain64 -s 256 -h sha512 luksFormat /dev/sdm1 /etc/saveme/keys/luks.hp37.cfs.key -q
+echo hp37.cfs /dev/disk/by-uuid/$( lsblk -n /dev/sdm1 -o uuid,type -r | grep part | awk '{ print $1 }' ) /etc/saveme/keys/luks.hp37.cfs.key >> /etc/crypttab
+systemctl daemon-reload
+systemctl start systemd-cryptsetup@hp37.cfs.service
+---
+==> Do you wish to launch? y/n y
+SUCCESS -  Output is below:
+---
+Command successful.
+---
+SUGGESTED ACTION
+---
+mke2fs -T ext4,largefile -L tzgbd -j -m 1 -O sparse_super,dir_index -J size=128 /dev/mapper/hp37.cfs
+---
+==> Do you wish to launch? y/n y
+SUCCESS -  Output is below:
+---
+Creating filesystem with 976753664 4k blocks and 3815552 inodes
+Filesystem UUID: 50c56b77-93fd-44f0-8901-b5c237a7995a
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+        4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968, 
+        102400000, 214990848, 512000000, 550731776, 644972544
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (32768 blocks): done
+Writing superblocks and filesystem accounting information: done       
+
+---
+SUGGESTED ACTION
+---
+echo 'LABEL=tzgbd /arfs/tzgbd                   ext4    noauto,comment=systemd.automount        1 4' >> /etc/fstab
+systemctl daemon-reload
+systemctl start arfs-tzgbd.automount
+---
+==> Do you wish to launch? y/n y
+SUCCESS -  Output is below:
+---
+---
+  Key=arid => Value=tzgbd
+  Key=cprt => Value=mapper/hp37.cfs
+  Key=disk => Value=sdm
+  Key=keyf => Value=/etc/saveme/keys/luks.hp37.cfs.key
+  Key=part => Value=sdm1
+Finished adding /arfs/tzgbd
+
+```
+
 ### snapmgr
 
 #### help

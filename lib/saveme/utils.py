@@ -5,6 +5,7 @@
 from .external import runcommand
 from .schema import findscript
 from .cfg import getscriptsdir as _cfg_scripts_directory
+import re
 
 class StopException(Exception):
     pass
@@ -49,9 +50,9 @@ class TaskRunner:
         args = ["/bin/bash", "%s/%s"%(_cfg_scripts_directory(),
                                       action['script'])]
         for arg in action['args']:
-            if not arg in self._dict:
+            if not arg in self._dict and not arg in self._alias:
                 raise TaskRunner.MissingParamException("Cannot find %s in dict"%arg)
-            args += [self._dict[arg]]
+            args += [self.getvalue(arg)]
 
         if options is not None:
             for option in options:
@@ -61,12 +62,18 @@ class TaskRunner:
         self._retcode = retcode
         self._output = out.strip()
         if retcode == 0:
+            for line in out.split("\n"):
+                regex = re.compile(r"#\s+'(\S+)':'(\S+)'")
+                match = regex.match(line)
+                if match is not None:
+                    self._dict[match.group(1)] = match.group(2)
             if action['generates-commands']:
                 if out == "":
                     print("NO ACTION GENERATED")
                 self._retcode = launch(out, promptuser=promptuser)
         else:
-            print("action:%s gen issues [%s][%s][%d]"%(step, out, err, retcode))
+            print("FAILURE - %s issues [%s][%s][%d]"%(step, out, err, retcode))
+            raise StopException()
 
 
 
