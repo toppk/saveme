@@ -102,6 +102,11 @@ def launch(cmds, promptuser=True):
             return False
     return True
 
+def getcap(path):
+    runner = TaskRunner()
+    runner.setvalue('path', path)
+    runner.runstep("get-filesystem-capacity")
+    return int(runner.getvalue("capacity"))
 
 def parsepolicy(policystr):
     rules = []

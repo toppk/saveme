@@ -4,7 +4,7 @@
 #
 
 from .mirror import index, createdb, missingsum, addsum, \
-    listvolumes, checksumvolume
+    listvolumes, checksumvolume, registerarchive
 from .snapshots import manage, create, listsnapshot, deletesnapshot
 from .block import makearfsfromdisk, genarid
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
@@ -18,14 +18,15 @@ class CommandLine:
         def usage(proc):
             print("""usage: %s
 
-COMMANDS
-       checksum <volumeid>
-          index <path>
- missing-chksum
- provide-chksum  <volumeid> <fileid> <checksum>
-    scan-chksum  <volumeid> <fileid> <checksum>
-           list
-        resetdb""" % proc)
+ COMMANDS
+        checksum <volumeid>
+           index <path>
+register-archive <path>
+  missing-chksum
+  provide-chksum  <volumeid> <fileid> <checksum>
+     scan-chksum  <volumeid> <fileid> <checksum>
+            list
+         resetdb""" % proc)
 
         if len(args) == 1:
             usage(args[0])
@@ -52,6 +53,13 @@ COMMANDS
             listvolumes()
         elif args[1] == "resetdb":
             createdb()
+        elif args[1] == "register-archive":
+            if len(args) != 3:
+                print("register-archive: you must specify <path>")
+                status = 4
+            else:
+                path = args[2]
+                registerarchive(path)
         elif args[1] == "index":
             if len(args) != 3:
                 print("index: you must specify <path>")
