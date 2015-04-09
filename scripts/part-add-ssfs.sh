@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # add a snapshoting fs on a partition
-# parameters: part (don't include /dev/ just, e.g.: sdb, mapper/hp1.cfs),
+# parameters: part (don't include /dev/ just, e.g.: sdb, mapper/cprt-1),
 #             id (label and mount point, must be unique and simple. hint: use core-gen-ssid.sh)
 
 export PATH=/bin:/sbin
