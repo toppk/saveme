@@ -16,6 +16,8 @@ from datetime import datetime, timezone
 #
 #
 #
+def abspath(path):
+    return os.path.abspath(path)
 
 def getid():
     return getrandom(5, justalphanum=True)

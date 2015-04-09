@@ -19,4 +19,4 @@ if ! test -r $filepath; then
     exit 2
 fi
 
-echo sha512+sz:$( sha512sum $filepath | awk '{ print $1 }' )+$( stat -c%s $filepath )
+echo sha512:$( sha512sum $filepath | awk '{ print $1 }' )+$( stat -c%s $filepath )

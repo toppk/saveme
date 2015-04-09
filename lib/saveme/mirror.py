@@ -3,8 +3,8 @@
 #
 #
 #from .cfg import getdbdir as _cfg_database_directory
-from .external import getcurtime, indexer, epoch2iso
-from .utils import TaskRunner
+from .external import getcurtime, indexer, epoch2iso, abspath
+from .utils import TaskRunner, getcap, StopException
 
 import sqlite3
 
@@ -28,19 +28,19 @@ def createdb():
 create table files (
     volumeid integer,
     fileid text,
-    path text, 
-    st_uid integer, 
+    path text,
+    st_uid integer,
     st_gid integer,
-    st_atime integer, 
-    st_ctime integer, 
+    st_atime integer,
+    st_ctime integer,
     st_mtime integer,
-    st_blksize integer, 
-    st_blocks integer, 
+    st_blksize integer,
+    st_blocks integer,
     st_size integer,
-    st_rdev integer, 
-    st_dev integer, 
+    st_rdev integer,
+    st_dev integer,
     st_ino integer,
-    st_mode integer, 
+    st_mode integer,
     st_nlink integer
 )''')
 
@@ -51,8 +51,8 @@ create table files (
     cur.execute('''
 create table checksums (
     chksum text, 
-    fileid text, 
     volumeid integer,
+    fileid text, 
     gendate integer
 )''')
     try:
@@ -61,9 +61,10 @@ create table checksums (
         pass
     cur.execute('''
 create table archives (
-    name text, 
-    description text,
-    status text
+    path text unique, 
+    status text,
+    capacity integer,
+    chkdate integer
 )''')
     try:
         cur.execute('''drop table mirrors''')
@@ -72,9 +73,11 @@ create table archives (
     cur.execute('''
 create table mirrors (
     chksum text, 
-    blobkey text,
-    blobchksum text, 
     archiveid integer
+    blobchksum text, 
+    blobkey text,
+    blobsize integer,
+    copydate integer
 )''')
     try:
         cur.execute('''drop table volumes''')
@@ -84,7 +87,7 @@ create table mirrors (
 create table volumes (
     path text, 
     status text,
-    created integer
+    createdate integer
 )''')
     conn.commit()
     cur.close()
@@ -94,23 +97,23 @@ def addsum(volumeid, fileid, chksum):
     cur = conn.cursor()
     print("inserting for %d, %s"%(volumeid, fileid))
     cur.execute('''insert into checksums values (?,?,?,?)''',
-                (chksum, fileid, volumeid, getcurtime()))
+                (chksum, volumeid, fileid, getcurtime()))
     conn.commit()
     cur.close()
 
 def checksumvolume(volumeid):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
-    cur.execute('''select rowid, path, status, created from volumes where rowid=%d'''%volumeid)
+    cur.execute('''select rowid, path, status, createdate from volumes where rowid=%d'''%volumeid)
     volume = cur.fetchone()
     if volume is None:
         print("no volume with volumeid=%d"%volumeid)
         return 3
-    volumeid, path, status, created = volume
+    volumeid, path, status, createdate = volume
     if status != "indexed":
         print("will not work on this status")
         return 2
-    print('%d %12s %s %s' % (volumeid, status, epoch2iso(int(created)), path))
+    print('%d %12s %s %s' % (volumeid, status, epoch2iso(int(createdate)), path))
     files = []
     files = findsum(volumeid, withsums=False)
     for file in files:
@@ -137,10 +140,10 @@ def generatechecksum(path):
 def listvolumes():
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
-    cur.execute('''select rowid, path, status, created from volumes''')
+    cur.execute('''select rowid, path, status, createdate from volumes''')
     for row in cur.fetchall():
-        rowid, path, status, created = row
-        print('%d %12s %s %s' % (rowid, status, epoch2iso(int(created)), path))
+        rowid, path, status, createdate = row
+        print('%d %12s %s %s' % (rowid, status, epoch2iso(int(createdate)), path))
     cur.close()
 
 def missingsum(volumeid=None):
@@ -166,8 +169,22 @@ def findsum(volumeid=None, withsums=True):
     cur.close()
     return files
 
+def registerarchive(path):
+    path = abspath(path)
+    try:
+        conn = sqlite3.connect('example.db')
+        cur = conn.cursor()
+        cur.execute('insert into archives values (?,?,?,?)',
+                    (path, 'online', getcap(path), getcurtime()))
+        conn.commit()
+        cur.close()
+    except StopException as err:
+        print("Path is not a directory")
+    except sqlite3.IntegrityError as err:
+        print("There is already an archive with that name")
+    
 def index(path):
-
+    path = abspath(path)
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
 
