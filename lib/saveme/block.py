@@ -5,6 +5,7 @@
 
 from .utils import TaskRunner, StopException
 from .external import getid
+import time
 
 def genarid():
     return getid()
@@ -23,17 +24,20 @@ def makearfsfromdisk(disk):
         runner.runstep('verify-luks-partition')
         runner.setvalue('arid', genarid())
         runner.runstep('verify-arid-unused')
-        for step in ('add-archive-filesystem',
-                     'verify-archive-filesystem',
+        runner.runstep('add-archive-filesystem')
+        time.sleep(0.2)
+        for step in ('verify-archive-filesystem',
                      'mount-archive-filesystem',
                      'check-archive-filesystem'):
             runner.runstep(step)
         runner.dump()
     except TaskRunner.MissingParamException as err:
-        print("missing param: [%s]"% err)
+        print("Missing parameter: [%s]"% err)
+        runner.dump()
         return 1
     except StopException as err:
-        print("will not continue, due to input")
+        print("Will not continue")
+        runner.dump()
         return 1
-
+    print("Finished adding /arfs/%s" %runner.getvalue("arid"))
     return runner.getretcode()
