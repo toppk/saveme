@@ -178,11 +178,11 @@ def registerarchive(path):
                     (path, 'online', getcap(path), getcurtime()))
         conn.commit()
         cur.close()
-    except StopException as err:
+    except StopException:
         print("Path is not a directory")
-    except sqlite3.IntegrityError as err:
+    except sqlite3.IntegrityError:
         print("There is already an archive with that name")
-    
+
 def index(path):
     path = abspath(path)
     conn = sqlite3.connect('example.db')
