@@ -1,0 +1,30 @@
+# active
+000000001126031370D8  wwn-0x500a0751031370d8                  62522712           8,0    sda         OSDISK:/
+00000000112603137044  wwn-0x500a075103137044                  62522712           8,16   sdb         OSDISK:/alt/root
+151110400369          b55369ff-f164-4741-a6d9-04ed49b928b5   468851544  cprt-34  8,32   sdc  dm-1   t3 mirror-0
+MJ1311YNG5ZXNA        002da3eb-8cd7-4406-be62-2d12052d3886  2930266584  cprt-29  8,48   sdd  dm-0   /home ID: 5
+BTJR408407UU480BGN    18c340c8-48eb-40dd-baae-6ad9ff0ab494   468851544  cprt-30  8,64   sde  dm-8   /t2 ID: 1
+BTJR408404PJ480BGN    fe22ed18-2123-485c-a2d0-a47cf753a1d6   468851544  cprt-31  8,80   sdf  dm-2   /t2 ID: 2
+WD-WMC1F0D99SSJ
+MK0311YHG3JT6A        bb9307ef-64ac-44a6-98b5-7807bd7b4f5c  2930266584  cprt-25  8,112  sdh  dm-3   /arfs/xp2
+MJ1313YNG2G16C        e42a1c34-210a-4f7d-b3db-34ede9f1b43a  2930266584  cprt-27  8,128  sdi  dm-6   /home ID: 3
+14420D869813          ea14ffc9-f0df-4bbd-a771-20d666e15096   500107608  cprt-35  8,144  sdj  dm-5   t3 mirror-0
+PK2334PEK42A1T        546fcfc9-25f2-4b68-b453-67a6996e1a9e  3907018584  cprt-40  8,160  sdk  dm-12  /arfs/wwfn1
+PK2334PCKGHW5B        f1afd54a-9f76-4eed-9e65-8fa2b00256d6  3907018584  cprt-36  8,192  sdm  dm-7   /home ID: 2
+PK1334PCJZTSPS        63f5f9d8-7869-4766-bd03-2dc2dae8856f  3907018584  cprt-39  8,176  sdl  dm-10  /arfs/Ji7jl
+Z30425NK              b2408374-3be6-4025-951e-2896cd872f12  3907018584  cprt-38  8,208  sdn  dm-9   /home ID: 4
+Z303FBDZ              04b14d87-e85b-401b-bf36-a0133fc195fc  3907018584  cprt-37  8,224  sdo  dm-4   /arfs/tzgbd
+# retired
+WD-WCAYY0185537       d8b92d50-9315-461d-b49d-61e4c2f095e8  1953514584  cprt-24  8,208  sdn  dm-0   /arfs/xp1
+WD-WMAZ20073164       303fa217-4917-4dc7-8373-0f27c8243bcb  1953514584  cprt-22  8,224  sdo  dm-2   /home ID: 2
+                      ebff72c8-4fef-4f74-aced-914730aafde7              cprt-23                     xp3old
+		      695fcc70-62cd-49eb-bbbc-b7ed2239bbf5              cprt-21                     xp3old
+		      87eb4112-f55a-4759-88c7-69259b0d4d33              cprt-18                     xp3old
+		      1287af74-3219-407a-8275-714c31faa01d              cprt-19                     xp3old
+		      65857f4a-7dc0-437f-9b2e-735af14d422c              cprt-20                     unknown
+		      ddccb256-5b7c-46cb-8d71-fc6a312a78d5              cprt-28                     unknown
+		      0f39e081-8fb0-4a5c-b6fa-dbdac38c0752              cprt-32                     /alt/xp3
+		      26d5ca22-342b-42b6-bc8c-f0820df3b504              cprt-32                     /alt/xp3
+		      ce17f7cb-8a93-4daf-a6cd-78d8d2ae3110              cprt-26                     /arfs/xp4
+		      303fa217-4917-4dc7-8373-0f27c8243bcb              cprt-22                     /home ID: ?
+		      1c58a336-9ddd-4c8f-95ca-b9b7f439c40d              cprt-28                     /home ID: ?
