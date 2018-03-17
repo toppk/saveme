@@ -46,11 +46,14 @@ if [ "$cpid" == "" ]; then
     exit 6
 fi
 
+ecpi=$( systemd-escape $cpid | sed 's/\\/\\\\/g' )
+
 # SECURITY: cipher size hash
 ## found off google searches.  we should get some confirmation and include references.
 echo "# 'cprt':'mapper/$cpid'"
+echo "# 'ecpi':'$ecpi'"
 echo cryptsetup --verbose -c aes-xts-plain64 -s 256 -h sha512 luksFormat /dev/$part $keyf  -q
 #echo cryptsetup --key-file $keyf luksOpen /dev/$part mapper/$cpid # systemd does this
 echo echo $cpid' /dev/disk/by-uuid/$( lsblk -n /dev/'$part' -o uuid,type -r | grep part | awk '\''{ print $1 }'\'' ) '$keyf' >> /etc/crypttab'
 echo systemctl daemon-reload
-echo systemctl start systemd-cryptsetup@${cpid}.service
+echo systemctl start systemd-cryptsetup@${ecpi}.service
