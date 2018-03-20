@@ -26,7 +26,7 @@ if echo $type | grep -q part; then
     exit 2
 fi
 
-sfdisk -R /dev/$disk
+blockdev --rereadpt /dev/$disk
 err=$?
 if [ $err -ne 0 ];then
     echo $disk is busy
@@ -36,5 +36,5 @@ fi
 part=${disk}1
 
 echo "# 'part':'$part'"
-echo parted /dev/$disk mktable gpt
-echo parted -a optimal /dev/$disk mkpart primary 0% 100%
+echo parted -s -a optimal /dev/$disk mktable gpt
+echo parted -s -a optimal /dev/$disk mkpart primary 0% 100%
