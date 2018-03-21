@@ -1,42 +1,43 @@
-#model                    serial                uuid                                  capacity    luks     ma,mi  bsd  raid   usage             location
+#model                    serial                uuid                                  capacity    luks     ma,mi  bsd  raid   usage             location   comments
 # active
-M4-CT064M4SSD2            000000001126031370D8  wwn-0x500a0751031370d8                  62522712           8,0    sde                     
-M4-CT064M4SSD2            00000000112603137044  wwn-0x500a075103137044                  62522712           8,16   sdd            
-SanDisk SDSSDXPS480G      151110400369          b55369ff-f164-4741-a6d9-04ed49b928b5   468851544  cprt-34  8,32   sdc  dm-4   t3 mirror-0         
 INTEL SSDSC2BP480G4       BTJR408407UU480BGN    18c340c8-48eb-40dd-baae-6ad9ff0ab494   468851544  cprt-30  8,96   sdg  dm-3   /t2 ID: 1            
 INTEL SSDSC2BP480G4       BTJR408404PJ480BGN    fe22ed18-2123-485c-a2d0-a47cf753a1d6   468851544  cprt-31  8,80   sdf  dm-2   /t2 ID: 2
-WDC WD40EFRX-68WT0N0      WD-WCC4E7HAKFX7       609d52dc-fae1-4721-9ae2-5cf2b81b1f8d  3907018584  cprt-42  8,121  sdh  dm-9   /arfs/Gd3UK
-WDC WD4003FZEX-00Z4SA0    WD-WMC1F0D99SSJ       6dbeefda-df4a-4f53-91d6-90f5b8886079  3907018584  cprt-41  8,128  sdi  dm-7   /arfs/ifZ6d
+SanDisk SDSSDXPS480G      151110400369          b55369ff-f164-4741-a6d9-04ed49b928b5   468851544  cprt-34  8,32   sdc  dm-4   t3 mirror-0         
 Crucial_CT512MX100SSD1    14420D869813          ea14ffc9-f0df-4bbd-a771-20d666e15096   500107608  cprt-35  8,144  sdj  dm-6   t3 mirror-0       
-HGST HDN724040ALE640      PK2334PEK42A1T        546fcfc9-25f2-4b68-b453-67a6996e1a9e  3907018584  cprt-40  8,160  sdk  dm-11  /arfs/wwfn1           
-HGST HDN724040ALE640      PK2334PCKGHW5B        f1afd54a-9f76-4eed-9e65-8fa2b00256d6  3907018584  cprt-36  8,192  sdm  dm-5   /home ID: 4        
+Samsung SSD 860 PRO 1TB   S41ANGAK202830B       wwn-0x5002538e70024a94                1000204632           8,80   sdf                           2.5_5
+Samsung SSD 860 PRO 1TB   S41ANGAK202789K       wwn-0x5002538e70024a6b                1000204632           8,96   sdg                           2.5_6
+ST10000NM0086-2AA101      ZA23LL4E              00d1828b-2348-4ca8-b96a-3ad045645dc0  9766436864  cprt-45  8,224  sdo  dm-11  /arfs/GuhAV       3.5_1
+ST10000NM0086-2AA101      ZA240FFT              7fd2935c-fe02-4ac6-97f1-20b95adfcfb8  9766436864  cprt-44  8,240  sdp  dm-10  /arfs/b236O       3.5_2  
 HGST HDN724040ALE640      PK1334PCJZTSPS        63f5f9d8-7869-4766-bd03-2dc2dae8856f  3907018584  cprt-39  8,176  sdl  dm-10  /home ID: 2       3.5_3
-ST4000VN008-2DR166        WDH1B5PC              cb2360f7-e246-4686-a225-c9e6eda0a4bb  3907018584  cprt-43  8,208  sdn  dm-8   /home ID: 1
-ST4000VN000-1H4168        Z303FBDZ              04b14d87-e85b-401b-bf36-a0133fc195fc  3907018584  cprt-37  8,240  sdp  dm-1   /home ID: 3        
-Samsung SSD 850 EVO 500GB S2RANX0HC15916X       wwn-0x5002538d4187bf1c                 488386584                  sda         OSDISK:/          2.5_5
-Samsung SSD 850 EVO 500GB S2RANX0HC15918Y       wwn-0x5002538d4187bf32                 488386584           8,16   sdb         OSDISK:/alt/root  2.5_6
-ST10000NM0086-2AA101      ZA240FFT              7fd2935c-fe02-4ac6-97f1-20b95adfcfb8  9766436864           65,0   sdq  dm-12  /arfs/b236O       3.5_2  
-ST10000NM0086-2AA101      ZA23LL4E                                                    9766436864                                                3.5_1
-# to be rotated
-# to be retired
-# retired
-ST4000VN000-1H4168        Z30425NK              b2408374-3be6-4025-951e-2896cd872f12  3907018584  cprt-38  8,224  sdo  dm-0   /home ID: 4         
-Hitachi HDS5C3030ALA630   MJ1311YNG5ZXNA        002da3eb-8cd7-4406-be62-2d12052d3886  2930266584  cprt-29  8,48   sdd  dm-0   /home ID: 5        
-Hitachi HDS5C3030ALA630   MJ1313YNG2G16C        e42a1c34-210a-4f7d-b3db-34ede9f1b43a  2930266584  cprt-27  8,128  sdi  dm-8   /home ID: 3          
-Hitachi HDS723030ALA640   MK0311YHG3JT6A        bb9307ef-64ac-44a6-98b5-7807bd7b4f5c  2930266584  cprt-25  8,112  sdh  dm-3   /arfs/xp2               
-                          WD-WCAYY0185537       d8b92d50-9315-461d-b49d-61e4c2f095e8  1953514584  cprt-24  8,208  sdn  dm-0   /arfs/xp1
-                          WD-WMAZ20073164       303fa217-4917-4dc7-8373-0f27c8243bcb  1953514584  cprt-22  8,224  sdo  dm-2   /home ID: 2
-                                                ebff72c8-4fef-4f74-aced-914730aafde7              cprt-23                     xp3old
-                          		        695fcc70-62cd-49eb-bbbc-b7ed2239bbf5              cprt-21                     xp3old
-                          		        87eb4112-f55a-4759-88c7-69259b0d4d33              cprt-18                     xp3old
-                          		        1287af74-3219-407a-8275-714c31faa01d              cprt-19                     xp3old
-	                          	        65857f4a-7dc0-437f-9b2e-735af14d422c              cprt-20                     unknown
-                          		        ddccb256-5b7c-46cb-8d71-fc6a312a78d5              cprt-28                     unknown
-	                          	        0f39e081-8fb0-4a5c-b6fa-dbdac38c0752              cprt-32                     /alt/xp3
-		                                26d5ca22-342b-42b6-bc8c-f0820df3b504              cprt-32                     /alt/xp3
-	                          	        ce17f7cb-8a93-4daf-a6cd-78d8d2ae3110              cprt-26                     /arfs/xp4
-	                          	        303fa217-4917-4dc7-8373-0f27c8243bcb              cprt-22                     /home ID: ?
-	                          	        1c58a336-9ddd-4c8f-95ca-b9b7f439c40d              cprt-28                     /home ID: ?
+ST4000VN000-1H4168        Z303FBDZ              04b14d87-e85b-401b-bf36-a0133fc195fc  3907018584  cprt-37  8,240  sdp  dm-1   /home ID: 3       3.5_4     # to be rotated
+WDC WD40EFRX-68WT0N0      WD-WCC4E7HAKFX7       609d52dc-fae1-4721-9ae2-5cf2b81b1f8d  3907018584  cprt-42  8,112  sdh  dm-6   /arfs/Gd3UK       3.5_5     # to be retired
+HGST HDN724040ALE640      PK2334PCKGHW5B        f1afd54a-9f76-4eed-9e65-8fa2b00256d6  3907018584  cprt-36  8,192  sdm  dm-5   /home ID: 4       3.5_6     # to be rotated
+HGST HDN724040ALE640      PK2334PEK42A1T        546fcfc9-25f2-4b68-b453-67a6996e1a9e  3907018584  cprt-40  8,160  sdk  dm-11  /arfs/wwfn1       3.5_7  
+WDC WD4003FZEX-00Z4SA0    WD-WMC1F0D99SSJ       6dbeefda-df4a-4f53-91d6-90f5b8886079  3907018584  cprt-41  8,128  sdi  dm-7   /arfs/ifZ6d       3.5_8
+ST4000VN008-2DR166        WDH1B5PC              cb2360f7-e246-4686-a225-c9e6eda0a4bb  3907018584  cprt-43  8,208  sdn  dm-8   /home ID: 1       3.5_9
+Samsung SSD 850 EVO 500GB S2RANX0HC15916X       wwn-0x5002538d4187bf1c                 488386584                  sda         OSDISK:/          
+Samsung SSD 850 EVO 500GB S2RANX0HC15918Y       wwn-0x5002538d4187bf32                 488386584           8,16   sdb         OSDISK:/alt/root
+
+# offline
+M4-CT064M4SSD2            000000001126031370D8  wwn-0x500a0751031370d8                  62522712           8,0    sde                           box       # retired
+M4-CT064M4SSD2            00000000112603137044  wwn-0x500a075103137044                  62522712           8,16   sdd                           box       # retired
+ST4000VN000-1H4168        Z30425NK              b2408374-3be6-4025-951e-2896cd872f12  3907018584  cprt-38  8,224  sdo  dm-0   /home ID: 4       box       # retired
+Hitachi HDS5C3030ALA630   MJ1311YNG5ZXNA        002da3eb-8cd7-4406-be62-2d12052d3886  2930266584  cprt-29  8,48   sdd  dm-0   /home ID: 5       box       # retired
+Hitachi HDS5C3030ALA630   MJ1313YNG2G16C        e42a1c34-210a-4f7d-b3db-34ede9f1b43a  2930266584  cprt-27  8,128  sdi  dm-8   /home ID: 3       box       # retired
+Hitachi HDS723030ALA640   MK0311YHG3JT6A        bb9307ef-64ac-44a6-98b5-7807bd7b4f5c  2930266584  cprt-25  8,112  sdh  dm-3   /arfs/xp2         box       # retired 
+                          WD-WCAYY0185537       d8b92d50-9315-461d-b49d-61e4c2f095e8  1953514584  cprt-24  8,208  sdn  dm-0   /arfs/xp1         box       # retired
+                          WD-WMAZ20073164       303fa217-4917-4dc7-8373-0f27c8243bcb  1953514584  cprt-22  8,224  sdo  dm-2   /home ID: 2       box       # retired
+                                                ebff72c8-4fef-4f74-aced-914730aafde7              cprt-23                     xp3old            box       # retired
+                          		        695fcc70-62cd-49eb-bbbc-b7ed2239bbf5              cprt-21                     xp3old            box       # retired
+                          		        87eb4112-f55a-4759-88c7-69259b0d4d33              cprt-18                     xp3old            box       # retired
+                          		        1287af74-3219-407a-8275-714c31faa01d              cprt-19                     xp3old            box       # retired
+	                          	        65857f4a-7dc0-437f-9b2e-735af14d422c              cprt-20                     unknown           box       # retired
+                          		        ddccb256-5b7c-46cb-8d71-fc6a312a78d5              cprt-28                     unknown           box       # retired
+	                          	        0f39e081-8fb0-4a5c-b6fa-dbdac38c0752              cprt-32                     /alt/xp3          box       # retired
+		                                26d5ca22-342b-42b6-bc8c-f0820df3b504              cprt-32                     /alt/xp3          box       # retired
+	                          	        ce17f7cb-8a93-4daf-a6cd-78d8d2ae3110              cprt-26                     /arfs/xp4         box       # retired
+	                          	        303fa217-4917-4dc7-8373-0f27c8243bcb              cprt-22                     /home ID: ?       box       # retired
+	                          	        1c58a336-9ddd-4c8f-95ca-b9b7f439c40d              cprt-28                     /home ID: ?       box       # retired
 
 
 
@@ -52,12 +53,12 @@ Hitachi HDS723030ALA640   MK0311YHG3JT6A        bb9307ef-64ac-44a6-98b5-7807bd7b
     3.5_2  pci-0000:03:00.0-sas-phy7-lun-0
     3.5_3  pci-0000:03:00.0-sas-phy8-lun-0
 
-    3.5_4
-    3.5_5
-    3.5_6
-    3.5_7
-    3.5_8
-    3.5_9
+    3.5_4  pci-0000:03:00.0-sas-phy9-lun-0
+    3.5_5  pci-0000:03:00.0-sas-phy10-lun-0
+    3.5_6  pci-0000:03:00.0-sas-phy11-lun-0
+    3.5_7  pci-0000:03:00.0-sas-phy12-lun-0
+    3.5_8  pci-0000:03:00.0-sas-phy13-lun-0
+    3.5_9  pci-0000:03:00.0-sas-phy14-lun-0
 
     2.5_7
     2.5_8
