@@ -10,7 +10,7 @@ Samsung SSD 860 PRO 2TB   S41BNF0M204996P                                       
 Samsung SSD 860 PRO 2TB   S41BNF0M203711Z                                             2000398680           8,160  sdk                           2.5_8
 ST10000NM0086-2AA101      ZA23LL4E              00d1828b-2348-4ca8-b96a-3ad045645dc0  9766436864  cprt-45  8,32   sdc  dm-11  marker-r0         3.5_1
 ST10000NM0086-2AA101      ZA240FFT              7fd2935c-fe02-4ac6-97f1-20b95adfcfb8  9766436864  cprt-44  8,224  sdo  dm-10  /arfs/b236O       3.5_2
-HGST HDN724040ALE640      PK1334PCJZTSPS        63f5f9d8-7869-4766-bd03-2dc2dae8856f  3907018584  cprt-39  8,208  sdn  dm-10                    3.5_3     # to be retired
+                                                                                                                                                3.5_3     # empty
 WDC WD4003FZEX-00Z4SA0    WD-WMC1F0D99SSJ       6dbeefda-df4a-4f53-91d6-90f5b8886079  3907018584  cprt-41  8,96   sdg  dm-7   marker-r2         3.5_4
 ST12000NM0007-2A1101      ZJV0Q030              609d52dc-fae1-4721-9ae2-5cf2b81b1f8d 11718885376  cprt-49  8,224  sdq  dm-6   /arfs/nglcR       3.5_5
 HGST HDN724040ALE640      PK2334PEK42A1T        546fcfc9-25f2-4b68-b453-67a6996e1a9e  3907018584  cprt-40  8,160  sdk  dm-11  marker-r1         3.5_6
@@ -21,13 +21,14 @@ Samsung SSD 850 EVO 500GB S2RANX0HC15918Y       wwn-0x5002538d4187bf32          
 Samsung SSD 850 EVO 500GB S2RANX0HC15916X       wwn-0x5002538d4187bf1c                 488386584           8,0    sda         OSDISK:/          2.5_8     # ata1 errors
 
 # offline
+HGST HDN724040ALE640      PK1334PCJZTSPS        63f5f9d8-7869-4766-bd03-2dc2dae8856f  3907018584  cprt-39  8,208  sdn  dm-10  marker-r0         box       # retired
 WDC WD40EFRX-68WT0N0      WD-WCC4E7HAKFX7       609d52dc-fae1-4721-9ae2-5cf2b81b1f8d  3907018584  cprt-42  8,112  sdh  dm-6                     box       # retired
 ST4000VN008-2DR166        WDH1B5PC              cb2360f7-e246-4686-a225-c9e6eda0a4bb  3907018584  cprt-43  8,208  sdn  dm-8                     box       # retired
+ST4000VN000-1H4168        Z30425NK              b2408374-3be6-4025-951e-2896cd872f12  3907018584  cprt-38  8,224  sdo  dm-0   /home ID: 4       storage   # hba crasher at 85%
 HGST HDN724040ALE640      PK2334PCKGHW5B        f1afd54a-9f76-4eed-9e65-8fa2b00256d6  3907018584  cprt-36  8,192  sdm  dm-5   /home ID: 4       leslie    # retired
 ST4000VN000-1H4168        Z303FBDZ              04b14d87-e85b-401b-bf36-a0133fc195fc  3907018584  cprt-37  8,240  sdp  dm-1   /home ID: 3       leslie    # retired
 M4-CT064M4SSD2            000000001126031370D8  wwn-0x500a0751031370d8                  62522712           8,0    sde                           leslie    # retired
 M4-CT064M4SSD2            00000000112603137044  wwn-0x500a075103137044                  62522712           8,16   sdd                           leslie    # retired
-ST4000VN000-1H4168        Z30425NK              b2408374-3be6-4025-951e-2896cd872f12  3907018584  cprt-38  8,224  sdo  dm-0   /home ID: 4       storage   # hba crasher at 85%
 Hitachi HDS5C3030ALA630   MJ1311YNG5ZXNA        002da3eb-8cd7-4406-be62-2d12052d3886  2930266584  cprt-29  8,48   sdd  dm-0   /home ID: 5       leslie    # retired
 Hitachi HDS5C3030ALA630   MJ1313YNG2G16C        e42a1c34-210a-4f7d-b3db-34ede9f1b43a  2930266584  cprt-27  8,128  sdi  dm-8   /home ID: 3       leslie    # retired
 Hitachi HDS723030ALA640   MK0311YHG3JT6A        bb9307ef-64ac-44a6-98b5-7807bd7b4f5c  2930266584  cprt-25  8,112  sdh  dm-3   /arfs/xp2         leslie    # retired 
