@@ -9,14 +9,14 @@ Samsung SSD 860 PRO 1TB   S41ANGAK202789K       wwn-0x5002538e70024a6b          
 Samsung SSD 860 PRO 2TB   S41BNF0M204996P                                             2000398680           8,144  sdj                           2.5_7
 Samsung SSD 860 PRO 2TB   S41BNF0M203711Z                                             2000398680           8,160  sdk                           2.5_8
 ST10000NM0086-2AA101      ZA23LL4E              00d1828b-2348-4ca8-b96a-3ad045645dc0  9766436864  cprt-45  8,32   sdc  dm-11  marker-r0         3.5_1
-ST10000NM0086-2AA101      ZA240FFT              7fd2935c-fe02-4ac6-97f1-20b95adfcfb8  9766436864  cprt-44  8,224  sdo  dm-10  /arfs/b236O       3.5_2
-                                                                                                                                                3.5_3     # empty
+ST10000NM0086-2AA101      ZA240FFT              7fd2935c-fe02-4ac6-97f1-20b95adfcfb8  9766436864  cprt-44  8,224  sdo  dm-10  /arfs/b236O       3.5_2     # to be rotated
+ST16000NM001G-2KK103      ZL2038ZP              5cdd45db-804e-4c3f-8b78-98e717fd0148 15625879552  cprt-50  65,32  sds  dm-24  /arfs/LSU0r       3.5_3
 WDC WD4003FZEX-00Z4SA0    WD-WMC1F0D99SSJ       6dbeefda-df4a-4f53-91d6-90f5b8886079  3907018584  cprt-41  8,96   sdg  dm-7   marker-r2         3.5_4
-ST12000NM0007-2A1101      ZJV0Q030              609d52dc-fae1-4721-9ae2-5cf2b81b1f8d 11718885376  cprt-49  8,224  sdq  dm-6   /arfs/nglcR       3.5_5
+ST12000NM0007-2A1101      ZJV0Q030              609d52dc-fae1-4721-9ae2-5cf2b81b1f8d 11718885376           8,224  sdo  dm-6                     3.5_5     # to be rotated
 HGST HDN724040ALE640      PK2334PEK42A1T        546fcfc9-25f2-4b68-b453-67a6996e1a9e  3907018584  cprt-40  8,160  sdk  dm-11  marker-r1         3.5_6
 ST10000NM0086-2AA101      ZA23ZRZP              7276eaa0-d011-4a9d-8a31-86434ec67448  9766436864  cprt-46  65,16  sdr  dm-11  /home ID: 1       3.5_7
 ST10000NM0086-2AA101      ZA240WWV              1c81e6d0-c7a1-4ab8-9219-4826c1896a0e  9766436864  cprt-47  65,32  sds  dm-12  /home ID: 2       3.5_8
-ST12000NM0007-2A1101      ZJV0WMQD              cb2360f7-e246-4686-a225-c9e6eda0a4bb 11718885376           8,240  sdp  dm-8                     3.5_9     # to be rotated
+ST12000NM0007-2A1101      ZJV0WMQD              cb2360f7-e246-4686-a225-c9e6eda0a4bb 11718885376  cprt-49  8,208  sdn  dm-8   /arfs/nglcR       3.5_9     
 Samsung SSD 850 EVO 500GB S2RANX0HC15918Y       wwn-0x5002538d4187bf32                 488386584           8,16   sdb         OSDISK:/alt/root  2.5_7
 Samsung SSD 850 EVO 500GB S2RANX0HC15916X       wwn-0x5002538d4187bf1c                 488386584           8,0    sda         OSDISK:/          2.5_8     # ata1 errors
 
