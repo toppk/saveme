@@ -92,6 +92,42 @@ create table volumes (
     conn.commit()
     cur.close()
 
+def addbackup(volumeid, fileid, chksum):
+    pass
+
+def missingbackup(volumeid=None):
+    checksums = findbackup(volumeid, withbackup=False)
+    for chksum in checksums:
+        print('%s %s/%s' % (chksum[0], chksum[1], chksum[2].decode('utf-8')))
+
+def findbackup(volumeid=None, withbackup=True):
+    conn = sqlite3.connect('example.db')
+    cur = conn.cursor()
+    query = '''select  checksums.chksum,volumes.path, files.path, mirrors.* from checksums join files on checksums.volumeid = files.volumeid and checksums.fileid=files.fileid join volumes on checksums.volumeid = volumes.rowid left join mirrors on checksums.chksum = mirrors.chksum where 1=1'''
+    if not withbackup:
+        query += ' and mirrors.archiveid is null'
+    if volumeid is not None:
+        query += " and checksums.volumeid=%d" % volumeid
+    cur.execute(query)
+    checksums = []
+    for row in cur.fetchall():
+        checksums += [row]
+    cur.close()
+    return checksums
+
+def backupvolume(volumeid):
+    conn = sqlite3.connect('example.db')
+    cur = conn.cursor()
+    cur.execute('''select rowid, path, status, createdate from volumes where rowid=%d'''%volumeid)
+    volume = cur.fetchone()
+    if volume is None:
+        print("no volume with volumeid=%d"%volumeid)
+        return 3
+    volumeid, path, status, createdate = volume
+    if status != "checksummed":
+        print("will not work on this status")
+        return 2
+
 def addsum(volumeid, fileid, chksum):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
@@ -100,6 +136,37 @@ def addsum(volumeid, fileid, chksum):
                 (chksum, volumeid, fileid, getcurtime()))
     conn.commit()
     cur.close()
+
+def generatechecksum(path):
+    runner = TaskRunner()
+    runner.setvalue('path', path)
+    runner.runstep("generate-checksum")
+    if runner.getretcode() == 0:
+        if runner.getout() != "":
+            return runner.getout()
+
+def missingsum(volumeid=None):
+    files = findsum(volumeid, withsum=False)
+    for file in files:
+        print('%d %s %s/%s' % (file[0], file[1], file[2], file[3].decode('utf-8')))
+
+def findsum(volumeid=None, withsum=True):
+    conn = sqlite3.connect('example.db')
+    cur = conn.cursor()
+    query = '''select files.volumeid, files.fileid, volumes.path, files.path from files
+    left join checksums on files.fileid = checksums.fileid and files.volumeid=checksums.volumeid
+    join volumes on files.volumeid=volumes.rowid
+    where files.st_mode&32768'''
+    if not withsum:
+        query += ' and checksums.chksum is null'
+    if volumeid is not None:
+        query += " and volumes.rowid=%d" % volumeid
+    cur.execute(query)
+    files = []
+    for row in cur.fetchall():
+        files += [row]
+    cur.close()
+    return files
 
 def checksumvolume(volumeid):
     conn = sqlite3.connect('example.db')
@@ -115,60 +182,28 @@ def checksumvolume(volumeid):
         return 2
     print('%d %12s %s %s' % (volumeid, status, epoch2iso(int(createdate)), path))
     files = []
-    files = findsum(volumeid, withsums=False)
+    files = findsum(volumeid, withsum=False)
     for file in files:
         if file[0] != volumeid:
             print("this is odd %s" % (str(file)))
         chksum = generatechecksum("%s/%s"%(file[2], file[3].decode('utf-8')))
         if chksum is None:
-            print("errir in chksum")
+            print("err in chksum")
         else:
             addsum(file[0], file[1], chksum)
-    cur.execute('''update volumes set status='checksumed' where rowid=%d'''%(volumeid))
+    cur.execute('''update volumes set status='checksummed' where rowid=%d'''%(volumeid))
     conn.commit()
     cur.close()
 
-def generatechecksum(path):
-
-    runner = TaskRunner()
-    runner.setvalue('path', path)
-    runner.runstep("generate-checksum")
-    if runner.getretcode() == 0:
-        if runner.getout() != "":
-            return runner.getout()
-
-def listvolumes():
+def listarchives():
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
-    cur.execute('''select rowid, path, status, createdate from volumes''')
+    cur.execute('''select path, status, capacity, chkdate from archives''')
     for row in cur.fetchall():
-        rowid, path, status, createdate = row
-        print('%d %12s %s %s' % (rowid, status, epoch2iso(int(createdate)), path))
+        path, status, capacity, chkdate = row
+        print('%-24s %12s %s %10.2fGB' % (path, status, epoch2iso(int(chkdate)), capacity / 1e9 ))
     cur.close()
-
-def missingsum(volumeid=None):
-    files = findsum(volumeid, withsums=False)
-    for file in files:
-        print('%d %s %s/%s' % (file[0], file[1], file[2], file[3].decode('utf-8')))
-
-def findsum(volumeid=None, withsums=True):
-    conn = sqlite3.connect('example.db')
-    cur = conn.cursor()
-    query = '''select files.volumeid, files.fileid, volumes.path, files.path from files
-    left join checksums on files.fileid = checksums.fileid and files.volumeid=checksums.volumeid
-    join volumes on files.volumeid=volumes.rowid
-    where files.st_mode&32768'''
-    if not withsums:
-        query += ' and checksums.chksum is null'
-    if volumeid is not None:
-        query += " and volumes.rowid=%d" % volumeid
-    cur.execute(query)
-    files = []
-    for row in cur.fetchall():
-        files += [row]
-    cur.close()
-    return files
-
+    
 def registerarchive(path):
     path = abspath(path)
     try:
@@ -182,6 +217,15 @@ def registerarchive(path):
         print("Path is not a directory")
     except sqlite3.IntegrityError:
         print("There is already an archive with that name")
+
+def listvolumes():
+    conn = sqlite3.connect('example.db')
+    cur = conn.cursor()
+    cur.execute('''select rowid, path, status, createdate from volumes''')
+    for row in cur.fetchall():
+        rowid, path, status, createdate = row
+        print('%d %12s %s %s' % (rowid, status, epoch2iso(int(createdate)), path))
+    cur.close()
 
 def index(path):
     path = abspath(path)

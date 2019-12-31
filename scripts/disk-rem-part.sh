@@ -25,7 +25,7 @@ if ! echo $type | grep -q disk; then
     exit 2
 fi
 
-sfdisk -R /dev/$disk
+blockdev --rereadpt /dev/$disk
 err=$?
 if [ $err -ne 0 ];then
     echo $disk is busy

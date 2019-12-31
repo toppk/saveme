@@ -26,10 +26,10 @@ def makearfsfromdisk(disk):
         runner.runstep('verify-arid-unused')
         runner.runstep('add-archive-filesystem')
         time.sleep(0.2)
-        for step in ('verify-archive-filesystem',
-                     'mount-archive-filesystem',
-                     'check-archive-filesystem'):
-            runner.runstep(step)
+        runner.runstep('verify-archive-filesystem')
+        runner.runstep('mount-archive-filesystem')
+        time.sleep(0.2)
+        runner.runstep('check-archive-filesystem')
         runner.dump()
     except TaskRunner.MissingParamException as err:
         print("Missing parameter: [%s]"% err)
