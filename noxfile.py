@@ -15,7 +15,11 @@ def lint(session):
     )
 
     session.run("autoflake", "--in-place", "--recursive", *source_files)
-    session.run("seed-isort-config", "--application-directories=lib/saveme", success_codes=[0, 1])
+    session.run(
+        "seed-isort-config",
+        "--application-directories=lib/saveme",
+        success_codes=[0, 1],
+    )
     session.run("isort", "--project=saveme", "--recursive", "--apply", *source_files)
     session.run("black", "--target-version=py36", *source_files)
 
@@ -39,12 +43,7 @@ def check(session):
     session.run("flake8", *source_files)
     session.run("mypy", "lib/saveme")
     session.run(
-        "isort",
-        "--check",
-        "--diff",
-        "--project=saveme",
-        "--recursive",
-        *source_files,
+        "isort", "--check", "--diff", "--project=saveme", "--recursive", *source_files,
     )
 
 
@@ -69,4 +68,4 @@ def serve(session):
 @nox.session(python=["3.6", "3.7", "3.8"])
 def test(session):
     session.install("--upgrade", "-r", "test-requirements.txt")
-    session.run("python", "-m", "pytest", *session.posargs)
+    session.run("nosetests", "--with-coverage", "tests/python.py")
