@@ -1,6 +1,6 @@
 #model                    serial                uuid                                  capacity    luks     ma,mi  bsd  raid   usage             location   comments
 # active
-INTEL SSDSC2BP480G4       BTJR408407UU480BGN    18c340c8-48eb-40dd-baae-6ad9ff0ab494   468851544  cprt-30  8,64   sde  dm-3   /t2 ID: 1         2.5_1
+INTEL SSDSC2BP480G4       BTJR408407UU480BGN    18c340c8-48eb-40dd-baae-6ad9ff0ab494   468851544  cprt-30  8,96   sde  dm-3   /t2 ID: 1         2.5_1
 INTEL SSDSC2BP480G4       BTJR408404PJ480BGN    fe22ed18-2123-485c-a2d0-a47cf753a1d6   468851544  cprt-31  8,80   sdf  dm-2   /t2 ID: 2         2.5_2
 SanDisk SDSSDXPS480G      151110400369          b55369ff-f164-4741-a6d9-04ed49b928b5   468851544  cprt-34  8,48   sdd  dm-4   t3 mirror-0       2.5_3
 Crucial_CT512MX100SSD1    14420D869813          ea14ffc9-f0df-4bbd-a771-20d666e15096   500107608  cprt-35  8,176  sdl  dm-6   t3 mirror-0       2.5_4
@@ -10,10 +10,10 @@ Samsung SSD 860 PRO 2TB   S41BNF0M204996P                                       
 Samsung SSD 860 PRO 2TB   S41BNF0M203711Z                                             2000398680           8,160  sdk                           2.5_8
 ST10000NM0086-2AA101      ZA23LL4E              00d1828b-2348-4ca8-b96a-3ad045645dc0  9766436864  cprt-45  8,32   sdc  dm-11  marker-r0         3.5_1
 ST10000NM0086-2AA101      ZA240FFT              7fd2935c-fe02-4ac6-97f1-20b95adfcfb8  9766436864  cprt-44  8,224  sdo  dm-10  marker-r1         3.5_2
-ST16000NM001G-2KK103      ZL2038ZP              5cdd45db-804e-4c3f-8b78-98e717fd0148 15625879552  cprt-50  65,32  sds  dm-24  /arfs/LSU0r       3.5_3
-WDC WD4003FZEX-00Z4SA0    WD-WMC1F0D99SSJ       6dbeefda-df4a-4f53-91d6-90f5b8886079  3907018584  cprt-41  8,96   sdg  dm-7                     3.5_4     # to be retired
+ST16000NM001G-2KK103      ZL2038ZP              5cdd45db-804e-4c3f-8b78-98e717fd0148 15625879552  cprt-50  65,32  sds  dm-23  /arfs/LSU0r       3.5_3
+TOSHIBA MG07ACA14TA       2870A020F97G          d6f44e40-f220-4489-8b13-b6d964ac4de2 13672382464  cprt-52  8,64   sde  dm-24  /arfs/J9tPb       3.5_4
 ST12000NM0007-2A1101      ZJV0Q030              89787016-975d-4c4b-8897-b6ee8849d99c 11718885376  cprt-51  8,224  sdo  dm-25  marker-r2         3.5_5
-HGST HDN724040ALE640      PK2334PEK42A1T        546fcfc9-25f2-4b68-b453-67a6996e1a9e  3907018584  cprt-40  8,160  sdn  dm-11                    3.5_6     # to be retired
+                                                                                                                                                3.5_6     # next disk
 ST10000NM0086-2AA101      ZA23ZRZP              7276eaa0-d011-4a9d-8a31-86434ec67448  9766436864  cprt-46  65,16  sdr  dm-11  /home ID: 1       3.5_7
 ST10000NM0086-2AA101      ZA240WWV              1c81e6d0-c7a1-4ab8-9219-4826c1896a0e  9766436864  cprt-47  65,32  sds  dm-12  /home ID: 2       3.5_8
 ST12000NM0007-2A1101      ZJV0WMQD              cb2360f7-e246-4686-a225-c9e6eda0a4bb 11718885376  cprt-49  8,208  sdn  dm-8   /arfs/nglcR       3.5_9     
@@ -21,6 +21,8 @@ Samsung SSD 850 EVO 500GB S2RANX0HC15918Y       wwn-0x5002538d4187bf32          
 Samsung SSD 850 EVO 500GB S2RANX0HC15916X       wwn-0x5002538d4187bf1c                 488386584           8,0    sda         OSDISK:/          2.5_8     # ata1 errors
 
 # offline
+WDC WD4003FZEX-00Z4SA0    WD-WMC1F0D99SSJ       6dbeefda-df4a-4f53-91d6-90f5b8886079  3907018584  cprt-41  8,96   sdg  dm-7                     shelf     # retired
+HGST HDN724040ALE640      PK2334PEK42A1T        546fcfc9-25f2-4b68-b453-67a6996e1a9e  3907018584  cprt-40  8,160  sdn  dm-11                    shelf     # retired
 HGST HDN724040ALE640      PK1334PCJZTSPS        63f5f9d8-7869-4766-bd03-2dc2dae8856f  3907018584  cprt-39  8,208  sdn  dm-10  marker-r0         box       # retired
 WDC WD40EFRX-68WT0N0      WD-WCC4E7HAKFX7       609d52dc-fae1-4721-9ae2-5cf2b81b1f8d  3907018584  cprt-42  8,112  sdh  dm-6                     box       # retired
 ST4000VN008-2DR166        WDH1B5PC              cb2360f7-e246-4686-a225-c9e6eda0a4bb  3907018584  cprt-43  8,208  sdn  dm-8                     box       # retired
