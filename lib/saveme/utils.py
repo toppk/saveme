@@ -37,6 +37,8 @@ class TaskRunner:
     def dump(self):
         for key, value in self._dict.items():
             print("  Key=%s => Value=%s" % (key, value))
+        for key, value in self._alias.items():
+            print("  Alias=%s => Origkey=%s" % (key, value))
 
     def getout(self):
         return self._output
