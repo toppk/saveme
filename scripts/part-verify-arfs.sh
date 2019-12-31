@@ -20,8 +20,12 @@ if ! test -b /dev/$part; then
     exit 4
 fi
 
-if [ "$( lsblk /dev/$part -r  -o fstype,label -n )" != "ext4 $arid" ]; then
+udevadm settle
+
+info=$( lsblk /dev/$part -r  -o fstype,label -n )
+if [ "$info" != "ext4 $arid" ]; then
     echo "#  FAILURE: $part does not contain expected fstype,label"
+    echo "#  info== $info"
     exit 7
 fi
 echo "#  SUCCESS: $part contains expected fstype,label"

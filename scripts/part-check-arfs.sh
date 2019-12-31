@@ -14,6 +14,9 @@ fi
    
 arid=$1
 
+# todo: remove extra mount check (it's needed for reliability)
+df --output /arfs/$arid
+
 if [ $( df --output /arfs/$arid | tail -1 | awk '{ print $2 }' ) != "ext4" ]; then
     echo "#  FAILURE: /arfs/$arid is not as expected"
     exit 8
