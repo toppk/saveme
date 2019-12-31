@@ -14,19 +14,23 @@ SETTINGS = {
 }
 
 
-def getsnapshotpattern():
+def getsnapshotpattern() -> str:
+    assert isinstance(SETTINGS["snapshot-pattern"], str)
     return SETTINGS["snapshot-pattern"]
 
 
-def getdefsnappol():
+def getdefsnappol() -> str:
+    assert isinstance(SETTINGS["default-snapshot-policy"], str)
     return SETTINGS["default-snapshot-policy"]
 
 
-def getdbdir():
+def getdbdir() -> str:
+    assert isinstance(SETTINGS["database-directory"], str)
     return SETTINGS["database-directory"]
 
 
-def getscriptsdir():
+def getscriptsdir() -> str:
+    assert isinstance(SETTINGS["scripts-directory"], str)
     return SETTINGS["scripts-directory"]
 
 

@@ -1,6 +1,4 @@
-#
-#
-#
+from typing import List
 
 from .block import genarid, makearfsfromdisk
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
@@ -20,13 +18,13 @@ from .snapshots import create, deletesnapshot, listsnapshot, manage
 
 
 class CommandLine:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def mirroradm(self, args):
+    def mirroradm(self, args: List[str]) -> int:
         status = 1
 
-        def usage(proc):
+        def usage(proc: str) -> None:
             print(
                 """usage: %s
 
@@ -110,8 +108,8 @@ register-archive <path>
             status = 5
         return status
 
-    def disktool(self, args):
-        def usage(proc):
+    def disktool(self, args: List[str]) -> int:
+        def usage(proc: str) -> None:
             print(
                 """usage: %s
 
@@ -146,8 +144,8 @@ OPTIONS
             status = 3
         return status
 
-    def snapmgr(self, args):
-        def usage(proc):
+    def snapmgr(self, args: List[str]) -> int:
+        def usage(proc: str) -> None:
             print(
                 """usage: %s
 
@@ -238,6 +236,6 @@ OPTIONS
             status = 2
         return status
 
-    def help(self):
+    def help(self) -> bool:
         print("i am suppossed to go, check usage")
         return True
