@@ -1,19 +1,21 @@
 import sqlite3
+from typing import List
 
 # from .cfg import getdbdir as _cfg_database_directory
 from .external import abspath, epoch2iso, getcurtime, indexer
+from .types import Backup, ChecksumError, File
 from .utils import StopException, TaskRunner, getcap
 
 
-def indexpath(path):
-    for file in indexer(path):
+def indexpath(path: str) -> None:
+    for file_path, _inode in indexer(path):
         try:
-            print("%s/%s" % (path, file[0]))  # S_ISDIR(res.st_mode),fp))
+            print("%s/%s" % (path, file_path))  # S_ISDIR(res.st_mode),fp))
         except UnicodeEncodeError:
-            print("%s/%s" % (path, file[0].encode("utf-8", "surrogateescape")))
+            print("%s/%r" % (path, file_path.encode("utf-8", "surrogateescape")))
 
 
-def createdb():
+def createdb() -> None:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     try:
@@ -99,20 +101,23 @@ create table volumes (
     cur.close()
 
 
-def addbackup(volumeid, fileid, chksum):
+def addbackup(volumeid: str, fileid: str, chksum: str) -> None:
     pass
 
 
-def missingbackup(volumeid=None):
+def missingbackup(volumeid: int = None) -> None:
     checksums = findbackup(volumeid, withbackup=False)
     for chksum in checksums:
-        print("%s %s/%s" % (chksum[0], chksum[1], chksum[2].decode("utf-8")))
+        print(
+            "%s %s/%s"
+            % (chksum.chksum, chksum.volume_path, chksum.file_path.decode("utf-8"))
+        )
 
 
-def findbackup(volumeid=None, withbackup=True):
+def findbackup(volumeid: int = None, withbackup: bool = True) -> List[Backup]:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
-    query = """select  checksums.chksum,volumes.path, files.path, mirrors.* from
+    query = """select  checksums.chksum, volumes.path, files.path, mirrors.* from
                checksums join files on checksums.volumeid = files.volumeid and
                checksums.fileid=files.fileid join volumes on
                checksums.volumeid = volumes.rowid left join mirrors
@@ -122,14 +127,14 @@ def findbackup(volumeid=None, withbackup=True):
     if volumeid is not None:
         query += " and checksums.volumeid=%d" % volumeid
     cur.execute(query)
-    checksums = []
+    checksums: List[Backup] = []
     for row in cur.fetchall():
-        checksums += [row]
+        checksums += [Backup(*row)]
     cur.close()
     return checksums
 
 
-def backupvolume(volumeid):
+def backupvolume(volumeid: int) -> int:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     cur.execute(
@@ -144,9 +149,10 @@ def backupvolume(volumeid):
     if status != "checksummed":
         print("will not work on this status")
         return 2
+    return 0
 
 
-def addsum(volumeid, fileid, chksum):
+def addsum(volumeid: int, fileid: str, chksum: str) -> None:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     print("inserting for %d, %s" % (volumeid, fileid))
@@ -158,22 +164,31 @@ def addsum(volumeid, fileid, chksum):
     cur.close()
 
 
-def generatechecksum(path):
+def generatechecksum(path: str) -> str:
     runner = TaskRunner()
     runner.setvalue("path", path)
     runner.runstep("generate-checksum")
     if runner.getretcode() == 0:
         if runner.getout() != "":
             return runner.getout()
+    raise ChecksumError()
 
 
-def missingsum(volumeid=None):
+def missingsum(volumeid: int = None) -> None:
     files = findsum(volumeid, withsum=False)
-    for file in files:
-        print("%d %s %s/%s" % (file[0], file[1], file[2], file[3].decode("utf-8")))
+    for myfile in files:
+        print(
+            "%d %s %s/%s"
+            % (
+                myfile.volume_id,
+                myfile.file_id,
+                myfile.volume_path,
+                myfile.file_path.decode("utf-8"),
+            )
+        )
 
 
-def findsum(volumeid=None, withsum=True):
+def findsum(volumeid: int = None, withsum: bool = True) -> List[File]:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     query = """select files.volumeid, files.fileid, volumes.path, files.path from files
@@ -185,14 +200,14 @@ def findsum(volumeid=None, withsum=True):
     if volumeid is not None:
         query += " and volumes.rowid=%d" % volumeid
     cur.execute(query)
-    files = []
+    files: List[File] = []
     for row in cur.fetchall():
-        files += [row]
+        files += [File(*row)]
     cur.close()
     return files
 
 
-def checksumvolume(volumeid):
+def checksumvolume(volumeid: int) -> int:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     cur.execute(
@@ -210,22 +225,25 @@ def checksumvolume(volumeid):
     print("%d %12s %s %s" % (volumeid, status, epoch2iso(int(createdate)), path))
     files = []
     files = findsum(volumeid, withsum=False)
-    for file in files:
-        if file[0] != volumeid:
-            print("this is odd %s" % (str(file)))
-        chksum = generatechecksum("%s/%s" % (file[2], file[3].decode("utf-8")))
+    for myfile in files:
+        if myfile.volume_id != volumeid:
+            print("this is odd %s" % (str(myfile)))
+        chksum = generatechecksum(
+            "%s/%s" % (myfile.volume_path, myfile.file_path.decode("utf-8"))
+        )
         if chksum is None:
             print("err in chksum")
         else:
-            addsum(file[0], file[1], chksum)
+            addsum(myfile.volume_id, myfile.file_id, chksum)
     cur.execute(
         """update volumes set status='checksummed' where rowid=%d""" % (volumeid)
     )
     conn.commit()
     cur.close()
+    return 0
 
 
-def listarchives():
+def listarchives() -> None:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     cur.execute("""select path, status, capacity, chkdate from archives""")
@@ -238,7 +256,7 @@ def listarchives():
     cur.close()
 
 
-def registerarchive(path):
+def registerarchive(path: str) -> None:
     path = abspath(path)
     try:
         conn = sqlite3.connect("example.db")
@@ -255,7 +273,7 @@ def registerarchive(path):
         print("There is already an archive with that name")
 
 
-def listvolumes():
+def listvolumes() -> None:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     cur.execute("""select rowid, path, status, createdate from volumes""")
@@ -265,7 +283,7 @@ def listvolumes():
     cur.close()
 
 
-def index(path):
+def index(path: str) -> int:
     path = abspath(path)
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
@@ -273,15 +291,14 @@ def index(path):
     cur.execute("insert into volumes values (?,?,?)", (path, "indexed", getcurtime()))
     volumeid = cur.lastrowid
     try:
-        for file in indexer(path):
-            inode = file[1]
+        for file_path, inode in indexer(path):
             fileid = "%d:%d" % (inode.st_dev, inode.st_ino)
             cur.execute(
                 "insert into files values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (
                     volumeid,
                     fileid,
-                    file[0].encode("utf8", "surrogateescape"),
+                    file_path.encode("utf8", "surrogateescape"),
                     inode.st_uid,
                     inode.st_gid,
                     int(inode.st_atime_ns / 1e3),

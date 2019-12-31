@@ -5,14 +5,15 @@
 import time
 
 from .external import getid
+from .types import MissingParamException
 from .utils import StopException, TaskRunner
 
 
-def genarid():
+def genarid() -> str:
     return getid()
 
 
-def makearfsfromdisk(disk):
+def makearfsfromdisk(disk: str) -> int:
     runner = TaskRunner()
     try:
         runner.setvalue("disk", disk)
@@ -35,7 +36,7 @@ def makearfsfromdisk(disk):
         time.sleep(0.2)
         runner.runstep("check-archive-filesystem")
         runner.dump()
-    except TaskRunner.MissingParamException as err:
+    except MissingParamException as err:
         print("Missing parameter: [%s]" % err)
         runner.dump()
         return 1

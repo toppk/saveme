@@ -1,29 +1,27 @@
-#
-#
-#
+from typing import List, Tuple
 
 from .cfg import getsnapshotpattern as _cfg_snapshot_pattern
 from .external import getcurtime, match, parsedate
 from .utils import StopException, TaskRunner, parsepolicy
 
 
-def deletesnapshot(path, label):
+def deletesnapshot(path: str, label: str) -> int:
     runner = TaskRunner()
     runner.setvalue("path", path)
     runner.setvalue("label", label)
     return runner.runstep("delete-snap")
 
 
-def create(path, label=None, promptuser=True):
+def create(path: str, label: str = None, promptuser: bool = True) -> int:
     runner = TaskRunner()
     runner.setvalue("path", path)
-    options = []
+    options: List[Tuple[str, str]] = []
     if label is not None:
         options += [("label", label)]
     return runner.runstep("take-snap", options=options, promptuser=promptuser)
 
 
-def listsnapshot(path):
+def listsnapshot(path: str) -> int:
     runner = TaskRunner()
     runner.setvalue("path", path)
     runner.runstep("list-snap")
@@ -33,9 +31,10 @@ def listsnapshot(path):
     return runner.getretcode()
 
 
-def manage(path, policy=None, promptuser=None):
+def manage(path: str, policy: str = None, promptuser: bool = True) -> int:
     res = []
     try:
+        assert policy is not None
         parsepolicy(policy)
     except ValueError as err:
         print("issues with policy [%s]" % (err))
@@ -50,7 +49,7 @@ def manage(path, policy=None, promptuser=None):
         print("no snapshots to manage")
         return 0
     snapshots = runner.getout().split("\n")
-    tsnap = []
+    tsnap: List[str] = []
     for snap in snapshots:
         if match(snap, _cfg_snapshot_pattern()):
             tsnap += [snap]
@@ -70,11 +69,11 @@ def manage(path, policy=None, promptuser=None):
     return runner.getretcode()
 
 
-def culltimeline(datearr, policy, now):
-    res = []
+def culltimeline(datearr: List[str], policy: str, now: int) -> List[str]:
+    res: List[str] = []
     prunemap = parsepolicy(policy)
     old = None
-    dates = []
+    dates: List[Tuple[int, str]] = []
     for sdatestr in datearr:
         dates += [(parsedate(sdatestr), sdatestr)]
     dates.sort()

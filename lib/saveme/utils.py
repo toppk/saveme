@@ -1,57 +1,60 @@
 import re
+from typing import Dict, List, Optional, Tuple, Union
 
 from .cfg import getscriptsdir as _cfg_scripts_directory
 from .external import runcommand
 from .schema import findscript
-
-
-class StopException(Exception):
-    pass
+from .types import MissingParamException, SnapPolicy, StopException
 
 
 class TaskRunner:
-    class MissingParamException(Exception):
-        pass
+    def __init__(self) -> None:
+        self._dict: Dict[str, str] = {}
+        self._alias: Dict[str, str] = {}
+        self._output: Optional[str] = None
+        self._retcode: Optional[int] = None
 
-    def __init__(self):
-        self._dict = {}
-        self._alias = {}
-        self._output = None
-        self._retcode = None
-
-    def getretcode(self):
+    def getretcode(self) -> int:
+        assert isinstance(self._retcode, int)
         return self._retcode
 
-    def setvalue(self, key, value):
+    def setvalue(self, key: str, value: str) -> None:
         self._dict[key] = value
 
-    def addalias(self, origkey, alias):
+    def addalias(self, origkey: str, alias: str) -> None:
         self._alias[alias] = origkey
 
-    def getvalue(self, alias):
+    def getvalue(self, alias: str) -> str:
         if alias in self._alias:
             alias = self._alias[alias]
 
         return self._dict[alias]
 
-    def dump(self):
+    def dump(self) -> None:
         for key, value in self._dict.items():
             print("  Key=%s => Value=%s" % (key, value))
         for key, value in self._alias.items():
             print("  Alias=%s => Origkey=%s" % (key, value))
 
-    def getout(self):
+    def getout(self) -> str:
+        assert isinstance(self._output, str)
         return self._output
 
-    def runstep(self, step, options=None, stdin=None, promptuser=True):
+    def runstep(
+        self,
+        step: str,
+        options: List[Tuple[str, str]] = None,
+        stdin: str = None,
+        promptuser: bool = True,
+    ) -> int:
         action = findscript(step)
         # print("action[%s]: %s with [%s] that is a cmdgen=%s" %
         #      (step, action['script'], action['args'],
         #       action['generates-commands']))
-        args = ["/bin/bash", "%s/%s" % (_cfg_scripts_directory(), action["script"])]
-        for arg in action["args"]:
+        args = ["/bin/bash", "%s/%s" % (_cfg_scripts_directory(), action.script)]
+        for arg in action.args:
             if arg not in self._dict and arg not in self._alias:
-                raise TaskRunner.MissingParamException("Cannot find %s in dict" % arg)
+                raise MissingParamException("Cannot find %s in dict" % arg)
             args += [self.getvalue(arg)]
 
         if options is not None:
@@ -67,16 +70,17 @@ class TaskRunner:
                 match = regex.match(line)
                 if match is not None:
                     self._dict[match.group(1)] = match.group(2)
-            if action["generates-commands"]:
+            if action.generates_commands:
                 if out == "":
                     print("NO ACTION GENERATED")
                 self._retcode = launch(out, promptuser=promptuser)
         else:
             print("FAILURE - %s issues [%s][%s][%d]" % (step, out, err, retcode))
             raise StopException()
+        return retcode
 
 
-def launch(cmds, promptuser=True):
+def launch(cmds: str, promptuser: bool = True) -> bool:
     if promptuser:
         print(
             """SUGGESTED ACTION
@@ -108,42 +112,43 @@ def launch(cmds, promptuser=True):
     return True
 
 
-def getcap(path):
+def getcap(path: str) -> int:
     runner = TaskRunner()
     runner.setvalue("path", path)
     runner.runstep("get-filesystem-capacity")
     return int(runner.getvalue("capacity"))
 
 
-def parsepolicy(policystr):
-    rules = []
+def parsepolicy(policystr: str) -> List[SnapPolicy]:
+    rules: List[SnapPolicy] = []
     for rule in policystr.split(","):
         rule = rule.strip()
-        (rangespec, sparseness) = rule.split(":")
-        sparseness = sparseness.strip()
+        (rangespec, sparse) = rule.split(":")
+        sparse = sparse.strip()
         rangespec = rangespec.strip()
         start = None
         end = None
-        if sparseness not in ("all", "none"):
-            sparseness = parsehdate(sparseness)
+        sparseness: Union[str, int] = sparse if sparse in (
+            "all",
+            "none",
+        ) else parsehdate(sparse)
         if rangespec.find("-") > 0:
-            (start, end) = rangespec.split("-")
-            (start, end) = (parsehdate(start), parsehdate(end))
+            start, end = [parsehdate(hdate) for hdate in rangespec.split("-")]
         elif rangespec.endswith("+"):
             start = parsehdate(rangespec[:-1])
         else:
-            print("this is bad")
+            raise ValueError("this is bad")
         if end is not None and start > end:
             raise ValueError(
                 "cannot end before you start %s - %s[%s]" % (start, end, rangespec)
             )
-        rules += [(start, end, sparseness, rule)]
+        rules += [SnapPolicy(start, end, sparseness, rule)]
 
     # need to sort and quality check the rules (and fill any gaps)
     return rules
 
 
-def parsehdate(timestr):
+def parsehdate(timestr: str) -> int:
     # no mo(nth) as there isn't a time definition of a month.
     time = None
     timestr = timestr.strip()
@@ -153,7 +158,7 @@ def parsehdate(timestr):
         time = int(int(timestr[:-2]) * 365 * 24 * 60 * 60 * 1e6)
     elif timestr.endswith("mo"):
         # I said no month
-        print("no mo(nth) support")
+        raise ValueError("no mo(nth) support")
     elif timestr.endswith("wk"):
         time = int(int(timestr[:-2]) * 7 * 24 * 60 * 60 * 1e6)
     elif timestr.endswith("dy"):

@@ -1,7 +1,3 @@
-#
-#
-#
-
 import os
 import queue
 import random
@@ -11,17 +7,18 @@ import subprocess
 import time
 from datetime import datetime, timezone
 from stat import S_ISDIR
+from typing import Generator, List, Tuple
 
 
-def abspath(path):
+def abspath(path: str) -> str:
     return os.path.abspath(path)
 
 
-def getid():
+def getid() -> str:
     return getrandom(5, justalphanum=True)
 
 
-def getrandom(length, justalphanum=False):
+def getrandom(length: int, justalphanum: bool = False) -> str:
     chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
     alphas = string.ascii_lowercase + string.ascii_uppercase
     if not justalphanum:
@@ -39,14 +36,14 @@ def getrandom(length, justalphanum=False):
     )
 
 
-def indexer(path):
+def indexer(path: str) -> Generator[Tuple[str, os.stat_result], None, None]:
     if not os.path.isdir(path):
         raise ValueError("path %s is not a directory" % path)
     # print("supposed to index %s to %s" % (path,_cfg_database_directory()))
     if path[-1] != "/":
         path += "/"
     yield (".", os.lstat(path))
-    myqueue = queue.Queue()
+    myqueue: queue.Queue = queue.Queue()
     myqueue.put(path)
     while not myqueue.empty():
         entry = myqueue.get()
@@ -58,7 +55,7 @@ def indexer(path):
             yield (filepath[len(path) :], res)
 
 
-def runcommand(args, stdin=None):
+def runcommand(args: List[str], stdin: str = None) -> Tuple[int, str, str]:
     if stdin is not None:
         proc = subprocess.Popen(
             args,
@@ -80,11 +77,11 @@ def runcommand(args, stdin=None):
     return retcode, out.decode("utf-8"), err.decode("utf-8")
 
 
-def getcurtime():
+def getcurtime() -> int:
     return int(time.time() * 1e6)
 
 
-def epoch2iso(epochmicros):
+def epoch2iso(epochmicros: int) -> str:
     thedate = datetime.fromtimestamp(epochmicros / 1e6)
     thedate = datetime.fromtimestamp(time.time())
     strdate = thedate.strftime("%Y-%m-%dT%H:%M:%S")
@@ -96,7 +93,7 @@ def epoch2iso(epochmicros):
     return strdate + utcoffset
 
 
-def parsedate(timespec):
+def parsedate(timespec: str) -> int:
     pattern = "%Y-%m-%dT%H:%M:%S"
     datestr = timespec[:-5]
     sign = int(timespec[-5:-4] + "1")
@@ -107,7 +104,7 @@ def parsedate(timespec):
     return int(1e6 * (int(utcdate.timestamp()) - utcoffset))
 
 
-def match(string, pattern):
+def match(string: str, pattern: str) -> bool:
     return re.search("^%s$" % pattern, string) is not None
 
 
