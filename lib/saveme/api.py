@@ -1,14 +1,24 @@
-
 #
 #
 #
 
-from .mirror import index, createdb, missingsum, addsum, \
-    listvolumes, checksumvolume, registerarchive, listarchives, \
-    missingbackup, addbackup, backupvolume
-from .snapshots import manage, create, listsnapshot, deletesnapshot
-from .block import makearfsfromdisk, genarid
+from .block import genarid, makearfsfromdisk
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
+from .mirror import (
+    addbackup,
+    addsum,
+    backupvolume,
+    checksumvolume,
+    createdb,
+    index,
+    listarchives,
+    listvolumes,
+    missingbackup,
+    missingsum,
+    registerarchive,
+)
+from .snapshots import create, deletesnapshot, listsnapshot, manage
+
 
 class CommandLine:
     def __init__(self):
@@ -16,8 +26,10 @@ class CommandLine:
 
     def mirroradm(self, args):
         status = 1
+
         def usage(proc):
-            print("""usage: %s
+            print(
+                """usage: %s
 
  COMMANDS
            index <path>
@@ -30,7 +42,9 @@ register-archive <path>
         checksum <volumeid>
   missing-chksum
   provide-chksum  <volumeid> <fileid> <checksum>
-         resetdb""" % proc)
+         resetdb"""
+                % proc
+            )
 
         if len(args) == 1:
             usage(args[0])
@@ -99,14 +113,18 @@ register-archive <path>
 
     def disktool(self, args):
         def usage(proc):
-            print("""usage: %s
+            print(
+                """usage: %s
 
 COMMANDS
  disk-to-arfs <disk>
  generate-arid
 
 OPTIONS
- disk = disk to use (e.g. hda)""" % proc)
+ disk = disk to use (e.g. hda)"""
+                % proc
+            )
+
         status = 12
         if len(args) == 1:
             usage(args[0])
@@ -131,7 +149,8 @@ OPTIONS
 
     def snapmgr(self, args):
         def usage(proc):
-            print("""usage: %s
+            print(
+                """usage: %s
 
 COMMANDS
  manage <path> [--policy=XXX] [--noprompt]
@@ -142,7 +161,9 @@ COMMANDS
 OPTIONS
  policy = [0-9]*[hr,dy,wk,yr]
  label = use a manual id
- noprompt = will take action, no pause for confirmation""" % proc)
+ noprompt = will take action, no pause for confirmation"""
+                % proc
+            )
 
         status = 12
         if len(args) == 1:
@@ -152,8 +173,10 @@ OPTIONS
                 print("manage: you must specify <path>")
                 status = 1
             elif args[2] in ("--help", "help"):
-                print("""usage: manage  <path> [--policy=XXX] [--noprompt]
-                example policy="1wk+\"""")
+                print(
+                    """usage: manage  <path> [--policy=XXX] [--noprompt]
+                example policy="1wk+\""""
+                )
                 status = 12
             else:
                 pool = args[2]
@@ -167,8 +190,10 @@ OPTIONS
                     else:
                         print("unknown option = %s" % options)
                         return 3
-                print("Managing snapshots for path=\"%s\" with policy=\"%s\" "
-                      % (pool, policy))
+                print(
+                    'Managing snapshots for path="%s" with policy="%s" '
+                    % (pool, policy)
+                )
                 status = manage(pool, policy, promptuser=promptuser)
         elif args[1] == "list":
             if len(args) == 2:
@@ -215,6 +240,5 @@ OPTIONS
         return status
 
     def help(self):
-        print('i am suppossed to go, check usage')
+        print("i am suppossed to go, check usage")
         return True
-
