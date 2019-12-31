@@ -1,0 +1,23 @@
+# -test snapshots.sh
+# -test every unit
+# +highlevel 1/5
+# +snapshot-py  4/5
+# +snapshot-sh  8/10
+# -plugable conventions
+# -beta
+# -odd file tests (unprintables, spaces, non-utf8, right to left)
+# +index
+# +backups
+# -announcement
+# +timeline
+# +archive
+# -sequences
+# +webui
+# -lowlevel-teardown cleanup
+# ?SMART
+# ?firmware
+# ?send/recv
+# ?dedup
+# ?pluggable conventions
+# ?chunking
+# ?non-systemd

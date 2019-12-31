@@ -1,0 +1,60 @@
+
+[root@static zfs-0.6.4]# zpool import
+
+   pool: t3
+     id: 17598977423876563220
+  state: ONLINE
+ status: Some supported features are not enabled on the pool.
+ action: The pool can be imported using its name or numeric identifier, though
+        some features will not be available without an explicit 'zpool upgrade'.
+ config:
+
+        t3           ONLINE
+          mirror-0   ONLINE
+            cprt-35  ONLINE
+            cprt-34  ONLINE
+
+
+[root@static zfs-0.6.4]# service zed stop
+Redirecting to /bin/systemctl stop  zed.service
+[root@static zfs-0.6.4]# ^C
+[root@static zfs-0.6.4]# lsmod | grep zfs
+zfs                  1208717  3 
+zunicode              330821  1 zfs
+zavl                   14419  1 zfs
+zcommon                43856  1 zfs
+znvpair                80040  2 zfs,zcommon
+spl                   187996  5 zfs,zavl,zunicode,zcommon,znvpair
+[root@static zfs-0.6.4]# rmmod zunicode
+[root@static zfs-0.6.4]# zfs unmount -a
+[root@static zfs-0.6.4]#  zpool export t3
+   198  systemctl stop zfs-mount.service
+  199  systemctl stop zfs.target
+[root@static zfs-0.6.4]# find  /lib/modules/3.19.3-200.fc21.x86_64 -mtime -1 -ls
+3277825    4 drwxr-xr-x   6 root     root         4096 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64
+3287736  800 -rw-r--r--   1 root     root       816437 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.alias.bin
+3288099   12 -rw-r--r--   1 root     root         9726 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.builtin.bin
+  3508    4 drwxr-xr-x   5 root     root         4096 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/extra
+  2057  108 -rw-r--r--   1 root     root       108328 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/extra/znvpair.ko
+  1364   12 -rw-r--r--   1 root     root        11304 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/extra/zavl.ko
+  7352   32 -rw-r--r--   1 root     root        31144 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/extra/zpios.ko
+  2139   64 -rw-r--r--   1 root     root        64664 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/extra/zcommon.ko
+  2137  324 -rw-r--r--   1 root     root       329680 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/extra/zunicode.ko
+  7006 2052 -rw-r--r--   1 root     root      2097416 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/extra/zfs.ko
+3276946  280 -rw-r--r--   1 root     root       285815 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.dep
+3287984  356 -rw-r--r--   1 root     root       360779 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.symbols
+3288057  820 -rw-r--r--   1 root     root       835776 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.alias
+3288080    4 -rw-r--r--   1 root     root           84 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.softdep
+3288085  436 -rw-r--r--   1 root     root       445317 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.symbols.bin
+3288112    4 -rw-r--r--   1 root     root          349 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.devname
+3287981  400 -rw-r--r--   1 root     root       409412 Apr 24 20:54 /lib/modules/3.19.3-200.fc21.x86_64/modules.dep.bin
+[root@static zfs-0.6.4]# date
+
+
+
+
+[toppk@static ~]$ for dir in  module/ include/ cmd/ lib/ ; do diff  -qr $dir ~toppk/workspace/zfs/$dir;done | grep -v gitignore | grep -v \\.pc | awk '{ print "cat " $4 " > " $2 }' ^C
+[toppk@static ~]$ /usr/lib/dkms/common.postinst zfs 0.6.4^C
+[toppk@static ~]$ git clone https://github.com/behlendorf/zfs.git^C
+[toppk@static ~]$ git checkout 691db53835aff52a4a9a540259d92e8f4fb787dc^C
+

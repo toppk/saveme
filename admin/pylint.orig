@@ -1,0 +1,710 @@
+************* Module saveme
+C:  1, 0: Missing module docstring (missing-docstring)
+************* Module saveme.utils
+C:  9, 0: Line too long (136/80) (line-too-long)
+C: 12, 0: Line too long (133/80) (line-too-long)
+C: 13, 0: Trailing whitespace (trailing-whitespace)
+C: 23, 0: Trailing whitespace (trailing-whitespace)
+C: 26, 0: Trailing whitespace (trailing-whitespace)
+C: 28, 0: Trailing whitespace (trailing-whitespace)
+C: 32, 0: Exactly one space required after comma
+        (ra,sc) = rule.split(":")
+           ^ (bad-whitespace)
+C: 33, 0: Trailing whitespace (trailing-whitespace)
+C: 37, 0: Exactly one space required after comma
+        if sc not in ("all","none"):
+                           ^ (bad-whitespace)
+C: 40, 0: Exactly one space required after comma
+            (start,end) = ra.split("-")
+                  ^ (bad-whitespace)
+C: 41, 0: Exactly one space required after comma
+            (start,end) = (parsehdate(start),parsehdate(end))
+                  ^ (bad-whitespace)
+C: 41, 0: Exactly one space required after comma
+            (start,end) = (parsehdate(start),parsehdate(end))
+                                            ^ (bad-whitespace)
+C: 43, 0: Exactly one space required around assignment
+            start=parsehdate(ra[:-1])
+                 ^ (bad-whitespace)
+C: 48, 0: Exactly one space required after comma
+        rules += [(start,end,sc,rule)]
+                        ^ (bad-whitespace)
+C: 48, 0: Exactly one space required after comma
+        rules += [(start,end,sc,rule)]
+                            ^ (bad-whitespace)
+C: 48, 0: Exactly one space required after comma
+        rules += [(start,end,sc,rule)]
+                               ^ (bad-whitespace)
+C:  1, 0: Missing module docstring (missing-docstring)
+C:  7, 0: Missing function docstring (missing-docstring)
+C: 27, 0: Missing function docstring (missing-docstring)
+C: 32, 9: Invalid variable name "ra" (invalid-name)
+C: 32,12: Invalid variable name "sc" (invalid-name)
+C: 33, 8: Invalid variable name "sc" (invalid-name)
+C: 34, 8: Invalid variable name "ra" (invalid-name)
+C: 38,12: Invalid variable name "sc" (invalid-name)
+C: 53, 0: Missing function docstring (missing-docstring)
+R: 53, 0: Too many return statements (7/6) (too-many-return-statements)
+************* Module saveme.external
+C: 10, 0: Exactly one space required after comma
+from datetime import datetime,timezone
+                             ^ (bad-whitespace)
+C: 13, 0: Exactly one space required after comma
+def runcommand(args,stdin=None):
+                   ^ (bad-whitespace)
+C: 15, 0: Line too long (143/80) (line-too-long)
+C: 15, 0: Exactly one space required after comma
+        sp = subprocess.Popen(args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+                                  ^ (bad-whitespace)
+C: 15, 0: Exactly one space required after comma
+        sp = subprocess.Popen(args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+                                                        ^ (bad-whitespace)
+C: 15, 0: Exactly one space required after comma
+        sp = subprocess.Popen(args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+                                                                               ^ (bad-whitespace)
+C: 15, 0: Exactly one space required after comma
+        sp = subprocess.Popen(args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+                                                                                                      ^ (bad-whitespace)
+C: 16, 0: Exactly one space required after comma
+        out,err = sp.communicate(input=bytes(stdin,"utf-8"))
+           ^ (bad-whitespace)
+C: 16, 0: Exactly one space required after comma
+        out,err = sp.communicate(input=bytes(stdin,"utf-8"))
+                                                  ^ (bad-whitespace)
+C: 18, 0: Line too long (121/80) (line-too-long)
+C: 18, 0: Exactly one space required after comma
+        sp = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+                                  ^ (bad-whitespace)
+C: 18, 0: Exactly one space required after comma
+        sp = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+                                                         ^ (bad-whitespace)
+C: 18, 0: Exactly one space required after comma
+        sp = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=dict(os.environ, PATH="/bin:/sbin"))
+                                                                                ^ (bad-whitespace)
+C: 19, 0: Exactly one space required after comma
+        out,err = sp.communicate()
+           ^ (bad-whitespace)
+C: 20, 0: Trailing whitespace (trailing-whitespace)
+C: 22, 0: Exactly one space required after comma
+    return retcode,out.decode("utf-8"),err.decode("utf-8")
+                  ^ (bad-whitespace)
+C: 22, 0: Exactly one space required after comma
+    return retcode,out.decode("utf-8"),err.decode("utf-8")
+                                      ^ (bad-whitespace)
+C: 23, 0: Trailing whitespace (trailing-whitespace)
+C: 27, 0: Trailing whitespace (trailing-whitespace)
+C: 29, 0: Line too long (169/80) (line-too-long)
+C: 29, 0: Exactly one space required after comma
+    return int(datetime.strptime(ts[:-6],"%Y%m%d_%H:%M:%S").replace(tzinfo=timezone.utc).timestamp()) - (int(ts[-2:])*60 + 60 * 60 * int(ts[-4:-2]) * int(ts[-5:-4]+'1'))
+                                        ^ (bad-whitespace)
+C: 31, 0: Exactly one space required after comma
+def match(string,pattern):
+                ^ (bad-whitespace)
+C: 32, 0: Exactly one space required after comma
+    return re.search("^%s$"%pattern,string) is not None
+                                   ^ (bad-whitespace)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 13, 0: Missing function docstring (missing-docstring)
+C: 15, 8: Invalid variable name "sp" (invalid-name)
+C: 18, 8: Invalid variable name "sp" (invalid-name)
+C: 24, 0: Missing function docstring (missing-docstring)
+C: 28, 0: Invalid argument name "ts" (invalid-name)
+C: 28, 0: Missing function docstring (missing-docstring)
+C: 31, 0: Missing function docstring (missing-docstring)
+************* Module saveme.cfg
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W: 10, 0: Anomalous backslash in string: '\d'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+C:  3, 0: Line too long (96/80) (line-too-long)
+C:  6, 0: Exactly one space required after comma
+import os,sys
+         ^ (bad-whitespace)
+C:  9, 0: Line too long (101/80) (line-too-long)
+C: 29, 0: Line too long (98/80) (line-too-long)
+C:  1, 0: Missing module docstring (missing-docstring)
+C:  8, 0: Invalid constant name "settings" (invalid-name)
+C: 15, 0: Missing function docstring (missing-docstring)
+C: 18, 0: Missing function docstring (missing-docstring)
+C: 21, 0: Missing function docstring (missing-docstring)
+C: 24, 0: Missing function docstring (missing-docstring)
+************* Module saveme.schema
+C:  1, 0: Missing module docstring (missing-docstring)
+C:  6, 0: Invalid constant name "routines" (invalid-name)
+C: 12, 0: Missing function docstring (missing-docstring)
+************* Module saveme.snapshots
+C:  6, 0: Exactly one space required after comma
+from .utils import parsepolicy,launch
+                              ^ (bad-whitespace)
+C:  7, 0: Exactly one space required after comma
+from .external import parsedate,runcommand,getcurtime,match
+                               ^ (bad-whitespace)
+C:  7, 0: Exactly one space required after comma
+from .external import parsedate,runcommand,getcurtime,match
+                                          ^ (bad-whitespace)
+C:  7, 0: Exactly one space required after comma
+from .external import parsedate,runcommand,getcurtime,match
+                                                     ^ (bad-whitespace)
+C: 12, 0: Exactly one space required after comma
+def deletesnapshot(path,label):
+                       ^ (bad-whitespace)
+C: 13, 0: Line too long (96/80) (line-too-long)
+C: 13, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,label]
+                       ^ (bad-whitespace)
+C: 13, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,label]
+                                                         ^ (bad-whitespace)
+C: 13, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,label]
+                                                                                    ^ (bad-whitespace)
+C: 13, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,label]
+                                                                                         ^ (bad-whitespace)
+C: 22, 0: Exactly one space required after comma
+        print("delsnap gen issues [%s][%s][%d]"%(out,err,retcode))
+                                                    ^ (bad-whitespace)
+C: 22, 0: Exactly one space required after comma
+        print("delsnap gen issues [%s][%s][%d]"%(out,err,retcode))
+                                                        ^ (bad-whitespace)
+C: 24, 0: Trailing whitespace (trailing-whitespace)
+C: 25, 0: Exactly one space required after comma
+def create(path,label=None,promptuser=None):
+               ^ (bad-whitespace)
+C: 25, 0: Exactly one space required after comma
+def create(path,label=None,promptuser=None):
+                          ^ (bad-whitespace)
+C: 26, 0: Trailing whitespace (trailing-whitespace)
+C: 27, 0: Line too long (88/80) (line-too-long)
+C: 27, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("take-snap")),path]
+                       ^ (bad-whitespace)
+C: 27, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("take-snap")),path]
+                                                         ^ (bad-whitespace)
+C: 27, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("take-snap")),path]
+                                                                                  ^ (bad-whitespace)
+C: 28, 0: Trailing whitespace (trailing-whitespace)
+C: 30, 0: No space allowed after bracket
+        args += [ "--label=%s" % label ]
+                ^ (bad-whitespace)
+C: 30, 0: No space allowed before bracket
+        args += [ "--label=%s" % label ]
+                                       ^ (bad-whitespace)
+C: 38, 0: Exactly one space required after comma
+        print("issues with execution [%s][%s][%d]"%(out,err,retcode))
+                                                       ^ (bad-whitespace)
+C: 38, 0: Exactly one space required after comma
+        print("issues with execution [%s][%s][%d]"%(out,err,retcode))
+                                                           ^ (bad-whitespace)
+C: 41, 0: Exactly one space required after comma
+    if launch(out,promptuser=promptuser):
+                 ^ (bad-whitespace)
+C: 45, 0: Trailing whitespace (trailing-whitespace)
+C: 47, 0: Line too long (88/80) (line-too-long)
+C: 47, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
+                       ^ (bad-whitespace)
+C: 47, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
+                                                         ^ (bad-whitespace)
+C: 47, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
+                                                                                  ^ (bad-whitespace)
+C: 52, 0: Exactly one space required after comma
+        print("issues with listsnap [%s][%s][%d]"%(out,err,retcode))
+                                                      ^ (bad-whitespace)
+C: 52, 0: Exactly one space required after comma
+        print("issues with listsnap [%s][%s][%d]"%(out,err,retcode))
+                                                          ^ (bad-whitespace)
+C: 57, 0: Exactly one space required after comma
+        if match(s,_cfg_snapshot_pattern()):
+                  ^ (bad-whitespace)
+C: 63, 0: Exactly one space required after comma
+def manage(path,policy=None,promptuser=None):
+               ^ (bad-whitespace)
+C: 63, 0: Exactly one space required after comma
+def manage(path,policy=None,promptuser=None):
+                           ^ (bad-whitespace)
+C: 70, 0: Line too long (88/80) (line-too-long)
+C: 70, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
+                       ^ (bad-whitespace)
+C: 70, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
+                                                         ^ (bad-whitespace)
+C: 70, 0: Exactly one space required after comma
+    args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("list-snap")),path]
+                                                                                  ^ (bad-whitespace)
+C: 75, 0: Exactly one space required after comma
+        print("issues with listsnap [%s][%s][%d]"%(out,err,retcode))
+                                                      ^ (bad-whitespace)
+C: 75, 0: Exactly one space required after comma
+        print("issues with listsnap [%s][%s][%d]"%(out,err,retcode))
+                                                          ^ (bad-whitespace)
+C: 80, 0: Exactly one space required after comma
+        if match(s,_cfg_snapshot_pattern()):
+                  ^ (bad-whitespace)
+C: 83, 0: Line too long (83/80) (line-too-long)
+C: 84, 0: Exactly one space required after comma
+    res = culltimeline(tsnap,policy,getcurtime())
+                            ^ (bad-whitespace)
+C: 84, 0: Exactly one space required after comma
+    res = culltimeline(tsnap,policy,getcurtime())
+                                   ^ (bad-whitespace)
+C: 86, 0: Line too long (98/80) (line-too-long)
+C: 86, 0: Exactly one space required after comma
+        args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,"-"]
+                           ^ (bad-whitespace)
+C: 86, 0: Exactly one space required after comma
+        args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,"-"]
+                                                             ^ (bad-whitespace)
+C: 86, 0: Exactly one space required after comma
+        args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,"-"]
+                                                                                        ^ (bad-whitespace)
+C: 86, 0: Exactly one space required after comma
+        args = ["/bin/bash","%s/%s"%(_cfg_scripts_directory(),findscript("delete-snap")),path,"-"]
+                                                                                             ^ (bad-whitespace)
+C: 89, 0: Exactly one space required after comma
+        retcode, out, err = runcommand(args,stdin="\n".join(res)+"\n")
+                                           ^ (bad-whitespace)
+W: 91, 0: Bad indentation. Found 10 spaces, expected 12 (bad-indentation)
+W: 92, 0: Bad indentation. Found 14 spaces, expected 16 (bad-indentation)
+W: 93, 0: Bad indentation. Found 14 spaces, expected 16 (bad-indentation)
+W: 94, 0: Bad indentation. Found 10 spaces, expected 12 (bad-indentation)
+C: 94, 0: Exactly one space required after comma
+          if launch(out,promptuser=promptuser):
+                       ^ (bad-whitespace)
+W: 96, 0: Bad indentation. Found 10 spaces, expected 12 (bad-indentation)
+C: 99, 0: Exactly one space required after comma
+            print("yoyo[%s][%s][%d]"%(out,err,retcode))
+                                         ^ (bad-whitespace)
+C: 99, 0: Exactly one space required after comma
+            print("yoyo[%s][%s][%d]"%(out,err,retcode))
+                                             ^ (bad-whitespace)
+C:102, 0: Trailing whitespace (trailing-whitespace)
+C:103, 0: Exactly one space required after comma
+def culltimeline(datearr,policy,now):
+                        ^ (bad-whitespace)
+C:103, 0: Exactly one space required after comma
+def culltimeline(datearr,policy,now):
+                               ^ (bad-whitespace)
+C:109, 0: No space allowed after bracket
+        dates += [ (parsedate(sdatestr),sdatestr) ]
+                 ^ (bad-whitespace)
+C:109, 0: Exactly one space required after comma
+        dates += [ (parsedate(sdatestr),sdatestr) ]
+                                       ^ (bad-whitespace)
+C:109, 0: No space allowed before bracket
+        dates += [ (parsedate(sdatestr),sdatestr) ]
+                                                  ^ (bad-whitespace)
+C:116, 0: No space allowed after bracket
+            if delta >= ra[0] and ( ( ra[1] is None) or (delta <= ra[1])  ):
+                                  ^ (bad-whitespace)
+C:116, 0: No space allowed after bracket
+            if delta >= ra[0] and ( ( ra[1] is None) or (delta <= ra[1])  ):
+                                    ^ (bad-whitespace)
+C:116, 0: No space allowed before bracket
+            if delta >= ra[0] and ( ( ra[1] is None) or (delta <= ra[1])  ):
+                                                                          ^ (bad-whitespace)
+C:127, 0: Trailing whitespace (trailing-whitespace)
+C:131, 0: Line too long (83/80) (line-too-long)
+C:137, 0: Trailing whitespace (trailing-whitespace)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 12, 0: Missing function docstring (missing-docstring)
+C: 25, 0: Missing function docstring (missing-docstring)
+C: 46, 0: Missing function docstring (missing-docstring)
+C: 56, 8: Invalid variable name "s" (invalid-name)
+W: 55, 4: Unused variable 'tsnap' (unused-variable)
+C: 63, 0: Missing function docstring (missing-docstring)
+C: 67, 4: Invalid variable name "e" (invalid-name)
+C: 79, 8: Invalid variable name "s" (invalid-name)
+W: 66, 8: Unused variable 'prunemap' (unused-variable)
+C:103, 0: Missing function docstring (missing-docstring)
+C:114,12: Invalid variable name "ra" (invalid-name)
+************* Module saveme.api
+C:  6, 0: Exactly one space required after comma
+from .snapshots import manage,create,listsnapshot,deletesnapshot
+                             ^ (bad-whitespace)
+C:  6, 0: Exactly one space required after comma
+from .snapshots import manage,create,listsnapshot,deletesnapshot
+                                    ^ (bad-whitespace)
+C:  6, 0: Exactly one space required after comma
+from .snapshots import manage,create,listsnapshot,deletesnapshot
+                                                 ^ (bad-whitespace)
+C: 10, 0: Trailing whitespace (trailing-whitespace)
+C: 13, 0: Exactly one space required after comma
+    def usage(self,proc):
+                  ^ (bad-whitespace)
+C: 14, 0: Line too long (297/80) (line-too-long)
+C: 16, 0: Exactly one space required after comma
+    def go(self,args):
+               ^ (bad-whitespace)
+C: 25, 0: No space allowed after bracket
+            elif args[2] in ( "--help", "help" ):
+                            ^ (bad-whitespace)
+C: 25, 0: No space allowed before bracket
+            elif args[2] in ( "--help", "help" ):
+                                               ^ (bad-whitespace)
+C: 26, 0: Line too long (99/80) (line-too-long)
+C: 34, 0: Exactly one space required around assignment
+                    policy=options[9:]
+                          ^ (bad-whitespace)
+C: 36, 0: Exactly one space required around assignment
+                    promptuser=False
+                              ^ (bad-whitespace)
+C: 38, 0: No space allowed before bracket
+                    print ("unknown option = %s" % options)
+                          ^ (bad-whitespace)
+C: 40, 0: Line too long (92/80) (line-too-long)
+C: 40, 0: No space allowed after bracket
+            print( "Managing snapshots for path=\"%s\" with policy=\"%s\" " % (pool,policy))
+                 ^ (bad-whitespace)
+C: 40, 0: Exactly one space required after comma
+            print( "Managing snapshots for path=\"%s\" with policy=\"%s\" " % (pool,policy))
+                                                                                   ^ (bad-whitespace)
+C: 41, 0: Exactly one space required after comma
+            return manage(pool,policy,promptuser=promptuser)
+                              ^ (bad-whitespace)
+C: 41, 0: Exactly one space required after comma
+            return manage(pool,policy,promptuser=promptuser)
+                                     ^ (bad-whitespace)
+C: 49, 0: No space allowed before bracket
+                print ("unknown option = %s" % options)
+                      ^ (bad-whitespace)
+C: 61, 0: Exactly one space required around assignment
+                    label=options[8:]
+                         ^ (bad-whitespace)
+C: 65, 0: No space allowed before bracket
+                    print ("unknown option = %s" % options)
+                          ^ (bad-whitespace)
+C: 67, 0: Exactly one space required after comma
+            status = create(pool,label=label,promptuser=promptuser)
+                                ^ (bad-whitespace)
+C: 67, 0: Exactly one space required after comma
+            status = create(pool,label=label,promptuser=promptuser)
+                                            ^ (bad-whitespace)
+C: 75, 0: No space allowed before bracket
+                print ("unknown option = %s" % options)
+                      ^ (bad-whitespace)
+C: 77, 0: Exactly one space required after comma
+            deletesnapshot(pool,label)
+                               ^ (bad-whitespace)
+C:  1, 0: Missing module docstring (missing-docstring)
+C:  9, 0: Missing class docstring (missing-docstring)
+W:  9, 0: Class has no __init__ method (no-init)
+C: 13, 4: Missing method docstring (missing-docstring)
+R: 13, 4: Method could be a function (no-self-use)
+C: 16, 4: Invalid method name "go" (invalid-name)
+C: 16, 4: Missing method docstring (missing-docstring)
+R: 16, 4: Too many return statements (12/6) (too-many-return-statements)
+R: 16, 4: Too many branches (21/12) (too-many-branches)
+C: 83, 4: Missing method docstring (missing-docstring)
+R: 83, 4: Method could be a function (no-self-use)
+************* Module saveme.mirror
+C: 10, 0: Exactly one space required after comma
+import os,sys
+         ^ (bad-whitespace)
+C: 17, 0: Exactly one space required after comma
+    print("supposed to index %s to %s" % (path,_cfg_database_directory()))
+                                              ^ (bad-whitespace)
+C: 20, 0: Trailing whitespace (trailing-whitespace)
+C: 21, 0: Exactly one space required after comma
+    locale.setlocale(locale.LC_CTYPE,'en_US')
+                                    ^ (bad-whitespace)
+C: 26, 0: Exactly one space required after comma
+    locale.setlocale(locale.LC_CTYPE,'en_US.iso88591')
+                                    ^ (bad-whitespace)
+C: 27, 0: Exactly one space required after comma
+    locale.setlocale(locale.LC_CTYPE,'ascii')
+                                    ^ (bad-whitespace)
+C: 30, 0: No space allowed before bracket
+        print ("found %s + %s" % (de.path,de.name ))
+              ^ (bad-whitespace)
+C: 30, 0: Exactly one space required after comma
+        print ("found %s + %s" % (de.path,de.name ))
+                                         ^ (bad-whitespace)
+C: 30, 0: No space allowed before bracket
+        print ("found %s + %s" % (de.path,de.name ))
+                                                  ^ (bad-whitespace)
+C: 38, 0: Exactly one space required after comma
+                locale.setlocale(locale.LC_CTYPE,'en_US.iso88591')
+                                                ^ (bad-whitespace)
+C: 40, 0: Exactly one space required after comma
+                locale.setlocale(locale.LC_CTYPE,_mylocale)
+                                                ^ (bad-whitespace)
+C: 45, 0: Exactly one space required after comma
+                    locale.setlocale(locale.LC_CTYPE,'en_US.iso88591')
+                                                    ^ (bad-whitespace)
+C: 47, 0: Exactly one space required after comma
+                    locale.setlocale(locale.LC_CTYPE,_mylocale)
+                                                    ^ (bad-whitespace)
+C: 50, 0: Trailing whitespace (trailing-whitespace)
+C: 56, 0: No space allowed after bracket
+            print( file[0].encode('utf-8','surrogateescape') )
+                 ^ (bad-whitespace)
+C: 56, 0: Exactly one space required after comma
+            print( file[0].encode('utf-8','surrogateescape') )
+                                         ^ (bad-whitespace)
+C: 56, 0: No space allowed before bracket
+            print( file[0].encode('utf-8','surrogateescape') )
+                                                             ^ (bad-whitespace)
+C: 57, 0: Trailing whitespace (trailing-whitespace)
+C: 66, 0: Exactly one space required after comma
+            fp = "%s/%s" % (path,fn)
+                                ^ (bad-whitespace)
+C: 70, 0: Exactly one space required after comma
+            yield (fp,res)
+                     ^ (bad-whitespace)
+C: 77, 0: Trailing whitespace (trailing-whitespace)
+C: 91, 0: Trailing whitespace (trailing-whitespace)
+C: 92, 0: Trailing whitespace (trailing-whitespace)
+C: 97, 0: Line too long (101/80) (line-too-long)
+C: 97, 0: Exactly one space required after comma
+        c.execute('insert into inodes values (?,?)', (f[0].encode('utf8','surrogateescape'),f[1][0]))
+                                                                        ^ (bad-whitespace)
+C: 97, 0: Exactly one space required after comma
+        c.execute('insert into inodes values (?,?)', (f[0].encode('utf8','surrogateescape'),f[1][0]))
+                                                                                           ^ (bad-whitespace)
+C:101, 0: Trailing whitespace (trailing-whitespace)
+C:108, 0: Line too long (192/80) (line-too-long)
+C:  1, 0: Missing module docstring (missing-docstring)
+W: 11, 0: Wildcard import stat (wildcard-import)
+C: 16, 0: Missing function docstring (missing-docstring)
+C: 19, 4: Invalid variable name "q" (invalid-name)
+C: 22, 8: Invalid variable name "de" (invalid-name)
+C: 29, 8: Invalid variable name "de" (invalid-name)
+C: 36,12: Invalid variable name "e" (invalid-name)
+C: 41,16: Invalid variable name "de" (invalid-name)
+C: 44,16: Invalid variable name "e" (invalid-name)
+W: 36,12: Unused variable 'e' (unused-variable)
+C: 51, 0: Missing function docstring (missing-docstring)
+C: 58, 0: Missing function docstring (missing-docstring)
+C: 61, 4: Invalid variable name "q" (invalid-name)
+C: 65,12: Invalid variable name "fn" (invalid-name)
+C: 66,12: Invalid variable name "fp" (invalid-name)
+C: 79, 0: Missing function docstring (missing-docstring)
+C: 81, 4: Invalid variable name "c" (invalid-name)
+C: 87, 0: Missing function docstring (missing-docstring)
+C: 94, 4: Invalid variable name "c" (invalid-name)
+C: 96, 8: Invalid variable name "f" (invalid-name)
+C:109, 0: Missing function docstring (missing-docstring)
+W: 11, 0: Unused import filemode from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFIFO from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IWOTH from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import UF_NOUNLINK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import UF_APPEND from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import UF_COMPRESSED from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_DEV from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFBLK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import UF_NODUMP from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IWGRP from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import UF_IMMUTABLE from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IRUSR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISDOOR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import UF_HIDDEN from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IWUSR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import SF_SNAPSHOT from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IRGRP from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IWRITE from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISGID from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IXUSR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IXOTH from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISVTX from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISSOCK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import SF_NOUNLINK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFCHR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFREG from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_CTIME from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_INO from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISLNK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IMODE from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFSOCK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import SF_IMMUTABLE from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import SF_APPEND from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISBLK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IROTH from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFWHT from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_GID from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_MTIME from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IRWXU from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFDOOR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISFIFO from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISWHT from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFDIR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_UID from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_ATIME from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_NLINK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFMT from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISREG from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_MODE from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import UF_OPAQUE from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFLNK from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IRWXO from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IEXEC from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISPORT from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IXGRP from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ENFMT from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISUID from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IRWXG from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IREAD from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import SF_ARCHIVED from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_ISCHR from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import ST_SIZE from wildcard import (unused-wildcard-import)
+W: 11, 0: Unused import S_IFPORT from wildcard import (unused-wildcard-import)
+
+
+Report
+======
+342 statements analysed.
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |0        |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |0.000    |=          |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |225    |225      |=          |
++-----------+-------+---------+-----------+
+|refactor   |5      |5        |=          |
++-----------+-------+---------+-----------+
+|warning    |91     |91       |=          |
++-----------+-------+---------+-----------+
+|error      |0      |0        |=          |
++-----------+-------+---------+-----------+
+
+
+
+% errors / warnings by module
+-----------------------------
+
++-----------------+------+--------+---------+-----------+
+|module           |error |warning |refactor |convention |
++=================+======+========+=========+===========+
+|saveme.mirror    |0.00  |71.43   |0.00     |20.89      |
++-----------------+------+--------+---------+-----------+
+|saveme.cfg       |0.00  |19.78   |0.00     |4.44       |
++-----------------+------+--------+---------+-----------+
+|saveme.snapshots |0.00  |7.69    |0.00     |34.22      |
++-----------------+------+--------+---------+-----------+
+|saveme.api       |0.00  |1.10    |80.00    |13.78      |
++-----------------+------+--------+---------+-----------+
+
+
+
+Messages
+--------
+
++------------------------------+------------+
+|message id                    |occurrences |
++==============================+============+
+|bad-whitespace                |120         |
++------------------------------+------------+
+|unused-wildcard-import        |63          |
++------------------------------+------------+
+|missing-docstring             |35          |
++------------------------------+------------+
+|invalid-name                  |27          |
++------------------------------+------------+
+|trailing-whitespace           |23          |
++------------------------------+------------+
+|line-too-long                 |20          |
++------------------------------+------------+
+|anomalous-backslash-in-string |18          |
++------------------------------+------------+
+|bad-indentation               |5           |
++------------------------------+------------+
+|unused-variable               |3           |
++------------------------------+------------+
+|too-many-return-statements    |2           |
++------------------------------+------------+
+|no-self-use                   |2           |
++------------------------------+------------+
+|wildcard-import               |1           |
++------------------------------+------------+
+|too-many-branches             |1           |
++------------------------------+------------+
+|no-init                       |1           |
++------------------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 0.61/10 (previous run: 0.61/10, +0.00)
+
+External dependencies
+---------------------
+::
+
+    saveme 
+      \-cfg (saveme.api,saveme.snapshots,saveme.mirror)
+      \-external (saveme.utils,saveme.snapshots)
+      \-schema (saveme.snapshots)
+      \-snapshots (saveme.api)
+      \-utils (saveme.snapshots)
+
+
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |8      |8          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |1          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |3      |3          |=          |0.00        |33.33    |
++---------+-------+-----------+-----------+------------+---------+
+|function |23     |23         |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |374    |80.78 |374      |=          |
++----------+-------+------+---------+-----------+
+|docstring |7      |1.51  |7        |=          |
++----------+-------+------+---------+-----------+
+|comment   |41     |8.86  |41       |=          |
++----------+-------+------+---------+-----------+
+|empty     |41     |8.86  |41       |=          |
++----------+-------+------+---------+-----------+
+
+
+
