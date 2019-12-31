@@ -1,0 +1,22 @@
+site_name: SAVEME
+site_description: a data management tool
+
+theme:
+    name: 'material'
+
+repo_name: toppk/saveme
+repo_url: https://github.com/toppk/saveme
+edit_uri: ""
+
+nav:
+    - Introduction: 'index.md'
+    - Getting Started: 'GETTING_STARTED.md'
+    - Usage: 'USAGE.md'
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - mkautodoc
+
+extra_css:
+    - css/custom.css

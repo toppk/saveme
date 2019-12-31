@@ -2,3 +2,7 @@
 __pycache__
 scratch/
 .nox/
+.mypy_cache/
+.coverage
+saveme.egg-info/
+site/
