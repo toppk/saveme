@@ -1,12 +1,7 @@
 import re
 
 from .cfg import getscriptsdir as _cfg_scripts_directory
-
-#
-#
 from .external import runcommand
-
-#
 from .schema import findscript
 
 
@@ -53,7 +48,7 @@ class TaskRunner:
         #       action['generates-commands']))
         args = ["/bin/bash", "%s/%s" % (_cfg_scripts_directory(), action["script"])]
         for arg in action["args"]:
-            if not arg in self._dict and not arg in self._alias:
+            if arg not in self._dict and arg not in self._alias:
                 raise TaskRunner.MissingParamException("Cannot find %s in dict" % arg)
             args += [self.getvalue(arg)]
 

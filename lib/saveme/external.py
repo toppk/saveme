@@ -12,11 +12,7 @@ import time
 from datetime import datetime, timezone
 from stat import S_ISDIR
 
-#
 
-#
-#
-#
 def abspath(path):
     return os.path.abspath(path)
 
