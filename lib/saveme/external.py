@@ -9,6 +9,8 @@ import queue
 from stat import S_ISDIR
 import os
 import re
+import random
+import string
 from datetime import datetime, timezone
 
 #
@@ -23,8 +25,8 @@ def getid():
     return getrandom(5, justalphanum=True)
 
 def getrandom(length, justalphanum=False):
-    import string
     chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
+    alphas = string.ascii_lowercase + string.ascii_uppercase
     if not justalphanum:
         chars += "+-"
     #from collections import OrderedDict as od
@@ -35,7 +37,7 @@ def getrandom(length, justalphanum=False):
     #        for c in ''.join(chars[c % len(chars)] for c in os.urandom(64)):
     #            d[c] += 1
     #print d
-    return ''.join(chars[c % len(chars)] for c in os.urandom(length))
+    return random.SystemRandom().choice(alphas) + ''.join([ random.SystemRandom().choice(chars)  for i in range(length-1)])
 
 
 def indexer(path):

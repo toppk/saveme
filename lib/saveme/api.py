@@ -4,7 +4,8 @@
 #
 
 from .mirror import index, createdb, missingsum, addsum, \
-    listvolumes, checksumvolume, registerarchive
+    listvolumes, checksumvolume, registerarchive, listarchives, \
+    missingbackup, addbackup, backupvolume
 from .snapshots import manage, create, listsnapshot, deletesnapshot
 from .block import makearfsfromdisk, genarid
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
@@ -19,13 +20,16 @@ class CommandLine:
             print("""usage: %s
 
  COMMANDS
-        checksum <volumeid>
            index <path>
+    list-indexes
 register-archive <path>
+   list-archives
+          backup <volumeid>
+  missing-backup
+  provide-backup <volumeid> <fileid> <checksum>
+        checksum <volumeid>
   missing-chksum
   provide-chksum  <volumeid> <fileid> <checksum>
-     scan-chksum  <volumeid> <fileid> <checksum>
-            list
          resetdb""" % proc)
 
         if len(args) == 1:
@@ -40,7 +44,7 @@ register-archive <path>
             missingsum()
         elif args[1] == "checksum":
             if len(args) != 3:
-                print("provide: you must specify <volumeid>")
+                print("checksum: you must specify <volumeid>")
                 status = 2
             else:
                 try:
@@ -49,7 +53,28 @@ register-archive <path>
                     print("volumeid must be an integer")
                     return 3
                 status = checksumvolume(volumeid)
-        elif args[1] == "list":
+        elif args[1] == "provide-backup":
+            if len(args) != 6:
+                print("provide: you must specify <chksum> <blobsize> <blobchksum> -")
+                status = 1
+            else:
+                addsum(int(args[2]), args[3], args[4])
+        elif args[1] == "missing-backup":
+            missingbackup()
+        elif args[1] == "backup":
+            if len(args) != 3:
+                print("backup: you must specify <volumeid>")
+                status = 2
+            else:
+                try:
+                    volumeid = int(args[2])
+                except ValueError:
+                    print("volumeid must be an integer")
+                    return 3
+                status = backupvolume(volumeid)
+        elif args[1] == "list-archives":
+            listarchives()
+        elif args[1] == "list-indexes":
             listvolumes()
         elif args[1] == "resetdb":
             createdb()
