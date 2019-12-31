@@ -1,14 +1,8 @@
 import sqlite3
 
-#
 # from .cfg import getdbdir as _cfg_database_directory
 from .external import abspath, epoch2iso, getcurtime, indexer
-
-#
-#
 from .utils import StopException, TaskRunner, getcap
-
-#
 
 
 def indexpath(path):
@@ -55,9 +49,9 @@ create table files (
     cur.execute(
         """
 create table checksums (
-    chksum text, 
+    chksum text,
     volumeid integer,
-    fileid text, 
+    fileid text,
     gendate integer
 )"""
     )
@@ -68,7 +62,7 @@ create table checksums (
     cur.execute(
         """
 create table archives (
-    path text unique, 
+    path text unique,
     status text,
     capacity integer,
     chkdate integer
@@ -81,9 +75,9 @@ create table archives (
     cur.execute(
         """
 create table mirrors (
-    chksum text, 
+    chksum text,
     archiveid integer
-    blobchksum text, 
+    blobchksum text,
     blobkey text,
     blobsize integer,
     copydate integer
@@ -96,7 +90,7 @@ create table mirrors (
     cur.execute(
         """
 create table volumes (
-    path text, 
+    path text,
     status text,
     createdate integer
 )"""
@@ -118,7 +112,11 @@ def missingbackup(volumeid=None):
 def findbackup(volumeid=None, withbackup=True):
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
-    query = """select  checksums.chksum,volumes.path, files.path, mirrors.* from checksums join files on checksums.volumeid = files.volumeid and checksums.fileid=files.fileid join volumes on checksums.volumeid = volumes.rowid left join mirrors on checksums.chksum = mirrors.chksum where 1=1"""
+    query = """select  checksums.chksum,volumes.path, files.path, mirrors.* from
+               checksums join files on checksums.volumeid = files.volumeid and
+               checksums.fileid=files.fileid join volumes on
+               checksums.volumeid = volumes.rowid left join mirrors
+               on checksums.chksum = mirrors.chksum where 1=1"""
     if not withbackup:
         query += " and mirrors.archiveid is null"
     if volumeid is not None:
@@ -313,4 +311,6 @@ def index(path):
 # indexpath2("/home")
 # indexpath2("/home")
 # indexpath2("/home/media/Shorts")
-# [root@static tests]# more $( python3 -c "import os;os.sys.stdout.buffer.write(b'/home/toppk/crap/phonegames/s40game/Gameloft\xbe\xad\xb5\xe4\xd3\xce\xcf\xb7\xc8\xab\xbc\xaf/XIII/XIII.jad')" )
+# [root@static tests]# more $( python3 -c "import os;os.sys.stdout.buffer.write
+# (b'/home/toppk/crap/phonegames/s40game/
+# Gameloft\xbe\xad\xb5\xe4\xd3\xce\xcf\xb7\xc8\xab\xbc\xaf/XIII/XIII.jad')" )

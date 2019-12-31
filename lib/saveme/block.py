@@ -40,7 +40,7 @@ def makearfsfromdisk(disk):
         runner.dump()
         return 1
     except StopException as err:
-        print("Will not continue")
+        print("Will not continue [%s]" % err)
         runner.dump()
         return 1
     print("Finished adding /arfs/%s" % runner.getvalue("arid"))

@@ -5,7 +5,6 @@
 from .block import genarid, makearfsfromdisk
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
 from .mirror import (
-    addbackup,
     addsum,
     backupvolume,
     checksumvolume,
