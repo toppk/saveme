@@ -1,0 +1,4 @@
+# this isn't called .coveragerc because it isn't picked up automaticall
+# this is only used on github actions to avoid sending tests to codecov.io
+[run]
+omit = tests/*
