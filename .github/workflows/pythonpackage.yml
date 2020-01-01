@@ -32,7 +32,8 @@ jobs:
         nox -s check
     - name: NOX framework test
       run: |
-        nox -s test-${{ matrix.python-version }} -- -m "not live" --cov-config=.avoidtestcov
+        nox -s test-${{ matrix.python-version }}
+#        nox -s test-${{ matrix.python-version }} -- -m "not live" --cov-config=.avoidtestcov
     - name: Upload coverage report
       run: |
         codecov --token=${{ secrets.CODECOV_BUILD_PYSANDRA }}

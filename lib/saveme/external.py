@@ -62,7 +62,7 @@ def runcommand(args: List[str], stdin: str = None) -> Tuple[int, str, str]:
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            env=dict(os.environ, PATH="/bin:/sbin"),
+            env=dict(os.environ, PATH="/bin:/sbin:/usr/bin:/usr/sbin"),
         )
         out, err = proc.communicate(input=bytes(stdin, "utf-8"))
     else:
@@ -70,7 +70,7 @@ def runcommand(args: List[str], stdin: str = None) -> Tuple[int, str, str]:
             args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            env=dict(os.environ, PATH="/bin:/sbin"),
+            env=dict(os.environ, PATH="/bin:/sbin:/usr/bin:/usr/sbin"),
         )
         out, err = proc.communicate()
     retcode = proc.wait()
