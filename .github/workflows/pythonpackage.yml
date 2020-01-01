@@ -36,4 +36,4 @@ jobs:
 #        nox -s test-${{ matrix.python-version }} -- -m "not live" --cov-config=.avoidtestcov
     - name: Upload coverage report
       run: |
-        codecov --token=${{ secrets.CODECOV_BUILD_PYSANDRA }}
+        codecov --token=${{ secrets.CODECOV_BUILD_SAVEME }}

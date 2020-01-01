@@ -68,4 +68,4 @@ def serve(session):
 @nox.session(python=["3.6", "3.7", "3.8"])
 def test(session):
     session.install("--upgrade", "-r", "test-requirements.txt")
-    session.run("nosetests", "--with-coverage", "tests/python.py")
+    session.run("nosetests", "--with-coverage", "tests/python.py", *session.posargs)
