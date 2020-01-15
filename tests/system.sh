@@ -6,7 +6,7 @@
 export PATH=/bin:/sbin
 PS4='+\D{%s} [$?] # '
 
-parted_ver=$( parted  -v | head -1 )
+parted_ver=$( parted  -v | head -1 | sed 's/\.[^.]*$//' )
 
 if [ "$parted_ver" == "parted (GNU parted) 3.2" ]; then
     :
@@ -18,7 +18,7 @@ fi
 
 sfdisk_ver=$( sfdisk  --version )
 
-if [ "$sfdisk_ver" == "sfdisk from util-linux 2.25.2" ]; then
+if [ "$sfdisk_ver" == "sfdisk from util-linux 2.34" ]; then
     :
 else
     echo unknown sfdisk version $cryptsetup_ver
@@ -27,7 +27,7 @@ fi
 
 cryptsetup_ver=$( cryptsetup  --version )
 
-if echo "$cryptsetup_ver" | egrep -q "cryptsetup 1.6.[67]"; then
+if echo "$cryptsetup_ver" | egrep -q "cryptsetup 2.2.2"; then
     :
 else
     echo unknown cryptsetup version $cryptsetup_ver
@@ -38,7 +38,7 @@ fi
 
 df_ver=$( df  --version | head -1 )
 
-if [ "$df_ver" == "df (GNU coreutils) 8.22" ]; then
+if [ "$df_ver" == "df (GNU coreutils) 8.31" ]; then
     :
 else
     echo unknown df version $df_ver

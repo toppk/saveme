@@ -46,15 +46,26 @@ if [ "$cpid" == "" ]; then
     exit 6
 fi
 
-ecpi=$( systemd-escape $cpid | sed 's/\\/\\\\/g' )
+secsize=$( cd -P /sys/class/block/$part/..  && cat queue/hw_sector_size )
+if [[ "$secsize" != 512 && "$secsize" != 4096 ]]; then
+   echo $part has unknown sector size [$secsize]
+   exit 7
+fi
 
+
+ecpi=$( systemd-escape $cpid | sed 's/\\/\\\\/g' )
+uuid=$( uuidgen )
 # SECURITY: cipher size hash
 ## found off google searches.  we should get some confirmation and include references.
+## https://crypto.stackexchange.com/questions/48935/why-use-argon2i-or-argon2d-if-argon2id-exists
+## https://cloudnull.io/2017/05/issuing-allowing-discards-enabling-timers-oh-my-2/
+#  --persistent --allow-discards ???
 echo "# 'cprt':'mapper/$cpid'"
 echo "# 'ecpi':'$ecpi'"
-echo cryptsetup --verbose -c aes-xts-plain64 -s 256 -h sha512 luksFormat /dev/$part $keyf  -q
-#echo cryptsetup --key-file $keyf luksOpen /dev/$part mapper/$cpid # systemd does this
+echo "# 'uuid':'$uuid'"
+echo cryptsetup -c aes-xts-plain64 -s 512 -h sha512 --sector-size=$secsize --pbkdf=argon2id --uuid=$uuid --type=luks2 luksFormat /dev/$part $keyf  -q
 echo udevadm settle
-echo echo $cpid' /dev/disk/by-uuid/$( lsblk -n /dev/'$part' -o uuid,type -r | grep part | awk '\''{ print $1 }'\'' ) '$keyf' >> /etc/crypttab'
+echo echo $cpid /dev/disk/by-uuid/$uuid  $keyf '>>' /etc/crypttab
 echo systemctl daemon-reload
+#echo cryptsetup --key-file $keyf luksOpen /dev/$part mapper/$cpid # systemd does this
 echo systemctl start systemd-cryptsetup@${ecpi}.service
