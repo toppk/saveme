@@ -33,7 +33,11 @@ if [ $err -ne 0 ];then
     exit 3
 fi
 
-part=${disk}1
+if [[ $disk =~ [0-9]$ ]]; then
+    part=${disk}p1
+else
+    part=${disk}1
+fi
 
 echo "# 'part':'$part'"
 echo parted -s -a optimal /dev/$disk mktable gpt
