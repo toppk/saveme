@@ -1,8 +1,12 @@
 site_name: saveme
-site_description: a data management tool
+site_description: Snapshots and encrypted archive disks for Linux, on btrfs, zfs and LUKS
+site_url: https://toppk.github.io/saveme/
 
 theme:
     name: 'material'
+    logo: assets/logo-128.webp
+    favicon: assets/favicon.ico
+    font: false
 
 repo_name: toppk/saveme
 repo_url: https://github.com/toppk/saveme
