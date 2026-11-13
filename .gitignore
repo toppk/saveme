@@ -1,8 +1,5 @@
-**/*~
-__pycache__
-scratch/
-.nox/
+*~
+__pycache__/
 .mypy_cache/
-.coverage
-saveme.egg-info/
 site/
+upstream/
