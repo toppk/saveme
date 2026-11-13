@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import unittest
+from pathlib import Path
 
 print(" Running Python Version [%s] " % sys.version)
 
@@ -205,6 +206,45 @@ class TestPolicyBoundaries(unittest.TestCase):
                 self.assertEqual(snapshots.manage("/t", "0+: all", False), 0)
         steps = [c.args[0] for c in runner.runstep.call_args_list]
         self.assertEqual(steps, ["list-snap"])
+
+
+class TestInstallLayout(unittest.TestCase):
+    REPO = Path(__file__).resolve().parents[1]
+
+    def test_scriptsdir_from_package(self):
+        from saveme.cfg import getscriptsdir
+
+        self.assertEqual(getscriptsdir(), str(self.REPO / "scripts"))
+        self.assertTrue((Path(getscriptsdir()) / "ssfs-list-snap.sh").is_file())
+
+    def test_tools_through_symlink(self):
+        import subprocess
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            evil = Path(tmp, "evil", "saveme")
+            evil.mkdir(parents=True)
+            for name in ("__init__.py", "api.py"):
+                (evil / name).write_text('print("HOSTILE")\nraise SystemExit(99)\n')
+            sbin = Path(tmp, "sbin")
+            sbin.mkdir()
+            env = dict(os.environ, PYTHONPATH=str(evil.parent))
+            for tool, args, code in (
+                ("snapmgr", ["list", "/nonexistent-saveme-path"], 1),
+                ("disktool", [], 12),
+                ("mirroradm", [], 1),
+            ):
+                (sbin / tool).symlink_to(self.REPO / "tools" / tool)
+                proc = subprocess.run(
+                    [str(sbin / tool), *args],
+                    cwd=tmp,
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(proc.returncode, code, proc.stdout + proc.stderr)
+                self.assertNotIn("HOSTILE", proc.stdout)
+                self.assertIn("usage:" if not args else "not a directory", proc.stdout)
 
 
 class TestExternal(unittest.TestCase):
