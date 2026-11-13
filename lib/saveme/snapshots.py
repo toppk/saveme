@@ -56,7 +56,7 @@ def manage(path: str, policy: str = None, promptuser: bool = True) -> int:
         else:
             print(" (skipping: %s - does not match expected pattern)" % snap)
     res = culltimeline(tsnap, policy, getcurtime())
-    if res is not None or len(res) > 0:
+    if res:
         runner.setvalue("label", "-")
         stdin = "\n".join(res) + "\n"
         try:
@@ -83,7 +83,7 @@ def culltimeline(datearr: List[str], policy: str, now: int) -> List[str]:
         for rangespec in prunemap:
             # print(" eval  ra= %s, %s, %s, %s " % (rangespec) )
             if delta >= rangespec[0] and (
-                (rangespec[1] is None) or (delta <= rangespec[1])
+                (rangespec[1] is None) or (delta < rangespec[1])
             ):
                 keep = False
                 # print("old=%s %s"%(old,rangespec[2]))
@@ -93,7 +93,7 @@ def culltimeline(datearr: List[str], policy: str, now: int) -> List[str]:
                     keep = True
                 elif old is None:
                     keep = True
-                elif snapdate[0] - old > rangespec[2]:
+                elif snapdate[0] - old >= rangespec[2]:
                     keep = True
                 if keep:
                     old = snapdate[0]

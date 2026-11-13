@@ -155,14 +155,56 @@ class TestDST(unittest.TestCase):
         culled = set(culltimeline(snaps, self.POLICY, self.NOW))
         kept = sorted(parsedate(s) for s in snaps if s not in culled)
         day, week = 86400 * 1000000, 7 * 86400 * 1000000
-        sparse = [t for t in kept if day <= self.NOW - t <= week]
-        gaps = [b - a for a, b in zip(sparse, sparse[1:])]
-        self.assertGreaterEqual(len(sparse), 16)
-        for gap in gaps:
-            self.assertGreater(gap, 8 * 3600 * 1000000)
-            self.assertLessEqual(gap, int(8.5 * 3600 * 1000000))
-        self.assertTrue(all(self.NOW - t <= week for t in kept))
+        sparse = [t for t in kept if day <= self.NOW - t < week]
+        gaps = {b - a for a, b in zip(sparse, sparse[1:])}
+        self.assertEqual(len(sparse), 18)
+        self.assertEqual(gaps, {8 * 3600 * 1000000})
+        self.assertTrue(all(self.NOW - t < week for t in kept))
         self.assertEqual(len([t for t in kept if self.NOW - t < day]), 48)
+
+
+class TestPolicyBoundaries(unittest.TestCase):
+    SNAP = "2026-11-01T01:15:00-0500"
+    DAY = 86400 * 1000000
+
+    def setUp(self):
+        from saveme.external import parsedate
+        from saveme.snapshots import culltimeline
+
+        self._cull = culltimeline
+        self._at = parsedate(self.SNAP)
+
+    def test_boundary_belongs_to_later_range(self):
+        now = self._at + self.DAY
+        self.assertEqual(self._cull([self.SNAP], "0-1dy: none, 1dy+: all", now), [])
+        self.assertEqual(
+            self._cull([self.SNAP], "0-1dy: all, 1dy+: none", now), [self.SNAP]
+        )
+
+    def test_boundary_deleted_once(self):
+        now = self._at + self.DAY
+        self.assertEqual(
+            self._cull([self.SNAP], "0-1dy: none, 1dy+: none", now), [self.SNAP]
+        )
+
+    def test_exact_interval_is_kept(self):
+        later = "2026-11-01T09:15:00-0500"
+        now = self._at + self.DAY
+        self.assertEqual(self._cull([self.SNAP, later], "0+: 8hr", now), [])
+
+    def test_manage_skips_delete_when_nothing_culled(self):
+        from unittest import mock
+
+        from saveme import snapshots
+
+        runner = mock.MagicMock()
+        runner.getretcode.return_value = 0
+        runner.getout.return_value = self.SNAP
+        with mock.patch.object(snapshots, "TaskRunner", return_value=runner):
+            with mock.patch.object(snapshots, "getcurtime", return_value=self._at):
+                self.assertEqual(snapshots.manage("/t", "0+: all", False), 0)
+        steps = [c.args[0] for c in runner.runstep.call_args_list]
+        self.assertEqual(steps, ["list-snap"])
 
 
 class TestExternal(unittest.TestCase):
