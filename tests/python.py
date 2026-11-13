@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
+import os
 import sys
+import time
 import unittest
 
 print(" Running Python Version [%s] " % sys.version)
@@ -32,7 +34,7 @@ class TestUtil(unittest.TestCase):
 
     def test_util_parsedate(self):
         # date +"%Y-%m-%dT%H:%M:%S%z"
-        self.assertEqual(self._parsedate("2015-04-06T23:05:04-0400"), 1428361508000000)
+        self.assertEqual(self._parsedate("2015-04-06T23:05:04-0400"), 1428375904000000)
 
     def test_util_culltimeline(self):
         # date +"%Y-%m-%dT%H:%M:%S%z"
@@ -86,6 +88,83 @@ class TestUtil(unittest.TestCase):
         )
 
 
+class TestDST(unittest.TestCase):
+    # America/New_York: 2026-03-08 springs forward, 2026-11-01 falls back
+    POLICY = "0-1dy: all, 1dy-1wk: 8hr, 1wk+: none"
+    NOW = 1793794200 * 1000000  # 2026-11-04T12:10:00Z
+
+    def setUp(self):
+        self._tz = os.environ.get("TZ")
+        os.environ["TZ"] = "America/New_York"
+        time.tzset()
+
+    def tearDown(self):
+        if self._tz is None:
+            del os.environ["TZ"]
+        else:
+            os.environ["TZ"] = self._tz
+        time.tzset()
+
+    @staticmethod
+    def _name(epoch: int) -> str:
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+
+        thedate = datetime.fromtimestamp(epoch, ZoneInfo("America/New_York"))
+        return thedate.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+    def test_parsedate_dst(self):
+        from saveme.external import parsedate
+
+        self.assertEqual(parsedate("2026-11-01T01:30:00-0400"), 1793511000000000)
+        self.assertEqual(parsedate("2026-11-01T01:15:00-0500"), 1793513700000000)
+        self.assertEqual(parsedate("2026-03-08T01:59:00-0500"), 1772953140000000)
+        self.assertEqual(parsedate("2026-03-08T03:01:00-0400"), 1772953260000000)
+
+    def test_epoch2iso_dst(self):
+        from saveme.external import epoch2iso, parsedate
+
+        self.assertEqual(epoch2iso(1793511000000000), "2026-11-01T01:30:00-0400")
+        self.assertEqual(epoch2iso(1793513700000000), "2026-11-01T01:15:00-0500")
+        self.assertEqual(epoch2iso(1772953260000000), "2026-03-08T03:01:00-0400")
+        for epoch in (1793511000000000, 1793513700000000, 1772953140000000):
+            self.assertEqual(parsedate(epoch2iso(epoch)), epoch)
+
+    def test_cull_order_across_dst(self):
+        from saveme.snapshots import culltimeline
+
+        # the -0500 one is 45 minutes later, though its clock time is earlier
+        snaps = ["2026-11-01T01:15:00-0500", "2026-11-01T01:30:00-0400"]
+        self.assertEqual(
+            culltimeline(snaps, "0+: 1hr", self.NOW), ["2026-11-01T01:15:00-0500"]
+        )
+
+    def test_cull_age_uses_offset(self):
+        from saveme.snapshots import culltimeline
+
+        snap = "2026-11-01T01:15:00-0500"
+        now = (1793513700 + 20 * 3600) * 1000000
+        self.assertEqual(culltimeline([snap], "0-1dy: all, 1dy+: none", now), [])
+
+    def test_cull_spacing_from_last_kept(self):
+        from saveme.external import parsedate
+        from saveme.snapshots import culltimeline
+
+        end = self.NOW // 1000000 - 600
+        snaps = [self._name(t) for t in range(end - 8 * 86400, end + 1, 1800)]
+        culled = set(culltimeline(snaps, self.POLICY, self.NOW))
+        kept = sorted(parsedate(s) for s in snaps if s not in culled)
+        day, week = 86400 * 1000000, 7 * 86400 * 1000000
+        sparse = [t for t in kept if day <= self.NOW - t <= week]
+        gaps = [b - a for a, b in zip(sparse, sparse[1:])]
+        self.assertGreaterEqual(len(sparse), 16)
+        for gap in gaps:
+            self.assertGreater(gap, 8 * 3600 * 1000000)
+            self.assertLessEqual(gap, int(8.5 * 3600 * 1000000))
+        self.assertTrue(all(self.NOW - t <= week for t in kept))
+        self.assertEqual(len([t for t in kept if self.NOW - t < day]), 48)
+
+
 class TestExternal(unittest.TestCase):
     def setUp(self):
         pass
@@ -111,8 +190,5 @@ class TestExternal(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    import sys
-    import os
-
     sys.path += [os.path.abspath(os.path.dirname(sys.argv[0]) + "/../lib")]
     unittest.main()

@@ -82,26 +82,13 @@ def getcurtime() -> int:
 
 
 def epoch2iso(epochmicros: int) -> str:
-    thedate = datetime.fromtimestamp(epochmicros / 1e6)
-    thedate = datetime.fromtimestamp(time.time())
-    strdate = thedate.strftime("%Y-%m-%dT%H:%M:%S")
-    minute = (time.localtime().tm_gmtoff / 60) % 60
-    hour = ((time.localtime().tm_gmtoff / 60) - minute) / 60
-    utcoffset = "%.2d%.2d" % (hour, minute)
-    if utcoffset[0] != "-":
-        utcoffset = "+" + utcoffset
-    return strdate + utcoffset
+    thedate = datetime.fromtimestamp(epochmicros // 1000000, timezone.utc).astimezone()
+    return thedate.strftime("%Y-%m-%dT%H:%M:%S%z")
 
 
 def parsedate(timespec: str) -> int:
-    pattern = "%Y-%m-%dT%H:%M:%S"
-    datestr = timespec[:-5]
-    sign = int(timespec[-5:-4] + "1")
-    hour = int(timespec[-4:-2])
-    minute = int(timespec[-2:])
-    utcdate = datetime.strptime(datestr, pattern).replace(tzinfo=timezone.utc)
-    utcoffset = sign * (hour + minute)
-    return int(1e6 * (int(utcdate.timestamp()) - utcoffset))
+    thedate = datetime.strptime(timespec, "%Y-%m-%dT%H:%M:%S%z")
+    return int(thedate.timestamp()) * 1000000
 
 
 def match(string: str, pattern: str) -> bool:

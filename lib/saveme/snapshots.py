@@ -95,7 +95,8 @@ def culltimeline(datearr: List[str], policy: str, now: int) -> List[str]:
                     keep = True
                 elif snapdate[0] - old > rangespec[2]:
                     keep = True
-                old = snapdate[0]
+                if keep:
+                    old = snapdate[0]
 
                 if keep is False:
                     # print("kill %s cuz %s [%s]" % (snapdate,keep,rangespec[3]))
