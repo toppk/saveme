@@ -9,7 +9,10 @@ def deletesnapshot(path: str, label: str) -> int:
     runner = TaskRunner()
     runner.setvalue("path", path)
     runner.setvalue("label", label)
-    return runner.runstep("delete-snap")
+    try:
+        return runner.runstep("delete-snap")
+    except StopException:
+        return runner.getretcode()
 
 
 def create(path: str, label: str = None, promptuser: bool = True) -> int:
@@ -18,13 +21,19 @@ def create(path: str, label: str = None, promptuser: bool = True) -> int:
     options: List[Tuple[str, str]] = []
     if label is not None:
         options += [("label", label)]
-    return runner.runstep("take-snap", options=options, promptuser=promptuser)
+    try:
+        return runner.runstep("take-snap", options=options, promptuser=promptuser)
+    except StopException:
+        return runner.getretcode()
 
 
 def listsnapshot(path: str) -> int:
     runner = TaskRunner()
     runner.setvalue("path", path)
-    runner.runstep("list-snap")
+    try:
+        runner.runstep("list-snap")
+    except StopException:
+        return runner.getretcode()
     if runner.getretcode() == 0:
         if runner.getout() != "":
             print(runner.getout())
@@ -42,7 +51,10 @@ def manage(path: str, policy: str = None, promptuser: bool = True) -> int:
 
     runner = TaskRunner()
     runner.setvalue("path", path)
-    runner.runstep("list-snap")
+    try:
+        runner.runstep("list-snap")
+    except StopException:
+        return runner.getretcode()
     if runner.getretcode() != 0:
         return runner.getretcode()
     if runner.getout() == "":
@@ -62,8 +74,7 @@ def manage(path: str, policy: str = None, promptuser: bool = True) -> int:
         try:
             runner.runstep("delete-snap", stdin=stdin, promptuser=promptuser)
         except StopException:
-            print("user selected no")
-            return 2
+            return runner.getretcode()
 
         # if len([i for i in out.split("\n") if i != "" and i[0] != "#"]) == 0:
     return runner.getretcode()

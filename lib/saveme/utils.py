@@ -74,13 +74,16 @@ class TaskRunner:
                 if out == "":
                     print("NO ACTION GENERATED")
                 self._retcode = launch(out, promptuser=promptuser)
+                if self._retcode != 0:
+                    raise StopException()
         else:
             print("FAILURE - %s issues [%s][%s][%d]" % (step, out, err, retcode))
             raise StopException()
-        return retcode
+        return self._retcode
 
 
-def launch(cmds: str, promptuser: bool = True) -> bool:
+def launch(cmds: str, promptuser: bool = True) -> int:
+    # 0 ran, 1 commands failed, 2 declined at the prompt
     if promptuser:
         print(
             """SUGGESTED ACTION
@@ -91,7 +94,8 @@ def launch(cmds: str, promptuser: bool = True) -> bool:
         )
         response = input("==> Do you wish to launch? y/n ")
         if response != "y":
-            raise StopException()
+            print("user selected no")
+            return 2
     else:
         print(
             """LAUNCHING THE FOLLOWING ACTION
@@ -108,8 +112,8 @@ def launch(cmds: str, promptuser: bool = True) -> bool:
             print("SUCCESS -  Output is below:\n---\n%s---" % out)
         else:
             print("ERROR - out,err,exit [%s][%s][%d]" % (out, err, retcode))
-            return False
-    return True
+            return 1
+    return 0
 
 
 def getcap(path: str) -> int:

@@ -208,6 +208,59 @@ class TestPolicyBoundaries(unittest.TestCase):
         self.assertEqual(steps, ["list-snap"])
 
 
+class TestExitCodes(unittest.TestCase):
+    SNAP = "2026-01-01T00:00:00-0500"
+
+    def _run(self, results, func, *args, answer=None, **kwargs):
+        from unittest import mock
+
+        from saveme import snapshots, utils
+
+        calls = []
+
+        def fake(args, stdin=None):
+            calls.append(args)
+            return results[len(calls) - 1]
+
+        with mock.patch.object(utils, "runcommand", side_effect=fake):
+            with mock.patch("builtins.input", return_value=answer):
+                with mock.patch.object(
+                    snapshots, "getcurtime", return_value=1893456000 * 1000000
+                ):
+                    return getattr(snapshots, func)(*args, **kwargs), len(calls)
+
+    def test_create_ok(self):
+        res = [(0, "btrfs subvolume snapshot\n", ""), (0, "", "")]
+        self.assertEqual(self._run(res, "create", "/x", promptuser=False), (0, 2))
+
+    def test_create_commands_fail(self):
+        res = [(0, "btrfs subvolume snapshot\n", ""), (1, "", "boom\n")]
+        self.assertEqual(self._run(res, "create", "/x", promptuser=False), (1, 2))
+
+    def test_create_script_fails(self):
+        res = [(3, "", "not a btrfs path\n")]
+        self.assertEqual(self._run(res, "create", "/x", promptuser=False), (3, 1))
+
+    def test_create_declined(self):
+        res = [(0, "btrfs subvolume snapshot\n", "")]
+        self.assertEqual(self._run(res, "create", "/x", answer="n"), (2, 1))
+
+    def test_manage_deletes_ok(self):
+        res = [
+            (0, self.SNAP + "\n", ""),
+            (0, "btrfs subvolume delete\n", ""),
+            (0, "", ""),
+        ]
+        policy = "0-1dy: all, 1dy+: none"
+        self.assertEqual(
+            self._run(res, "manage", "/x", policy, promptuser=False), (0, 3)
+        )
+
+    def test_list_script_fails(self):
+        res = [(1, "", "/x not a directory\n")]
+        self.assertEqual(self._run(res, "listsnapshot", "/x"), (1, 1))
+
+
 class TestInstallLayout(unittest.TestCase):
     REPO = Path(__file__).resolve().parents[1]
 
@@ -244,6 +297,7 @@ class TestInstallLayout(unittest.TestCase):
                 )
                 self.assertEqual(proc.returncode, code, proc.stdout + proc.stderr)
                 self.assertNotIn("HOSTILE", proc.stdout)
+                self.assertNotIn("Traceback", proc.stderr)
                 self.assertIn("usage:" if not args else "not a directory", proc.stdout)
 
 
