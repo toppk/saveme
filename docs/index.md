@@ -1,68 +1,36 @@
 # saveme
 
-a timeline management tool for filesystems.
+Snapshots and encrypted archive disks for Linux, on btrfs, zfs and LUKS.
 
-## Introduction
+## What it does
 
-Protecting ones data has always been a tough challenge. Fortunetly there
-has been a lot of new technology developed that give new ways to solve
-old problems.  Here are tools that enable people to manage and protect
-their data, in a better way.
+* **`snapmgr`** takes btrfs and zfs snapshots and thins them by age. A policy
+  like `0-1dy: all, 1dy-1wk: 4hr, 1wk-8wk: 1wk, 8wk+: none` says how dense
+  history should be at each age, however often snapshots are taken. Snapshot
+  names are their timestamps, so there's no other state to keep in sync.
+* **`disktool`** prepares archive disks: a GPT partition, LUKS encryption with
+  a generated key in `/etc/saveme/keys/`, and an ext4 filesystem mounted under
+  `/arfs/<id>`.
+* **`mirroradm`** is unfinished: it indexes and checksums files into SQLite,
+  toward backups made from snapshots rather than the live filesystem.
 
-This tool will help you manage your filesystems, including snapshots
-with a simpler more flexible policy format.  We're also building
-backups based on indexing and checksum'ing files from the snapshot.
-There are several design advantages that one gets when backing up the
-snapshot vs the live filesystem, but the backup functionality can be
-used without snapshots as well.
+saveme doesn't encrypt snapshots; encryption applies to the LUKS archive disks
+it prepares. Snapshots catch mistakes, but they're not a backup by themselves.
 
-## Compatability
+## How it runs
 
-This tool is designed to be ported to any storage technology.
-Currently works with:
-
-* linux
-* btrfs
-* zfs
-* ext4
-* gpt partition tables
-* dm-crypt (luks/cryptsetup) for crypto
-
-## Status
-
-* General - This software is still experimental.  Not everthing
-            works, but the scripts and execution follow a simple
-            design, that anyone who feels comfortable running
-            commands as root that can reformat filesystem should
-            be able to review any command simply.
-
-* Lowlevel - There are scripts to assist setting up partitions
-             setting up crypto block devices, adding filesystems to
-	     partitions.  All disk level commands are contained in
-             shell scripts that average less then 40 lines per file.
-             There is a tool to help run through all the steps to
-             create a new filesystem on a new disk.
-
-See USAGE for more details.
-
-* Snapshots - There is a tool to manage snapshots with a simple policy.
-              Gone are the hourly/daily concepts, and replaced with a
-	      unified policy regarding snapshot density.
+Every root action, snapshot creation and deletion included, is a short bash
+script in `scripts/` that checks its inputs and prints the commands it would
+run. saveme shows that list and asks before running it, unless `--noprompt` is
+given. So the commands that change disks are always visible, at the prompt and
+in the log.
 
 ```
 # crontab -l
 10,40 * * * * snapmgr create /my/vol --noprompt
-0     4 * * * snapmgr manage /my/vol --policy="0-1dy: all, 1dy-1wk: 8hr, \
-                                               4wk-1yr: 2wk, 1yr+: none" --noprompt
-#
-
+0     4 * * * snapmgr manage /my/vol --noprompt \
+                  --policy="0-1dy: all, 1dy-1wk: 8hr, 1wk-1yr: 2wk, 1yr+: none"
 ```
-See USAGE for more details.
 
-* Backups - This tool is currently in progress.  Currently there is a
-            sqlite database that stores indexes and checksums of files.
-            There will be more support code to place each file on a
-            set of fileystems registerd as "archive" where each file
-            will be encrypted with it's own key.
-
-See lib/saveme/mirror.py for details.
+It runs on Linux with btrfs, zfs, ext4, GPT partition tables and
+dm-crypt (LUKS). See Usage for details.
