@@ -55,7 +55,7 @@ def indexer(path: str) -> Generator[Tuple[str, os.stat_result], None, None]:
             yield (filepath[len(path) :], res)
 
 
-def runcommand(args: List[str], stdin: str = None) -> Tuple[int, str, str]:
+def runcommand(args: List[str], stdin: str | None = None) -> Tuple[int, str, str]:
     if stdin is not None:
         proc = subprocess.Popen(
             args,

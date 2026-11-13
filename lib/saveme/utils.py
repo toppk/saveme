@@ -43,8 +43,8 @@ class TaskRunner:
     def runstep(
         self,
         step: str,
-        options: List[Tuple[str, str]] = None,
-        stdin: str = None,
+        options: List[Tuple[str, str]] | None = None,
+        stdin: str | None = None,
         promptuser: bool = True,
     ) -> int:
         action = findscript(step)
@@ -85,25 +85,19 @@ class TaskRunner:
 def launch(cmds: str, promptuser: bool = True) -> int:
     # 0 ran, 1 commands failed, 2 declined at the prompt
     if promptuser:
-        print(
-            """SUGGESTED ACTION
+        print("""SUGGESTED ACTION
 ---
 %s
----"""
-            % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"])
-        )
+---""" % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
         response = input("==> Do you wish to launch? y/n ")
         if response != "y":
             print("user selected no")
             return 2
     else:
-        print(
-            """LAUNCHING THE FOLLOWING ACTION
+        print("""LAUNCHING THE FOLLOWING ACTION
 ---
 %s
----"""
-            % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"])
-        )
+---""" % "\n".join([i for i in cmds.split("\n") if i != "" and i[0] != "#"]))
 
     if not promptuser or response == "y":
         args = ["/bin/bash", "-e", "-c", cmds]
@@ -127,15 +121,20 @@ def parsepolicy(policystr: str) -> List[SnapPolicy]:
     rules: List[SnapPolicy] = []
     for rule in policystr.split(","):
         rule = rule.strip()
-        (rangespec, sparse) = rule.split(":")
+        rangespec, sparse = rule.split(":")
         sparse = sparse.strip()
         rangespec = rangespec.strip()
         start = None
         end = None
-        sparseness: Union[str, int] = sparse if sparse in (
-            "all",
-            "none",
-        ) else parsehdate(sparse)
+        sparseness: Union[str, int] = (
+            sparse
+            if sparse
+            in (
+                "all",
+                "none",
+            )
+            else parsehdate(sparse)
+        )
         if rangespec.find("-") > 0:
             start, end = [parsehdate(hdate) for hdate in rangespec.split("-")]
         elif rangespec.endswith("+"):

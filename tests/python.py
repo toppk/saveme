@@ -27,8 +27,8 @@ class TestUtil(unittest.TestCase):
     _parsedate = None
 
     def setUp(self):
-        from saveme.snapshots import culltimeline
         from saveme.external import parsedate
+        from saveme.snapshots import culltimeline
 
         self._parsedate = parsedate
         self._culltimeline = culltimeline
@@ -326,5 +326,5 @@ class TestExternal(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    sys.path += [os.path.abspath(os.path.dirname(sys.argv[0]) + "/../lib")]
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
     unittest.main()

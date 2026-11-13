@@ -25,8 +25,7 @@ class CommandLine:
         status = 1
 
         def usage(proc: str) -> None:
-            print(
-                """usage: %s
+            print("""usage: %s
 
  COMMANDS
            index <path>
@@ -39,9 +38,7 @@ register-archive <path>
         checksum <volumeid>
   missing-chksum
   provide-chksum  <volumeid> <fileid> <checksum>
-         resetdb"""
-                % proc
-            )
+         resetdb""" % proc)
 
         if len(args) == 1:
             usage(args[0])
@@ -110,17 +107,14 @@ register-archive <path>
 
     def disktool(self, args: List[str]) -> int:
         def usage(proc: str) -> None:
-            print(
-                """usage: %s
+            print("""usage: %s
 
 COMMANDS
  disk-to-arfs <disk>
  generate-arid
 
 OPTIONS
- disk = disk to use (e.g. hda)"""
-                % proc
-            )
+ disk = disk to use (e.g. hda)""" % proc)
 
         status = 12
         if len(args) == 1:
@@ -146,8 +140,7 @@ OPTIONS
 
     def snapmgr(self, args: List[str]) -> int:
         def usage(proc: str) -> None:
-            print(
-                """usage: %s
+            print("""usage: %s
 
 COMMANDS
  manage <path> [--policy=XXX] [--noprompt]
@@ -158,9 +151,7 @@ COMMANDS
 OPTIONS
  policy = [0-9]*[hr,dy,wk,yr]
  label = use a manual id
- noprompt = will take action, no pause for confirmation"""
-                % proc
-            )
+ noprompt = will take action, no pause for confirmation""" % proc)
 
         status = 12
         if len(args) == 1:
@@ -170,10 +161,8 @@ OPTIONS
                 print("manage: you must specify <path>")
                 status = 1
             elif args[2] in ("--help", "help"):
-                print(
-                    """usage: manage  <path> [--policy=XXX] [--noprompt]
-                example policy="1wk+\""""
-                )
+                print("""usage: manage  <path> [--policy=XXX] [--noprompt]
+                example policy="1wk+\"""")
                 status = 12
             else:
                 pool = args[2]

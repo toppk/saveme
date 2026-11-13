@@ -15,7 +15,7 @@ def deletesnapshot(path: str, label: str) -> int:
         return runner.getretcode()
 
 
-def create(path: str, label: str = None, promptuser: bool = True) -> int:
+def create(path: str, label: str | None = None, promptuser: bool = True) -> int:
     runner = TaskRunner()
     runner.setvalue("path", path)
     options: List[Tuple[str, str]] = []
@@ -40,7 +40,7 @@ def listsnapshot(path: str) -> int:
     return runner.getretcode()
 
 
-def manage(path: str, policy: str = None, promptuser: bool = True) -> int:
+def manage(path: str, policy: str | None = None, promptuser: bool = True) -> int:
     res = []
     try:
         assert policy is not None
@@ -104,7 +104,9 @@ def culltimeline(datearr: List[str], policy: str, now: int) -> List[str]:
                     keep = True
                 elif old is None:
                     keep = True
-                elif snapdate[0] - old >= rangespec[2]:
+                elif (
+                    isinstance(rangespec[2], int) and snapdate[0] - old >= rangespec[2]
+                ):
                     keep = True
                 if keep:
                     old = snapdate[0]

@@ -22,8 +22,7 @@ def createdb() -> None:
         cur.execute("""drop table files""")
     except sqlite3.OperationalError:
         pass
-    cur.execute(
-        """
+    cur.execute("""
 create table files (
     volumeid integer,
     fileid text,
@@ -41,41 +40,35 @@ create table files (
     st_ino integer,
     st_mode integer,
     st_nlink integer
-)"""
-    )
+)""")
 
     try:
         cur.execute("""drop table checksums""")
     except sqlite3.OperationalError:
         pass
-    cur.execute(
-        """
+    cur.execute("""
 create table checksums (
     chksum text,
     volumeid integer,
     fileid text,
     gendate integer
-)"""
-    )
+)""")
     try:
         cur.execute("""drop table archives""")
     except sqlite3.OperationalError:
         pass
-    cur.execute(
-        """
+    cur.execute("""
 create table archives (
     path text unique,
     status text,
     capacity integer,
     chkdate integer
-)"""
-    )
+)""")
     try:
         cur.execute("""drop table mirrors""")
     except sqlite3.OperationalError:
         pass
-    cur.execute(
-        """
+    cur.execute("""
 create table mirrors (
     chksum text,
     archiveid integer
@@ -83,20 +76,17 @@ create table mirrors (
     blobkey text,
     blobsize integer,
     copydate integer
-)"""
-    )
+)""")
     try:
         cur.execute("""drop table volumes""")
     except sqlite3.OperationalError:
         pass
-    cur.execute(
-        """
+    cur.execute("""
 create table volumes (
     path text,
     status text,
     createdate integer
-)"""
-    )
+)""")
     conn.commit()
     cur.close()
 
@@ -105,7 +95,7 @@ def addbackup(volumeid: str, fileid: str, chksum: str) -> None:
     pass
 
 
-def missingbackup(volumeid: int = None) -> None:
+def missingbackup(volumeid: int | None = None) -> None:
     checksums = findbackup(volumeid, withbackup=False)
     for chksum in checksums:
         print(
@@ -114,7 +104,7 @@ def missingbackup(volumeid: int = None) -> None:
         )
 
 
-def findbackup(volumeid: int = None, withbackup: bool = True) -> List[Backup]:
+def findbackup(volumeid: int | None = None, withbackup: bool = True) -> List[Backup]:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     query = """select  checksums.chksum, volumes.path, files.path, mirrors.* from
@@ -174,7 +164,7 @@ def generatechecksum(path: str) -> str:
     raise ChecksumError()
 
 
-def missingsum(volumeid: int = None) -> None:
+def missingsum(volumeid: int | None = None) -> None:
     files = findsum(volumeid, withsum=False)
     for myfile in files:
         print(
@@ -188,7 +178,7 @@ def missingsum(volumeid: int = None) -> None:
         )
 
 
-def findsum(volumeid: int = None, withsum: bool = True) -> List[File]:
+def findsum(volumeid: int | None = None, withsum: bool = True) -> List[File]:
     conn = sqlite3.connect("example.db")
     cur = conn.cursor()
     query = """select files.volumeid, files.fileid, volumes.path, files.path from files

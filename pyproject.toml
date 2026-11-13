@@ -1,0 +1,26 @@
+# Metadata and tool settings only; saveme is installed by unpacking a release (see README).
+[project]
+name = "saveme"
+version = "0.2.0"
+description = "Snapshot, disk and archive management for btrfs, zfs and LUKS"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.14"
+authors = [{ name = "toppk", email = "toppk@bllue.org" }]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/toppk/saveme"
+
+[tool.black]
+line-length = 88
+target-version = ["py314"]
+
+[tool.isort]
+profile = "black"
+known_first_party = ["saveme", "tests"]
+
+[tool.mypy]
+python_version = "3.14"
+disallow_untyped_defs = true
+ignore_missing_imports = true
