@@ -16,7 +16,29 @@ class TestMain(unittest.TestCase):
         self._cl = CommandLine()
 
     def test_cli_go(self):
-        self.assertEqual(self._cl.snapmgr(["me"]), 12)
+        self.assertEqual(self._cl.snapmgr(["me"]), 64)
+
+    def test_cli_usage_codes(self):
+        from contextlib import redirect_stderr, redirect_stdout
+        from io import StringIO
+
+        for tool in ("snapmgr", "disktool", "mirroradm"):
+            run = getattr(self._cl, tool)
+            for args, code in (
+                ([], 64),
+                (["bogus"], 64),
+                (["help"], 0),
+                (["-h"], 0),
+                (["--help"], 0),
+            ):
+                out, err = StringIO(), StringIO()
+                with redirect_stdout(out), redirect_stderr(err):
+                    self.assertEqual(run([tool, *args]), code, (tool, args))
+                self.assertIn("usage:", (out if code == 0 else err).getvalue())
+        with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
+            self.assertEqual(self._cl.snapmgr(["s", "manage", "--help"]), 0)
+            self.assertEqual(self._cl.snapmgr(["s", "list"]), 64)
+            self.assertEqual(self._cl.snapmgr(["s", "create", "/x", "--x"]), 64)
 
     def test_cli_help(self):
         self.assertEqual(self._cl.help(), True)
@@ -261,6 +283,45 @@ class TestExitCodes(unittest.TestCase):
         self.assertEqual(self._run(res, "listsnapshot", "/x"), (1, 1))
 
 
+class TestMirrorDb(unittest.TestCase):
+    def _mirroradm(self, dbdir, *args):
+        from contextlib import redirect_stderr, redirect_stdout
+        from io import StringIO
+        from unittest import mock
+
+        from saveme import cfg
+        from saveme.api import CommandLine
+
+        out, err = StringIO(), StringIO()
+        with mock.patch.dict(cfg.SETTINGS, {"database-directory": dbdir}):
+            with redirect_stdout(out), redirect_stderr(err):
+                code = CommandLine().mirroradm(["mirroradm", *args])
+        return code, out.getvalue(), err.getvalue()
+
+    def test_db_in_configured_directory(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            cwd = os.getcwd()
+            os.chdir(tmp)
+            try:
+                dbdir = Path(tmp, "db")
+                dbdir.mkdir()
+                self.assertEqual(self._mirroradm(str(dbdir), "resetdb")[0], 0)
+                self.assertEqual(
+                    self._mirroradm(str(dbdir), "list-archives"), (0, "", "")
+                )
+                self.assertEqual(os.listdir(tmp), ["db"])
+                self.assertEqual(os.listdir(dbdir), ["mirror.db"])
+            finally:
+                os.chdir(cwd)
+
+    def test_missing_db_directory(self):
+        code, out, err = self._mirroradm("/nonexistent-saveme-db", "list-archives")
+        self.assertEqual(code, 1)
+        self.assertIn("/nonexistent-saveme-db does not exist", err)
+
+
 class TestInstallLayout(unittest.TestCase):
     REPO = Path(__file__).resolve().parents[1]
 
@@ -292,12 +353,15 @@ class TestInstallLayout(unittest.TestCase):
             env = dict(os.environ, PYTHONPATH=str(evil.parent))
             for tool, args, code in (
                 ("snapmgr", ["list", "/nonexistent-saveme-path"], 1),
-                ("disktool", [], 12),
-                ("mirroradm", [], 1),
+                ("disktool", [], 64),
+                ("mirroradm", [], 64),
             ):
+                with open(self.REPO / "tools" / tool) as f:
+                    self.assertEqual(f.readline(), "#!/usr/bin/python3 -I\n")
                 (sbin / tool).symlink_to(self.REPO / "tools" / tool)
+                # run under this python, not whatever /usr/bin/python3 is
                 proc = subprocess.run(
-                    [str(sbin / tool), *args],
+                    [sys.executable, "-I", str(sbin / tool), *args],
                     cwd=tmp,
                     env=env,
                     capture_output=True,
@@ -306,7 +370,9 @@ class TestInstallLayout(unittest.TestCase):
                 self.assertEqual(proc.returncode, code, proc.stdout + proc.stderr)
                 self.assertNotIn("HOSTILE", proc.stdout)
                 self.assertNotIn("Traceback", proc.stderr)
-                self.assertIn("usage:" if not args else "not a directory", proc.stdout)
+                self.assertIn(
+                    "not a directory" if args else "usage:", proc.stdout + proc.stderr
+                )
 
 
 class TestExternal(unittest.TestCase):

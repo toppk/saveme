@@ -13,6 +13,10 @@ class MissingParamException(Exception):
     pass
 
 
+class NoDatabase(Exception):
+    pass
+
+
 class Routine:
     def __init__(self, script: str, args: List[str], generates_commands: bool) -> None:
         self.script = script

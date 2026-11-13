@@ -1,4 +1,5 @@
-from typing import List
+import sys
+from typing import Callable, List, TextIO
 
 from .block import genarid, makearfsfromdisk
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
@@ -15,6 +16,16 @@ from .mirror import (
     registerarchive,
 )
 from .snapshots import create, deletesnapshot, listsnapshot, manage
+from .types import NoDatabase
+
+# sysexits EX_USAGE, clear of 1 (commands failed) and 2 (declined)
+USAGE = 64
+HELP = ("help", "-h", "--help")
+
+
+def _err(msg: str) -> int:
+    print(msg, file=sys.stderr)
+    return USAGE
 
 
 class CommandLine:
@@ -22,10 +33,9 @@ class CommandLine:
         pass
 
     def mirroradm(self, args: List[str]) -> int:
-        status = 1
-
-        def usage(proc: str) -> None:
-            print("""usage: %s
+        def usage(proc: str, out: TextIO = sys.stdout) -> None:
+            print(
+                """usage: %s
 
  COMMANDS
            index <path>
@@ -38,47 +48,59 @@ register-archive <path>
         checksum <volumeid>
   missing-chksum
   provide-chksum  <volumeid> <fileid> <checksum>
-         resetdb""" % proc)
+         resetdb""" % proc,
+                file=out,
+            )
 
         if len(args) == 1:
+            usage(args[0], sys.stderr)
+            return USAGE
+        if args[1] in HELP:
             usage(args[0])
-        elif args[1] == "provide-chksum":
+            return 0
+        try:
+            return self._mirroradm(args, usage)
+        except NoDatabase as err:
+            print(
+                "mirroradm: database directory %s does not exist" % err, file=sys.stderr
+            )
+            return 1
+
+    def _mirroradm(self, args: List[str], usage: Callable[[str, TextIO], None]) -> int:
+        status = 0
+        if args[1] == "provide-chksum":
             if len(args) != 5:
-                print("provide: you must specify <volumeid> <fileid> <chksum>")
-                status = 1
+                status = _err("provide: you must specify <volumeid> <fileid> <chksum>")
             else:
                 addsum(int(args[2]), args[3], args[4])
         elif args[1] == "missing-chksum":
             missingsum()
         elif args[1] == "checksum":
             if len(args) != 3:
-                print("checksum: you must specify <volumeid>")
-                status = 2
+                status = _err("checksum: you must specify <volumeid>")
             else:
                 try:
                     volumeid = int(args[2])
                 except ValueError:
-                    print("volumeid must be an integer")
-                    return 3
+                    return _err("volumeid must be an integer")
                 status = checksumvolume(volumeid)
         elif args[1] == "provide-backup":
             if len(args) != 6:
-                print("provide: you must specify <chksum> <blobsize> <blobchksum> -")
-                status = 1
+                status = _err(
+                    "provide: you must specify <chksum> <blobsize> <blobchksum> -"
+                )
             else:
                 addsum(int(args[2]), args[3], args[4])
         elif args[1] == "missing-backup":
             missingbackup()
         elif args[1] == "backup":
             if len(args) != 3:
-                print("backup: you must specify <volumeid>")
-                status = 2
+                status = _err("backup: you must specify <volumeid>")
             else:
                 try:
                     volumeid = int(args[2])
                 except ValueError:
-                    print("volumeid must be an integer")
-                    return 3
+                    return _err("volumeid must be an integer")
                 status = backupvolume(volumeid)
         elif args[1] == "list-archives":
             listarchives()
@@ -88,59 +110,62 @@ register-archive <path>
             createdb()
         elif args[1] == "register-archive":
             if len(args) != 3:
-                print("register-archive: you must specify <path>")
-                status = 4
+                status = _err("register-archive: you must specify <path>")
             else:
                 path = args[2]
                 registerarchive(path)
         elif args[1] == "index":
             if len(args) != 3:
-                print("index: you must specify <path>")
-                status = 4
+                status = _err("index: you must specify <path>")
             else:
                 path = args[2]
-                index(path)
+                status = index(path)
         else:
-            print("not a valid action")
-            status = 5
+            usage(args[0], sys.stderr)
+            status = _err("not a valid action: %s" % args[1])
         return status
 
     def disktool(self, args: List[str]) -> int:
-        def usage(proc: str) -> None:
-            print("""usage: %s
+        def usage(proc: str, out: TextIO = sys.stdout) -> None:
+            print(
+                """usage: %s
 
 COMMANDS
  disk-to-arfs <disk>
  generate-arid
 
 OPTIONS
- disk = disk to use (e.g. hda)""" % proc)
+ disk = disk to use (e.g. hda)""" % proc,
+                file=out,
+            )
 
-        status = 12
         if len(args) == 1:
+            usage(args[0], sys.stderr)
+            status = USAGE
+        elif args[1] in HELP:
             usage(args[0])
+            status = 0
         elif args[1] == "generate-arid":
             if len(args) != 2:
-                print("there are no arguments")
-                status = 1
+                status = _err("generate-arid takes no arguments")
             else:
                 print("%s" % genarid())
                 status = 0
         elif args[1] == "disk-to-arfs":
             if len(args) != 3:
-                print("disk-to-arfs: you must specify <disk>")
-                status = 2
+                status = _err("disk-to-arfs: you must specify <disk>")
             else:
                 disk = args[2]
                 status = makearfsfromdisk(disk)
         else:
-            print("not a valid action")
-            status = 3
+            usage(args[0], sys.stderr)
+            status = _err("not a valid action: %s" % args[1])
         return status
 
     def snapmgr(self, args: List[str]) -> int:
-        def usage(proc: str) -> None:
-            print("""usage: %s
+        def usage(proc: str, out: TextIO = sys.stdout) -> None:
+            print(
+                """usage: %s
 
 COMMANDS
  manage <path> [--policy=XXX] [--noprompt]
@@ -151,19 +176,24 @@ COMMANDS
 OPTIONS
  policy = [0-9]*[hr,dy,wk,yr]
  label = use a manual id
- noprompt = will take action, no pause for confirmation""" % proc)
+ noprompt = will take action, no pause for confirmation""" % proc,
+                file=out,
+            )
 
-        status = 12
         if len(args) == 1:
+            usage(args[0], sys.stderr)
+            status = USAGE
+        elif args[1] in HELP:
             usage(args[0])
+            status = 0
         elif args[1] == "manage":
             if len(args) == 2:
-                print("manage: you must specify <path>")
-                status = 1
-            elif args[2] in ("--help", "help"):
-                print("""usage: manage  <path> [--policy=XXX] [--noprompt]
-                example policy="1wk+\"""")
-                status = 12
+                status = _err("manage: you must specify <path>")
+            elif args[2] in HELP:
+                print(
+                    'usage: manage <path> [--policy=XXX] [--noprompt]\n example --policy="1wk+: none"'
+                )
+                status = 0
             else:
                 pool = args[2]
                 policy = _cfg_default_snapshot_policy()
@@ -174,8 +204,7 @@ OPTIONS
                     elif options == "--noprompt":
                         promptuser = False
                     else:
-                        print("unknown option = %s" % options)
-                        return 3
+                        return _err("unknown option = %s" % options)
                 print(
                     'Managing snapshots for path="%s" with policy="%s" '
                     % (pool, policy)
@@ -183,19 +212,16 @@ OPTIONS
                 status = manage(pool, policy, promptuser=promptuser)
         elif args[1] == "list":
             if len(args) == 2:
-                print("list: you must specify <path>")
-                status = 1
+                status = _err("list: you must specify <path>")
             else:
                 pool = args[2]
                 label = None
                 for options in args[3:]:
-                    print("unknown option = %s" % options)
-                    return 3
+                    return _err("unknown option = %s" % options)
                 status = listsnapshot(pool)
         elif args[1] == "create":
             if len(args) == 2:
-                print("create: you must specify <path>")
-                status = 1
+                status = _err("create: you must specify <path>")
             else:
                 pool = args[2]
                 label = None
@@ -206,23 +232,20 @@ OPTIONS
                     elif options == "--noprompt":
                         promptuser = False
                     else:
-                        print("unknown option = %s" % options)
-                        return 3
+                        return _err("unknown option = %s" % options)
                 status = create(pool, label=label, promptuser=promptuser)
         elif args[1] == "delete":
             if len(args) < 4:
-                print("delete: you must specify <path> <label>")
-                status = 1
+                status = _err("delete: you must specify <path> <label>")
             else:
                 pool = args[2]
                 label = args[3]
                 for options in args[4:]:
-                    print("unknown option = %s" % options)
-                    return 3
+                    return _err("unknown option = %s" % options)
                 status = deletesnapshot(pool, label)
         else:
-            print("not a valid action")
-            status = 2
+            usage(args[0], sys.stderr)
+            status = _err("not a valid action: %s" % args[1])
         return status
 
     def help(self) -> bool:
