@@ -112,8 +112,8 @@ builds a release tarball and `SHA256SUMS` from a tag into `dist/`.
 
 The system tests in `tests/` (`fullrun.sh <disk>` and friends) run against
 real block devices as root and **destroy the disk they're given**. They're
-opt-in and never run in CI; the tool versions `tests/system.sh` checks for
-are from 2020.
+opt-in and never run in CI. `tests/system.sh` checks the tools they drive are
+installed and logs their versions.
 
 ## Related Links
 

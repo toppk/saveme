@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.1 (unreleased)
+
+* Usage errors exit 64 and go to stderr; `help`, `-h` and `--help` print the
+  usage and exit 0. Bare `snapmgr` and `disktool` used to exit 12.
+* `mirroradm` keeps its database at `/etc/saveme/db/mirror.db` instead of
+  `example.db` in the current directory, and exits 1 if that directory is
+  missing. Successful commands exit 0 instead of 1.
+* `tests/system.sh` checks the tools are installed rather than for 2020
+  versions.
+* The symlink test runs the tools under the test's Python, so CI covers 3.14.
+
 ## 0.2.0 (2026-11-13)
 
 Which snapshots `manage` keeps has changed; review your policies before

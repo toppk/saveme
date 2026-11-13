@@ -1,7 +1,7 @@
 # Metadata and tool settings only; saveme is installed by unpacking a release (see README).
 [project]
 name = "saveme"
-version = "0.2.0"
+version = "0.2.1"
 description = "Snapshot, disk and archive management for btrfs, zfs and LUKS"
 readme = "README.md"
 license = "MIT"
