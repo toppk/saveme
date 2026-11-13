@@ -10,10 +10,10 @@ __all__ = [
 ]
 
 __title__ = "saveme"
-__description__ = "Python driver for Cassandra focusing on asyncio users (INCOMPLETE)."
+__description__ = "Snapshot, disk and archive management for btrfs, zfs and LUKS"
 __uri__ = "https://github.com/toppk/saveme"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "toppk"
 __email__ = "toppk@bllue.org"
 __license__ = "MIT"
-__copyright__ = "Copyright 2015-2019 {}".format(__author__)
+__copyright__ = "Copyright 2015-2026 {}".format(__author__)

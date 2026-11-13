@@ -270,6 +270,14 @@ class TestInstallLayout(unittest.TestCase):
         self.assertEqual(getscriptsdir(), str(self.REPO / "scripts"))
         self.assertTrue((Path(getscriptsdir()) / "ssfs-list-snap.sh").is_file())
 
+    def test_version_matches_pyproject(self):
+        import tomllib
+
+        from saveme.__about__ import __version__
+
+        with open(self.REPO / "pyproject.toml", "rb") as f:
+            self.assertEqual(tomllib.load(f)["project"]["version"], __version__)
+
     def test_tools_through_symlink(self):
         import subprocess
         import tempfile

@@ -1,7 +1,7 @@
 # saveme
 
 a timeline management tool for filesystems.
-<a href="https://pysandra.readthedocs.org/">
+Docs: https://saveme.readthedocs.io/
 
 ## Introduction
 
@@ -68,13 +68,52 @@ See USAGE for more details.
 
 See lib/saveme/mirror.py for details.
 	      
-## Try it out
+## Install
 
-Please checkout this project, and read the GETTING_STARTED and USAGE docs.  
+saveme runs as root on the system Python (`/usr/bin/python3`, 3.14 or
+later, standard library only) and needs bash, plus the tools its scripts
+call (btrfs-progs, zfs, cryptsetup, parted). There's nothing to build or
+pip-install: a release is a tarball, unpacked as is. Keep the installed copy
+root-owned, and don't run it as root from a checkout you can write to.
 
-Requires python3 and bash.
+Layout:
 
-There is more to come...
+```
+/opt/saveme/releases/v<version>/    a release tarball, unpacked
+/opt/saveme/current                 -> releases/v<version>
+/usr/local/sbin/{snapmgr,disktool,mirroradm}
+                                    -> /opt/saveme/current/tools/<tool>
+/etc/saveme/                        config, db and keys
+```
+
+Install or upgrade, as root, with `saveme-<version>.tar.gz` and `SHA256SUMS`
+from the GitHub release:
+
+```
+v=0.2.0
+sha256sum -c SHA256SUMS
+install -d -m 0755 /opt/saveme/releases/v$v
+tar -xzf saveme-$v.tar.gz -C /opt/saveme/releases/v$v --strip-components=1 --no-same-owner
+chown -R root:root /opt/saveme/releases/v$v && chmod -R go-w /opt/saveme/releases/v$v
+ln -sfn releases/v$v /opt/saveme/current
+for t in snapmgr disktool mirroradm; do ln -sfn /opt/saveme/current/tools/$t /usr/local/sbin/$t; done
+```
+
+The tools find their library and scripts from their own resolved path, so
+the symlinks work as is. To roll back, point `current` at the previous
+release; old releases stay until you remove them.
+
+## Development
+
+`just check` runs the format, lint and type checks (tools pinned in
+`requirements-dev.txt`), and `just test` runs the unit tests, which need no
+root and no real disks. CI runs both on Python 3.14. `just dist v<version>`
+builds a release tarball and `SHA256SUMS` from a tag into `dist/`.
+
+The system tests in `tests/` (`fullrun.sh <disk>` and friends) run against
+real block devices as root and **destroy the disk they're given**. They're
+opt-in and never run in CI; the tool versions `tests/system.sh` checks for
+are from 2020.
 
 ## Related Links
 
