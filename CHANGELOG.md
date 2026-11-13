@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (unreleased)
+## 0.2.0 (2026-11-13)
 
 Which snapshots `manage` keeps has changed; review your policies before
 upgrading.
