@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="$if(lang)$$lang$$else$en$endif$">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$if(hero)$$site-title$ · $site-tagline$$else$$pagetitle$ · $site-title$$endif$</title>
+$if(description)$
+<meta name="description" content="$description$">
+$endif$
+<meta name="generator" content="Horizon (pandoc)">
+$if(canonical)$
+<link rel="canonical" href="$canonical$">
+$endif$
+<link rel="stylesheet" href="theme/fonts/fonts.css">
+<link rel="stylesheet" href="theme/horizon.css">
+$if(site-favicon)$
+<link rel="icon" href="$site-favicon$">
+$elseif(site-logo)$
+<link rel="icon" href="$site-logo$">
+$endif$
+$if(source)$
+<link rel="alternate" type="text/markdown" href="$source$" title="This page as Markdown">
+$endif$
+<script>
+  try {
+    var t = localStorage.getItem("horizon-theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="masthead-bar">
+    <a class="brand" href="index.html">
+$if(site-logo)$
+      <img src="$site-logo$" alt="">
+$endif$
+      <span class="brand-name">$site-title$</span>
+      <span class="brand-tag">$site-tagline$</span>
+    </a>
+    <nav class="topnav" aria-label="Site">
+$for(top-links)$
+      <a href="$it.href$">$it.label$</a>
+$endfor$
+      <button class="theme-toggle" type="button" aria-label="Switch between light and dark" title="Light / dark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
+    </nav>
+  </div>
+$if(hero)$
+  <div class="hero">
+    <div>
+$if(hero-eyebrow)$
+      <p class="hero-eyebrow">$hero-eyebrow$</p>
+$endif$
+      <h1>$hero-title$</h1>
+      <p class="hero-lede">$hero-lede$</p>
+      <div class="hero-actions">
+$for(hero-links)$
+        <a class="btn $it.kind$" href="$it.href$">$it.label$</a>
+$endfor$
+      </div>
+    </div>
+$if(hero-image)$
+    <div class="hero-art hero-image" aria-hidden="true">
+      <img src="$hero-image$" alt="" width="512" height="512">
+$else$
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 420 300" fill="none">
+        <defs>
+          <radialGradient id="h-sun" cx="0.5" cy="1" r="0.75">
+            <stop offset="0" stop-color="#f8c46a"/>
+            <stop offset="0.55" stop-color="#ef8a2b"/>
+            <stop offset="1" stop-color="#ef8a2b" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="h-planet" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9cc0e6"/>
+            <stop offset="0.55" stop-color="#2f7fb0"/>
+            <stop offset="1" stop-color="#0b5f68"/>
+          </linearGradient>
+          <clipPath id="h-above"><rect x="0" y="0" width="420" height="236"/></clipPath>
+        </defs>
+        <g clip-path="url(#h-above)">
+          <circle cx="210" cy="236" r="118" fill="url(#h-sun)" opacity="0.85"/>
+        </g>
+        <g stroke="#9cc0e6" stroke-opacity="0.22">
+          <path d="M20 236h380"/>
+          <path d="M60 258h300M110 278h200"/>
+        </g>
+        <path d="M0 236h420" stroke="#f6b44c" stroke-width="2"/>
+        <circle cx="262" cy="118" r="52" fill="url(#h-planet)"/>
+        <path d="M218 104c18 8 52 14 92 6" stroke="#dff3f3" stroke-opacity="0.35" stroke-width="2" fill="none"/>
+        <path d="M226 136c20 6 48 6 76-4" stroke="#dff3f3" stroke-opacity="0.25" stroke-width="2" fill="none"/>
+        <ellipse cx="262" cy="118" rx="110" ry="28" transform="rotate(-14 262 118)" stroke="#f6b44c" stroke-width="2.5" fill="none"/>
+        <path d="M157 140a110 28 -14 0 0 4 4" stroke="#f6b44c" stroke-width="2.5"/>
+        <circle cx="360" cy="78" r="5" fill="#f4f8fd"/>
+        <circle cx="92" cy="70" r="1.6" fill="#dbe7f7"/>
+        <circle cx="140" cy="38" r="1.2" fill="#dbe7f7"/>
+        <circle cx="388" cy="168" r="1.4" fill="#dbe7f7"/>
+        <circle cx="54" cy="150" r="1.1" fill="#dbe7f7"/>
+      </svg>
+$endif$
+    </div>
+  </div>
+$endif$
+  <div class="horizon" aria-hidden="true"></div>
+</header>
+
+<div class="shell$if(toc)$ with-toc$endif$">
+  <nav class="sidebar" aria-label="Documentation">
+    <details open>
+      <summary>Contents</summary>
+      <div class="nav-inner">
+$nav$
+      </div>
+    </details>
+  </nav>
+
+  <main id="main" class="page">
+$if(hero)$
+$else$
+$if(eyebrow)$
+    <p class="eyebrow">$eyebrow$</p>
+$endif$
+    <h1 class="title">$title$</h1>
+$if(lede)$
+    <p class="lede">$lede$</p>
+$endif$
+$endif$
+$body$
+$if(pager)$
+    <nav class="pager" aria-label="Pages">
+$pager$
+    </nav>
+$endif$
+    <footer class="page-foot">
+$if(source)$
+      <a href="$source$">This page as Markdown</a>
+$endif$
+$if(edit-url)$
+      <a href="$edit-url$">Edit on GitHub</a>
+$endif$
+$if(llms)$
+      <a href="$llms$">llms.txt</a>
+$endif$
+    </footer>
+  </main>
+
+$if(toc)$
+  <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+$table-of-contents$
+  </aside>
+$endif$
+</div>
+
+<footer class="site-foot">
+  <div class="site-foot-inner">
+    <span>$site-footer$</span>
+    <span class="made">Horizon theme</span>
+  </div>
+</footer>
+<script src="theme/horizon.js" defer></script>
+</body>
+</html>

@@ -16,6 +16,10 @@ check:
 test:
     python3 -I tests/python.py -v
 
+# Build the docs site into _site/ (needs pandoc); Pages runs this.
+site:
+    site/build.sh _site
+
 # Reformat in place.
 fmt:
     isort {{src}}

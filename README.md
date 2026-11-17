@@ -79,6 +79,10 @@ release; old releases stay until you remove them.
 root and no real disks. CI runs both on Python 3.14. `just dist v<version>`
 builds a release tarball and `SHA256SUMS` from a tag into `dist/`.
 
+The docs site is `docs/*.md` rendered with pandoc and the Horizon theme in
+`site/`; `just site` builds it into `_site/`, and pushes to `master` publish it
+to GitHub Pages.
+
 The system tests in `tests/` (`fullrun.sh <disk>` and friends) run against
 real block devices as root and **destroy the disk they're given**. They're
 opt-in and never run in CI. `tests/system.sh` checks the tools they drive are

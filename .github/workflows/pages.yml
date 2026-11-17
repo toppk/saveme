@@ -3,6 +3,10 @@ name: Pages
 on:
   push:
     branches: [master]
+    paths:
+      - "site/**"
+      - "docs/**"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -14,21 +18,25 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  PANDOC_VERSION: "3.7.0.2"
+
 jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          # match .readthedocs.yml
-          python-version: "3.13"
+      - name: Install pandoc
+        run: |
+          curl -fsSL -o pandoc.deb \
+            "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-amd64.deb"
+          sudo dpkg -i pandoc.deb
+          pandoc --version | head -1
+      - run: site/build.sh _site
       - uses: actions/configure-pages@v6
-      - run: pip install -r requirements-docs.txt
-      - run: mkdocs build --strict
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: site
+          path: _site
 
   deploy:
     needs: build

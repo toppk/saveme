@@ -1,0 +1,14 @@
+# Project settings for the Horizon theme (site/theme/README.md).
+site-title: saveme
+site-tagline: snapshots and encrypted archive disks for Linux
+site-logo: assets/logo-128.webp
+site-favicon: assets/favicon.ico
+site-footer: 'saveme · MIT licensed · <a href="https://github.com/toppk/saveme">github.com/toppk/saveme</a>'
+llms: llms.txt
+top-links:
+  - label: Getting started
+    href: getting-started.html
+  - label: Usage
+    href: usage.html
+  - label: GitHub
+    href: https://github.com/toppk/saveme

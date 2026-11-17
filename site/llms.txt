@@ -1,0 +1,14 @@
+# saveme
+
+> saveme is a Python toolkit (standard library only) for Linux snapshots and encrypted archive disks. `snapmgr` takes btrfs and zfs snapshots and thins them by an age policy such as `0-1dy: all, 1dy-1wk: 4hr, 1wk+: none`; `disktool` prepares LUKS-encrypted ext4 archive disks; `mirroradm` (indexing and checksums toward backups) is unfinished. Every root action is a short bash script that prints the commands it would run; the tools show them and ask before running unless `--noprompt` is given. saveme does not encrypt snapshots, and snapshots are not a backup by themselves.
+
+Every page below is Markdown. llms-full.txt has all of them in one file.
+
+## Start here
+
+- [Overview](index.md): what each tool does and how it runs
+- [Getting started](getting-started.md): the tree, the scripts, a walkthrough, design philosophy
+
+## Use
+
+- [Usage](usage.md): the scripts, `disktool`, `snapmgr` and the policy format

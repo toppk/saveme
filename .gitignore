@@ -1,6 +1,6 @@
 *~
 __pycache__/
 .mypy_cache/
-site/
+_site/
 upstream/
 dist/

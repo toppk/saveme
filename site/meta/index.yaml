@@ -1,0 +1,11 @@
+# Front-page presentation; the content is docs/index.md.
+hero: true
+hero-image: assets/logo-512.webp
+hero-eyebrow: btrfs · zfs · LUKS
+hero-title: Every root command, shown before it runs.
+hero-lede: saveme takes snapshots and thins them by age, and prepares LUKS-encrypted archive disks. It prints the commands it will run as root and asks before running them.
+hero-links:
+  - { label: Get started, href: getting-started.html, kind: primary }
+  - { label: Read the usage guide, href: usage.html, kind: secondary }
+  - { label: Source on GitHub, href: "https://github.com/toppk/saveme", kind: secondary }
+description: saveme takes btrfs and zfs snapshots and thins them by an age policy, and prepares LUKS-encrypted archive disks. Every root action prints its commands and asks first.
