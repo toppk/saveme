@@ -4,6 +4,7 @@ from typing import Callable, List, TextIO
 from .block import genarid, makearfsfromdisk
 from .cfg import getdefsnappol as _cfg_default_snapshot_policy
 from .mirror import (
+    addbackup,
     addsum,
     backupvolume,
     checksumvolume,
@@ -44,7 +45,7 @@ register-archive <path>
    list-archives
           backup <volumeid>
   missing-backup
-  provide-backup <volumeid> <fileid> <checksum>
+  provide-backup <checksum> <archiveid> <blobchksum> <blobkey> <blobsize>
         checksum <volumeid>
   missing-chksum
   provide-chksum  <volumeid> <fileid> <checksum>
@@ -70,7 +71,9 @@ register-archive <path>
         status = 0
         if args[1] == "provide-chksum":
             if len(args) != 5:
-                status = _err("provide: you must specify <volumeid> <fileid> <chksum>")
+                status = _err(
+                    "provide-chksum: you must specify <volumeid> <fileid> <checksum>"
+                )
             else:
                 addsum(int(args[2]), args[3], args[4])
         elif args[1] == "missing-chksum":
@@ -85,12 +88,17 @@ register-archive <path>
                     return _err("volumeid must be an integer")
                 status = checksumvolume(volumeid)
         elif args[1] == "provide-backup":
-            if len(args) != 6:
+            if len(args) != 7:
                 status = _err(
-                    "provide: you must specify <chksum> <blobsize> <blobchksum> -"
+                    "provide-backup: you must specify <checksum> <archiveid>"
+                    " <blobchksum> <blobkey> <blobsize>"
                 )
             else:
-                addsum(int(args[2]), args[3], args[4])
+                try:
+                    archiveid, blobsize = int(args[3]), int(args[6])
+                except ValueError:
+                    return _err("archiveid and blobsize must be integers")
+                addbackup(args[2], archiveid, args[4], args[5], blobsize)
         elif args[1] == "missing-backup":
             missingbackup()
         elif args[1] == "backup":
@@ -247,7 +255,3 @@ OPTIONS
             usage(args[0], sys.stderr)
             status = _err("not a valid action: %s" % args[1])
         return status
-
-    def help(self) -> bool:
-        print("i am suppossed to go, check usage")
-        return True

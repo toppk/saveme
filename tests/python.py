@@ -40,9 +40,6 @@ class TestMain(unittest.TestCase):
             self.assertEqual(self._cl.snapmgr(["s", "list"]), 64)
             self.assertEqual(self._cl.snapmgr(["s", "create", "/x", "--x"]), 64)
 
-    def test_cli_help(self):
-        self.assertEqual(self._cl.help(), True)
-
 
 class TestUtil(unittest.TestCase):
 
@@ -315,6 +312,48 @@ class TestMirrorDb(unittest.TestCase):
                 self.assertEqual(os.listdir(dbdir), ["mirror.db"])
             finally:
                 os.chdir(cwd)
+
+    def test_provide_backup(self):
+        import sqlite3
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(self._mirroradm(tmp, "resetdb")[0], 0)
+            with sqlite3.connect(Path(tmp, "mirror.db")) as conn:
+                cols = [r[1] for r in conn.execute("pragma table_info(mirrors)")]
+            self.assertEqual(
+                cols,
+                [
+                    "chksum",
+                    "archiveid",
+                    "blobchksum",
+                    "blobkey",
+                    "blobsize",
+                    "copydate",
+                ],
+            )
+            self.assertEqual(
+                self._mirroradm(tmp, "provide-backup", "abc", "1", "def", "k", "42")[0],
+                0,
+            )
+            with sqlite3.connect(Path(tmp, "mirror.db")) as conn:
+                row = conn.execute("select * from mirrors").fetchone()
+            self.assertEqual(row[:5], ("abc", 1, "def", "k", 42))
+            self.assertEqual(self._mirroradm(tmp, "provide-backup", "abc")[0], 64)
+            self.assertEqual(
+                self._mirroradm(tmp, "provide-backup", "a", "x", "b", "k", "1")[0], 64
+            )
+            data = Path(tmp, "data")
+            data.mkdir()
+            (data / "f").write_text("x")
+            self.assertEqual(self._mirroradm(tmp, "index", str(data))[0], 0)
+            fileid = self._mirroradm(tmp, "missing-chksum")[1].split()[1]
+            self._mirroradm(tmp, "provide-chksum", "1", fileid, "sum1")
+            self.assertEqual(
+                self._mirroradm(tmp, "missing-backup")[1], "sum1 %s/f\n" % data
+            )
+            self._mirroradm(tmp, "provide-backup", "sum1", "1", "b", "k", "1")
+            self.assertEqual(self._mirroradm(tmp, "missing-backup"), (0, "", ""))
 
     def test_missing_db_directory(self):
         code, out, err = self._mirroradm("/nonexistent-saveme-db", "list-archives")

@@ -10,6 +10,12 @@
 * `tests/system.sh` checks the tools are installed rather than for 2020
   versions.
 * The symlink test runs the tools under the test's Python, so CI covers 3.14.
+* `mirroradm`: the `mirrors` table had lost its `blobchksum` column to a
+  missing comma; run `mirroradm resetdb` to recreate it. `missing-backup` no
+  longer crashes once there are checksums, and `provide-backup` now records a
+  backup: `<checksum> <archiveid> <blobchksum> <blobkey> <blobsize>`.
+* `mirroradm` uses SQL parameters throughout and closes its connections.
+* Removed the unfinished `part-add-ssfs.sh` and the leftover `CommandLine.help()`.
 
 ## 0.2.0 (2026-11-13)
 

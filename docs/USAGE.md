@@ -27,7 +27,6 @@ This current scripts are for linux only (but both btrfs and zfs).
 
 * part-add-arfs.sh - create ext4 filesystem on the partition
 * part-add-luks.sh - create a luks block layer on the partition
-* part-add-ssfs.sh - will allow creation of btrfs or zfs pools
 
 ### System
 
