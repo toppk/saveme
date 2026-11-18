@@ -59,7 +59,7 @@ Install or upgrade, as root, with `saveme-<version>.tar.gz` and `SHA256SUMS`
 from the GitHub release:
 
 ```
-v=0.2.0
+v=0.2.1
 sha256sum -c SHA256SUMS
 install -d -m 0755 /opt/saveme/releases/v$v
 tar -xzf saveme-$v.tar.gz -C /opt/saveme/releases/v$v --strip-components=1 --no-same-owner

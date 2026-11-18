@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.1 (unreleased)
+## 0.2.1 (2026-11-17)
 
 * Usage errors exit 64 and go to stderr; `help`, `-h` and `--help` print the
   usage and exit 0. Bare `snapmgr` and `disktool` used to exit 12.
