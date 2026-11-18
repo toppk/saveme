@@ -80,6 +80,6 @@ for i in "${!pages[@]}"; do
   { printf '\n\n<!-- %s.md -->\n\n' "$name"; cat "$src"; } >>"$out/llms-full.txt"
 done
 
-"$here/redirects.sh" "$out" ..
+"$here/redirects.sh" "$out"
 
 echo "built $count pages into $out"

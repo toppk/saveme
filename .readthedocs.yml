@@ -1,7 +1,0 @@
-# Read the Docs is retired: it only serves redirects to https://toppk.github.io/saveme/.
-version: 2
-
-build:
-  os: ubuntu-24.04
-  commands:
-    - site/redirects.sh "$READTHEDOCS_OUTPUT/html" https://toppk.github.io/saveme --root
